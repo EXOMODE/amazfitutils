@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AmazfitWFReader.Properties
+namespace UI.Properties
 {
 
 
