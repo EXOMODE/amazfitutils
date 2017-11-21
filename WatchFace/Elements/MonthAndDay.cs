@@ -5,33 +5,33 @@ using WatchFace.Models;
 
 namespace WatchFace.Elements
 {
-    public class Time
+    public class MonthAndDay
     {
-        public AmPmSwitch AmPm { get; set; }
-        public TwoDigits Hours { get; set; }
-        public TwoDigits Minutes { get; set; }
-        public TwoDigits Seconds { get; set; }
+        public SeparateMonthAndDay Separate { get; set; }
+        public JoinedNumber Joined { get; set; }
+        public long Unknown1 { get; set; }
+        public long Unknown2 { get; set; }
 
-        public static Time Parse(List<Parameter> descriptor)
+        public static MonthAndDay Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new Time();
+            var result = new MonthAndDay();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.Hours = TwoDigits.Parse(parameter.Children);
+                        result.Separate = SeparateMonthAndDay.Parse(parameter.Children);
                         break;
                     case 2:
-                        result.Minutes = TwoDigits.Parse(parameter.Children);
+                        result.Joined = JoinedNumber.Parse(parameter.Children);
                         break;
                     case 3:
-                        result.Seconds = TwoDigits.Parse(parameter.Children);
+                        result.Unknown1 = parameter.Value;
                         break;
                     case 4:
-                        result.AmPm = AmPmSwitch.Parse(parameter.Children);
+                        result.Unknown2 = parameter.Value;
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

@@ -1,12 +1,25 @@
-﻿namespace WatchFace.Elements
+﻿using System.Collections.Generic;
+using WatchFace.Models;
+
+namespace WatchFace.Elements
 {
     public class Background
     {
-        private Image _image;
+        public Image Image { get; set; }
 
-        public Background(Image image)
+        public static Background Parse(List<Parameter> parameters)
         {
-            _image = image;
+            var result = new Background();
+            foreach (var parameter in parameters)
+                switch (parameter.Id)
+                {
+                    case 1:
+                        result.Image = Image.Parse(parameter.Children);
+                        break;
+                    default:
+                        throw new InvalidParameterException(parameter);
+                }
+            return result;
         }
     }
 }

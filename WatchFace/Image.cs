@@ -4,15 +4,15 @@ using System.IO;
 using SixLabors.ImageSharp;
 using WatchFace.Utils;
 
-namespace WatchFace.Models
+namespace WatchFace
 {
     public class ImageReader
     {
         private readonly BinaryReader _reader;
-        private ushort _paletteColors;
         private ushort _bitsPerPixel;
         private ushort _height;
         private List<Rgba32> _palette;
+        private ushort _paletteColors;
         private ushort _rowLengthInBytes;
         private ushort _transp;
         private ushort _width;

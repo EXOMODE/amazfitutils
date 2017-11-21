@@ -15,7 +15,7 @@ namespace WatchFace
             _fileStream = streamReader;
         }
 
-        public List<Resource> Resources { get; private set; }
+        public List<Parameter> Resources { get; private set; }
         public List<Image<Rgba32>> Images { get; private set; }
 
         public void Parse()
@@ -27,8 +27,8 @@ namespace WatchFace
 
             var mainParam = Parameter.ReadFrom(parametersStream);
             var parameters = Parameter.ReadList(parametersStream);
-            var coordinatesTableSize = mainParam.List[0].Value;
-            var imagesTableLength = mainParam.List[1].Value;
+            var coordinatesTableSize = mainParam.Children[0].Value;
+            var imagesTableLength = mainParam.Children[1].Value;
 
             ParseResources(coordinatesTableSize, parameters);
             ParseImages(imagesTableLength);
@@ -38,14 +38,14 @@ namespace WatchFace
         {
             var coordsStream = StreamBlock(_fileStream, (int) coordinatesTableSize);
 
-            Resources = new List<Resource>(parameters.Count);
+            Resources = new List<Parameter>(parameters.Count);
             foreach (var parameter in parameters)
             {
-                var descriptorOffset = parameter.List[0].Value;
-                var descriptorLength = parameter.List[1].Value;
-                coordsStream.Seek((long) descriptorOffset, SeekOrigin.Begin);
+                var descriptorOffset = parameter.Children[0].Value;
+                var descriptorLength = parameter.Children[1].Value;
+                coordsStream.Seek(descriptorOffset, SeekOrigin.Begin);
                 var descriptorStream = StreamBlock(coordsStream, (int) descriptorLength);
-                Resources.Add(new Resource(parameter.Id, Parameter.ReadList(descriptorStream)));
+                Resources.Add(new Parameter(parameter.Id, Parameter.ReadList(descriptorStream)));
             }
         }
 
@@ -62,7 +62,6 @@ namespace WatchFace
                 var imageOffset = BitConverter.ToUInt32(imagesOffsets, i * 4) + imagesOffset;
                 _fileStream.Seek(imageOffset, SeekOrigin.Begin);
                 var image = new ImageReader(_fileStream).Read();
-                image.Save($"{i}.bmp");
                 Images.Add(image);
             }
         }

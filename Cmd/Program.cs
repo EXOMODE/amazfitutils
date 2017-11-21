@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
+using SixLabors.ImageSharp;
 using WatchFace;
 using WatchFace.Models;
 
 namespace Cmd
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var fileName = args[0];
             Reader reader;
@@ -18,13 +18,20 @@ namespace Cmd
                 reader = new Reader(fileStream);
                 reader.Parse();
             }
+
             foreach (var resource in reader.Resources)
             {
                 Console.WriteLine("{0:D}: ", resource.Id);
-                foreach (var descriptor in resource.Descriptor)
-                {
-                    WriteParameter(4, descriptor);
-                }
+                foreach (var descriptor in resource.Children) WriteParameter(4, descriptor);
+            }
+
+            var watchFace = WatchFace.WatchFace.Parse(reader.Resources);
+
+            var index = 0;
+            foreach (var image in reader.Images)
+            {
+                image.Save($"{index}.bmp");
+                index++;
             }
 
             Console.ReadKey();
@@ -35,13 +42,10 @@ namespace Cmd
             for (var i = 0; i < offset; i++)
                 Console.Write(' ');
             Console.Write("{0:D}: ", parameter.Id);
-            if (parameter.IsList)
+            if (parameter.IsComplex)
             {
                 Console.WriteLine();
-                foreach (var parameter1 in parameter.List)
-                {
-                    WriteParameter(offset + 4, parameter1);
-                }
+                foreach (var parameter1 in parameter.Children) WriteParameter(offset + 4, parameter1);
             }
             else
             {

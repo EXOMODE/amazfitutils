@@ -5,31 +5,30 @@ namespace WatchFace.Models
 {
     public class Parameter
     {
-        private Parameter(byte id, long value)
+        public Parameter(byte id, long value)
         {
             Id = id;
             Value = value;
         }
 
-        private Parameter(byte id, List<Parameter> value)
+        public Parameter(byte id, List<Parameter> value)
         {
             Id = id;
-            List = value;
+            Children = value;
         }
 
         public byte Id { get; }
         public long Value { get; }
-        public List<Parameter> List { get; }
-        public bool IsList => List != null;
-
+        public List<Parameter> Children { get; }
+        public bool IsComplex => Children != null;
 
         public static Parameter ReadFrom(Stream fileStream)
         {
             var rawId = fileStream.ReadByte();
-            var id = (byte)((rawId & 0xf8) >> 3);
+            var id = (byte) ((rawId & 0xf8) >> 3);
             var flags = (ParameterFlags) (rawId & 0x7);
 
-            if (flags.HasFlag(ParameterFlags.List))
+            if (flags.HasFlag(ParameterFlags.hasChildren))
             {
                 var readBytes = fileStream.ReadByte();
                 var buffer = new byte[readBytes];

@@ -1,37 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using WatchFace.BasicElements;
 using WatchFace.Models;
 
-namespace WatchFace.Elements
+namespace WatchFace.BasicElements
 {
-    public class Time
+    public class AmPmSwitch
     {
-        public AmPmSwitch AmPm { get; set; }
-        public TwoDigits Hours { get; set; }
-        public TwoDigits Minutes { get; set; }
-        public TwoDigits Seconds { get; set; }
+        public long ImageIndexPm { get; set; }
+        public long ImageIndexAm { get; set; }
+        public long X { get; set; }
+        public long Y { get; set; }
 
-        public static Time Parse(List<Parameter> descriptor)
+        public static AmPmSwitch Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new Time();
+            var result = new AmPmSwitch();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.Hours = TwoDigits.Parse(parameter.Children);
+                        result.X = parameter.Value;
                         break;
                     case 2:
-                        result.Minutes = TwoDigits.Parse(parameter.Children);
+                        result.Y = parameter.Value;
                         break;
                     case 3:
-                        result.Seconds = TwoDigits.Parse(parameter.Children);
+                        result.ImageIndexAm = parameter.Value;
                         break;
                     case 4:
-                        result.AmPm = AmPmSwitch.Parse(parameter.Children);
+                        result.ImageIndexPm = parameter.Value;
                         break;
                     default:
                         throw new InvalidParameterException(parameter);
