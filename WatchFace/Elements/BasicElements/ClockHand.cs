@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using WatchFace.JsonConverters;
 using WatchFace.Models;
 
 namespace WatchFace.Elements.BasicElements
@@ -7,7 +9,10 @@ namespace WatchFace.Elements.BasicElements
     public class ClockHand
     {
         public long Unknown { get; set; }
+
+        [JsonConverter(typeof(HexStringJsonConverter))]
         public long Color { get; set; }
+
         public Coordinates Center { get; set; }
         public List<Coordinates> Shape { get; set; }
         public Image CenterImage { get; set; }

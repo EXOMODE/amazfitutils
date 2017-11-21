@@ -7,9 +7,9 @@ namespace WatchFace.Elements.StatusElements
 {
     public class Switch
     {
+        public Coordinates Coordinates { get; set; }
         public long ImageIndexOn { get; set; }
         public long ImageIndexOff { get; set; }
-        public Coordinates Coordinates { get; set; }
 
         public static Switch Parse(List<Parameter> descriptor)
         {

@@ -6,9 +6,9 @@ namespace WatchFace.Elements.BasicElements
 {
     public class Image
     {
-        public long ImageIndex { get; set; }
         public long X { get; set; }
         public long Y { get; set; }
+        public long ImageIndex { get; set; }
 
         public static Image Parse(List<Parameter> descriptor)
         {

@@ -6,15 +6,14 @@ namespace WatchFace.Elements.BasicElements
 {
     public class Number
     {
-        public long BottomRightX { get; set; }
-        public long BottomRightY { get; set; }
-        public long ImageIndex { get; set; }
-        public long ImagesCount { get; set; }
         public long TopLeftX { get; set; }
         public long TopLeftY { get; set; }
-
+        public long BottomRightX { get; set; }
+        public long BottomRightY { get; set; }
         public long Unknown1 { get; set; }
         public long Unknown2 { get; set; }
+        public long ImageIndex { get; set; }
+        public long ImagesCount { get; set; }
 
         public static Number Parse(List<Parameter> descriptor)
         {

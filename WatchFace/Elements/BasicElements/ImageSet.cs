@@ -6,10 +6,10 @@ namespace WatchFace.Elements.BasicElements
 {
     public class ImageSet
     {
-        public long ImageIndex { get; set; }
-        public long ImagesCount { get; set; }
         public long X { get; set; }
         public long Y { get; set; }
+        public long ImageIndex { get; set; }
+        public long ImagesCount { get; set; }
 
         public static ImageSet Parse(List<Parameter> descriptor)
         {

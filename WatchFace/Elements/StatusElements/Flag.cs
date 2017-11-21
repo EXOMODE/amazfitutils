@@ -7,8 +7,8 @@ namespace WatchFace.Elements.StatusElements
 {
     public class Flag
     {
-        public long ImageIndexOn { get; set; }
         public Coordinates Coordinates { get; set; }
+        public long ImageIndex { get; set; }
 
         public static Flag Parse(List<Parameter> descriptor)
         {
@@ -23,7 +23,7 @@ namespace WatchFace.Elements.StatusElements
                         result.Coordinates = Coordinates.Parse(parameter.Children);
                         break;
                     case 2:
-                        result.ImageIndexOn = parameter.Value;
+                        result.ImageIndex = parameter.Value;
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

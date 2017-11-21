@@ -7,7 +7,7 @@ namespace WatchFace.Elements
 {
     public class Status
     {
-        public Switch Switch { get; set; }
+        public Switch Bluetooth { get; set; }
         public Flag Alarm { get; set; }
         public Flag Lock { get; set; }
         public Flag DoNotDisturb { get; set; }
@@ -22,7 +22,7 @@ namespace WatchFace.Elements
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.Switch = Switch.Parse(parameter.Children);
+                        result.Bluetooth = Switch.Parse(parameter.Children);
                         break;
                     case 2:
                         result.Alarm = Flag.Parse(parameter.Children);

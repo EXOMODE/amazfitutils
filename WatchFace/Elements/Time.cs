@@ -8,10 +8,10 @@ namespace WatchFace.Elements
 {
     public class Time
     {
-        public AmPm AmPm { get; set; }
         public TwoDigits Hours { get; set; }
         public TwoDigits Minutes { get; set; }
         public TwoDigits Seconds { get; set; }
+        public AmPm AmPm { get; set; }
 
         public static Time Parse(List<Parameter> descriptor)
         {
