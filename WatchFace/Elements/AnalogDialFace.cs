@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using WatchFace.Elements.BasicElements;
-using WatchFace.Elements.DateElements;
 using WatchFace.Models;
 
 namespace WatchFace.Elements
 {
-    public class Date
+    public class AnalogDialFace
     {
-        public MonthAndDay MonthAndDay { get; set; }
-        public ImageSet WeekDay { get; set; }
+        public ClockHand Hours { get; set; }
+        public ClockHand Minutes { get; set; }
+        public ClockHand Seconds { get; set; }
 
-        public static Date Parse(List<Parameter> descriptor)
+        public static AnalogDialFace Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new Date();
+            var result = new AnalogDialFace();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.MonthAndDay = MonthAndDay.Parse(parameter.Children);
+                        result.Hours = ClockHand.Parse(parameter.Children);
                         break;
                     case 2:
-                        result.WeekDay = ImageSet.Parse(parameter.Children);
+                        result.Minutes = ClockHand.Parse(parameter.Children);
+                        break;
+                    case 3:
+                        result.Seconds = ClockHand.Parse(parameter.Children);
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

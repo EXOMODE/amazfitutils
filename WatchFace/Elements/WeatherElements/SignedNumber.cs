@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using WatchFace.Elements.BasicElements;
 using WatchFace.Models;
 
-namespace WatchFace.BasicElements
+namespace WatchFace.Elements.WeatherElements
 {
-    public class JoinedNumber
+    public class SignedNumber
     {
         public Number Number { get; set; }
-        public long DelimiterImageIndex { get; set; }
+        public long MinusImageIndex { get; set; }
 
-        public static JoinedNumber Parse(List<Parameter> descriptor)
+        public static SignedNumber Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new JoinedNumber();
+            var result = new SignedNumber();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
@@ -22,7 +23,7 @@ namespace WatchFace.BasicElements
                         result.Number = Number.Parse(parameter.Children);
                         break;
                     case 2:
-                        result.DelimiterImageIndex = parameter.Value;
+                        result.MinusImageIndex = parameter.Value;
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using WatchFace.Models;
 
-namespace WatchFace.BasicElements
+namespace WatchFace.Elements.TimeElements
 {
-    public class AmPmSwitch
+    public class AmPm
     {
         public long ImageIndexPm { get; set; }
         public long ImageIndexAm { get; set; }
         public long X { get; set; }
         public long Y { get; set; }
 
-        public static AmPmSwitch Parse(List<Parameter> descriptor)
+        public static AmPm Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new AmPmSwitch();
+            var result = new AmPm();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {

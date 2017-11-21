@@ -7,10 +7,15 @@ namespace WatchFace
 {
     public class WatchFace
     {
-        public Background Background { get; private set; }
-        public Time Time { get; private set; }
-        public Date Date { get; private set; }
-        public Activity Activity { get; private set; }
+        public Background Background { get; set; }
+        public Time Time { get; set; }
+        public Date Date { get; set; }
+        public Weather Weather { get; set; }
+        public Activity Activity { get; set; }
+        public Scales Scales { get; set; }
+        public Status Status { get; set; }
+        public Battery Battery { get; set; }
+        public AnalogDialFace AnalogDialFace { get; set; }
 
         public static WatchFace Parse(List<Parameter> descriptor)
         {
@@ -34,8 +39,23 @@ namespace WatchFace
                     case 5:
                         result.Date = Date.Parse(resource.Children);
                         break;
-                    //default:
-                    //    throw new InvalidParameterException(resource);
+                    case 6:
+                        result.Weather = Weather.Parse(resource.Children);
+                        break;
+                    case 7:
+                        result.Scales = Scales.Parse(resource.Children);
+                        break;
+                    case 8:
+                        result.Status = Status.Parse(resource.Children);
+                        break;
+                    case 9:
+                        result.Battery = Battery.Parse(resource.Children);
+                        break;
+                    case 10:
+                        result.AnalogDialFace = AnalogDialFace.Parse(resource.Children);
+                        break;
+                    default:
+                        throw new InvalidParameterException(resource);
                 }
             return result;
         }

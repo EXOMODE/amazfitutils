@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using WatchFace.BasicElements;
+using WatchFace.Elements.ActivityElements;
+using WatchFace.Elements.BasicElements;
 using WatchFace.Models;
 
 namespace WatchFace.Elements

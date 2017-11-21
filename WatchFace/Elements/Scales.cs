@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using WatchFace.Elements.BasicElements;
-using WatchFace.Elements.DateElements;
 using WatchFace.Models;
 
 namespace WatchFace.Elements
 {
-    public class Date
+    public class Scales
     {
-        public MonthAndDay MonthAndDay { get; set; }
-        public ImageSet WeekDay { get; set; }
+        public Scale Steps { get; set; }
 
-        public static Date Parse(List<Parameter> descriptor)
+        public static Scales Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new Date();
+            var result = new Scales();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
-                    case 1:
-                        result.MonthAndDay = MonthAndDay.Parse(parameter.Children);
-                        break;
                     case 2:
-                        result.WeekDay = ImageSet.Parse(parameter.Children);
+                        result.Steps = Scale.Parse(parameter.Children);
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

@@ -1,37 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using WatchFace.BasicElements;
 using WatchFace.Models;
 
-namespace WatchFace.Elements
+namespace WatchFace.Elements.BasicElements
 {
-    public class MonthAndDay
+    public class ImageSet
     {
-        public SeparateMonthAndDay Separate { get; set; }
-        public JoinedNumber Joined { get; set; }
-        public long Unknown1 { get; set; }
-        public long Unknown2 { get; set; }
+        public long ImageIndex { get; set; }
+        public long ImagesCount { get; set; }
+        public long X { get; set; }
+        public long Y { get; set; }
 
-        public static MonthAndDay Parse(List<Parameter> descriptor)
+        public static ImageSet Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new MonthAndDay();
+            var result = new ImageSet();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.Separate = SeparateMonthAndDay.Parse(parameter.Children);
+                        result.X = parameter.Value;
                         break;
                     case 2:
-                        result.Joined = JoinedNumber.Parse(parameter.Children);
+                        result.Y = parameter.Value;
                         break;
                     case 3:
-                        result.Unknown1 = parameter.Value;
+                        result.ImageIndex = parameter.Value;
                         break;
                     case 4:
-                        result.Unknown2 = parameter.Value;
+                        result.ImagesCount = parameter.Value;
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

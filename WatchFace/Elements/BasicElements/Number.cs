@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using WatchFace.Models;
 
-namespace WatchFace.BasicElements
+namespace WatchFace.Elements.BasicElements
 {
     public class Number
     {

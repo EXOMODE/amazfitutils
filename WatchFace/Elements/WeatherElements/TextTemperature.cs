@@ -2,31 +2,27 @@
 using System.Collections.Generic;
 using WatchFace.Models;
 
-namespace WatchFace.Elements
+namespace WatchFace.Elements.WeatherElements
 {
-    public class Image
+    public class TextTemperature
     {
-        public long ImageIndex { get; set; }
-        public long X { get; set; }
-        public long Y { get; set; }
+        public SeparateTemperature Separate { get; set; }
+        public JoinedTemperature Joined { get; set; }
 
-        public static Image Parse(List<Parameter> descriptor)
+        public static TextTemperature Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new Image();
+            var result = new TextTemperature();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.X = parameter.Value;
+                        result.Separate = SeparateTemperature.Parse(parameter.Children);
                         break;
                     case 2:
-                        result.Y = parameter.Value;
-                        break;
-                    case 3:
-                        result.ImageIndex = parameter.Value;
+                        result.Joined = JoinedTemperature.Parse(parameter.Children);
                         break;
                     default:
                         throw new InvalidParameterException(parameter);

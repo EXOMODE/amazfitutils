@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using WatchFace.Elements.BasicElements;
-using WatchFace.Elements.DateElements;
 using WatchFace.Models;
 
-namespace WatchFace.Elements
+namespace WatchFace.Elements.StatusElements
 {
-    public class Date
+    public class Switch
     {
-        public MonthAndDay MonthAndDay { get; set; }
-        public ImageSet WeekDay { get; set; }
+        public long ImageIndexOn { get; set; }
+        public long ImageIndexOff { get; set; }
+        public Coordinates Coordinates { get; set; }
 
-        public static Date Parse(List<Parameter> descriptor)
+        public static Switch Parse(List<Parameter> descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
-            var result = new Date();
+            var result = new Switch();
             foreach (var parameter in descriptor)
                 switch (parameter.Id)
                 {
                     case 1:
-                        result.MonthAndDay = MonthAndDay.Parse(parameter.Children);
+                        result.Coordinates = Coordinates.Parse(parameter.Children);
                         break;
                     case 2:
-                        result.WeekDay = ImageSet.Parse(parameter.Children);
+                        result.ImageIndexOn = parameter.Value;
+                        break;
+                    case 3:
+                        result.ImageIndexOff = parameter.Value;
                         break;
                     default:
                         throw new InvalidParameterException(parameter);
