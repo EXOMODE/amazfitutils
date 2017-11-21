@@ -7,7 +7,7 @@ namespace WatchFace.JsonConverters
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue($"0x{value:x}");
+            writer.WriteValue($"0x{value:X6}");
         }
 
         public override bool CanConvert(Type objectType)

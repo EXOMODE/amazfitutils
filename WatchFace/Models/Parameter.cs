@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using NLog;
 
 namespace WatchFace.Models
 {
     public class Parameter
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public Parameter(byte id, long value)
         {
             Id = id;
@@ -22,35 +26,36 @@ namespace WatchFace.Models
         public List<Parameter> Children { get; }
         public bool IsComplex => Children != null;
 
-        public static Parameter ReadFrom(Stream fileStream)
+        public static List<Parameter> ReadList(Stream stream, int traceOffset = 0)
+        {
+            var result = new List<Parameter>();
+            while (stream.Position < stream.Length)
+            {
+                var parameter = ReadFrom(stream, traceOffset);
+                result.Add(parameter);
+            }
+            return result;
+        }
+
+        public static Parameter ReadFrom(Stream fileStream, int traceOffset = 0)
         {
             var rawId = fileStream.ReadByte();
             var id = (byte) ((rawId & 0xf8) >> 3);
             var flags = (ParameterFlags) (rawId & 0x7);
 
+            var value = ReadValue(fileStream);
             if (flags.HasFlag(ParameterFlags.hasChildren))
             {
-                var readBytes = fileStream.ReadByte();
-                var buffer = new byte[readBytes];
-                fileStream.Read(buffer, 0, readBytes);
+                Logger.Trace(()=> TraceWithOffset($"{id} ({rawId:X2}): {value} bytes", traceOffset));
+                var buffer = new byte[value];
+                fileStream.Read(buffer, 0, (int) value);
                 var stream = new MemoryStream(buffer);
 
-                var list = ReadList(stream);
+                var list = ReadList(stream, traceOffset + 1);
                 return new Parameter(id, list);
             }
-            var value = ReadValue(fileStream);
+            Logger.Trace(()=> TraceWithOffset($"{id} ({rawId:X2}): {value} ({value:X2})", traceOffset));
             return new Parameter(id, value);
-        }
-
-        public static List<Parameter> ReadList(Stream stream)
-        {
-            var result = new List<Parameter>();
-            while (stream.Position < stream.Length)
-            {
-                var parameter = ReadFrom(stream);
-                result.Add(parameter);
-            }
-            return result;
         }
 
         private static long ReadValue(Stream fileStream)
@@ -67,6 +72,14 @@ namespace WatchFace.Models
             }
             value = value | ((long) (currentByte & 0x7f) << offset);
             return value;
+        }
+
+        private static string TraceWithOffset(string message, int offset)
+        {
+            var builder = new StringBuilder();
+            for (var i = 0; i < offset; i++) builder.Append("    ");
+            builder.Append(message);
+            return builder.ToString();
         }
     }
 }

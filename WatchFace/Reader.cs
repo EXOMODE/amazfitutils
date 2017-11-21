@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using NLog;
 using SixLabors.ImageSharp;
 using WatchFace.Models;
 
@@ -8,6 +9,8 @@ namespace WatchFace
 {
     public class Reader
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly FileStream _fileStream;
 
         public Reader(FileStream streamReader)
@@ -20,15 +23,28 @@ namespace WatchFace
 
         public void Parse()
         {
+            Logger.Trace("Reading header...");
             var header = Header.ReadFrom(_fileStream);
+            Logger.Trace("Header was read:");
+            Logger.Trace("Signature: {0}, Unknown: {1}, ParametersSize: {2}, IsValid: {3}", header.Signature,
+                header.Unknown,
+                header.ParametersSize, header.IsValid);
             if (!header.IsValid) return;
 
+            Logger.Trace("Reading parameter offsets...");
             var parametersStream = StreamBlock(_fileStream, (int) header.ParametersSize);
+            Logger.Trace("Parameter offsets were read from file");
 
+            Logger.Trace("Reading parameters descriptor...");
             var mainParam = Parameter.ReadFrom(parametersStream);
-            var parameters = Parameter.ReadList(parametersStream);
+            Logger.Trace("Parameters descriptor was read:");
             var coordinatesTableSize = mainParam.Children[0].Value;
             var imagesTableLength = mainParam.Children[1].Value;
+            Logger.Trace($"CoordinatesTableSize: {coordinatesTableSize}, ImagesTableLength: {imagesTableLength}");
+
+            Logger.Trace("Reading face parameters...");
+            var parameters = Parameter.ReadList(parametersStream);
+            Logger.Trace("Watch face parameters were read:");
 
             ParseResources(coordinatesTableSize, parameters);
             ParseImages(imagesTableLength);
@@ -41,10 +57,13 @@ namespace WatchFace
             Resources = new List<Parameter>(parameters.Count);
             foreach (var parameter in parameters)
             {
+                Logger.Trace("Reading descriptor for parameter {0}", parameter.Id);
                 var descriptorOffset = parameter.Children[0].Value;
                 var descriptorLength = parameter.Children[1].Value;
+                Logger.Trace("Descriptor offset: {0}, Descriptor length: {1}", descriptorOffset, descriptorLength);
                 coordsStream.Seek(descriptorOffset, SeekOrigin.Begin);
                 var descriptorStream = StreamBlock(coordsStream, (int) descriptorLength);
+                Logger.Trace("Parsing descriptor for parameter {0}...", parameter.Id);
                 Resources.Add(new Parameter(parameter.Id, Parameter.ReadList(descriptorStream)));
             }
         }
