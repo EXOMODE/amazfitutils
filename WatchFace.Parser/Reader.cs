@@ -21,7 +21,7 @@ namespace WatchFace
         public List<Parameter> Resources { get; private set; }
         public List<Image<Rgba32>> Images { get; private set; }
 
-        public void Parse()
+        public void Read()
         {
             Logger.Trace("Reading header...");
             var header = Header.ReadFrom(_fileStream);
