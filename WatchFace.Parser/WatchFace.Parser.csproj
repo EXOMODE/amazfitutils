@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>WatchFace</AssemblyName>
+    <AssemblyName>WatchFace.Parser</AssemblyName>
+    <RootNamespace>WatchFace.Parser</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

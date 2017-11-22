@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{963BCF47-8C24-4219-BC84-8EC3670205B3}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>WatchFace.Cmd</RootNamespace>
-    <AssemblyName>WatchFace.Cmd</AssemblyName>
+    <RootNamespace>WatchFace</RootNamespace>
+    <AssemblyName>WatchFace</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -145,7 +145,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WatchFace\WatchFace.Parser.csproj">
+    <ProjectReference Include="..\WatchFace.Parser\WatchFace.Parser.csproj">
       <Project>{8d2e0224-de7f-4ec9-ad23-9904b9d7b409}</Project>
       <Name>WatchFace.Parser</Name>
     </ProjectReference>

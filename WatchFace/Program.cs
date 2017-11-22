@@ -6,7 +6,7 @@ using NLog.Config;
 using NLog.Targets;
 using SixLabors.ImageSharp;
 
-namespace WatchFace.Cmd
+namespace WatchFace
 {
     internal class Program
     {
@@ -16,15 +16,33 @@ namespace WatchFace.Cmd
 
         private static void Main(string[] args)
         {
-            var inputFileName = args[0];
-            if (inputFileName == null)
+            if (args.Length == 0 || args[0] == null)
             {
                 Console.WriteLine("{0} unpacks Amazfit Bip downloadable watch faces.", AppName);
                 Console.WriteLine("Usage: {0}.exe watchface.bin", AppName);
                 return;
             }
 
-            SetupLogger(LogLevel.Trace);
+            var inputFileName = args[0];
+            if (!File.Exists(inputFileName))
+            {
+                Console.WriteLine("File '{0}' doesn't exists.", inputFileName);
+                return;
+            }
+
+            if (Path.GetExtension(inputFileName) == "json")
+                PackWatchFace(inputFileName);
+            else
+                UnpackWatchFace(inputFileName);
+        }
+
+        private static void PackWatchFace(string inputFileName) { }
+
+        private static void UnpackWatchFace(string inputFileName)
+        {
+            var outputDirectory = CreateOutputDirectory(inputFileName);
+            var baseName = Path.GetFileNameWithoutExtension(inputFileName);
+            SetupLogger(Path.Combine(outputDirectory, $"{baseName}.log"));
 
             var reader = ReadWatchFace(inputFileName);
             if (reader == null) return;
@@ -32,11 +50,9 @@ namespace WatchFace.Cmd
             var watchFace = ParseResources(reader);
             if (watchFace == null) return;
 
-            var outputDirectory = CreateOutputDirectory(inputFileName);
-
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             ExportImages(reader, outputDirectory);
-            ExportConfig(watchFace, outputDirectory);
+            ExportConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
         }
 
         private static Reader ReadWatchFace(string inputFileName)
@@ -77,7 +93,7 @@ namespace WatchFace.Cmd
         {
             var path = Path.GetDirectoryName(originalFileName);
             var name = Path.GetFileNameWithoutExtension(originalFileName);
-            var unpackedPath = Path.Combine(path, $"{name}_unpacked");
+            var unpackedPath = Path.Combine(path, $"{name}");
             if (!Directory.Exists(unpackedPath)) Directory.CreateDirectory(unpackedPath);
             return unpackedPath;
         }
@@ -100,13 +116,12 @@ namespace WatchFace.Cmd
             }
         }
 
-        private static void ExportConfig(WatchFace watchFace, string outputDirectory)
+        private static void ExportConfig(WatchFace watchFace, string jsonFileName)
         {
-            var configFileName = Path.Combine(outputDirectory, "config.json");
             Logger.Debug("Exporting config...");
             try
             {
-                using (var fileStream = File.OpenWrite(configFileName))
+                using (var fileStream = File.OpenWrite(jsonFileName))
                 using (var writer = new StreamWriter(fileStream))
                 {
                     writer.Write(JsonConvert.SerializeObject(watchFace, Formatting.Indented,
@@ -120,13 +135,23 @@ namespace WatchFace.Cmd
             }
         }
 
-        private static void SetupLogger(LogLevel logLevel)
+        private static void SetupLogger(string logFileName)
         {
             var config = new LoggingConfiguration();
-            var consoleTarget = new ColoredConsoleTarget();
+
+            var fileTarget = new FileTarget
+            {
+                FileName = logFileName,
+                Layout = "${message}"
+            };
+            config.AddTarget("file", fileTarget);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, fileTarget));
+
+            var consoleTarget = new ColoredConsoleTarget
+                {Layout = @"${message}"};
             config.AddTarget("console", consoleTarget);
-            var rule1 = new LoggingRule("*", logLevel, consoleTarget);
-            config.LoggingRules.Add(rule1);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
+
             LogManager.Configuration = config;
         }
     }
