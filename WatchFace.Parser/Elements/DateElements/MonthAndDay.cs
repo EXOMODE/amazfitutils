@@ -9,7 +9,7 @@ namespace WatchFace.Elements.DateElements
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public SeparateMonthAndDay Separate { get; set; }
-        public OneLineMonthAndDay Joined { get; set; }
+        public OneLineMonthAndDay OneLine { get; set; }
         public long Unknown3 { get; set; }
         public long Unknown4 { get; set; }
 
@@ -29,7 +29,7 @@ namespace WatchFace.Elements.DateElements
                         result.Separate = SeparateMonthAndDay.Parse(parameter.Children, currentPath);
                         break;
                     case 2:
-                        result.Joined = OneLineMonthAndDay.Parse(parameter.Children, currentPath);
+                        result.OneLine = OneLineMonthAndDay.Parse(parameter.Children, currentPath);
                         break;
                     case 3:
                         result.Unknown3 = parameter.Value;

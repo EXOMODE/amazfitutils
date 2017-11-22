@@ -12,7 +12,7 @@ namespace WatchFace.Elements.BasicElements
         public long TopLeftY { get; set; }
         public long BottomRightX { get; set; }
         public long BottomRightY { get; set; }
-        public long Unknown5 { get; set; }
+        public long Alignment { get; set; }
         public long Unknown6 { get; set; }
         public long ImageIndex { get; set; }
         public long ImagesCount { get; set; }
@@ -40,7 +40,7 @@ namespace WatchFace.Elements.BasicElements
                         result.BottomRightY = parameter.Value;
                         break;
                     case 5:
-                        result.Unknown5 = parameter.Value;
+                        result.Alignment = parameter.Value;
                         break;
                     case 6:
                         result.Unknown6 = parameter.Value;
