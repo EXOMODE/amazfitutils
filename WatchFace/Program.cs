@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.IO;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using SixLabors.ImageSharp;
 using WatchFace.Utils;
 
 namespace WatchFace
@@ -131,7 +131,7 @@ namespace WatchFace
                 var index = 0;
                 foreach (var image in reader.Images)
                 {
-                    image.Save(Path.Combine(outputDirectory, $"{index}.bmp"));
+                    image.Save(Path.Combine(outputDirectory, $"{index}.bmp"), ImageFormat.Bmp);
                     index++;
                 }
             }

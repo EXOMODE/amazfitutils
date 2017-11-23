@@ -1,21 +1,98 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>WatchFace.Parser</AssemblyName>
-    <RootNamespace>WatchFace.Parser</RootNamespace>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8D2E0224-DE7F-4EC9-AD23-9904B9D7B409}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WatchFace.Parser.Net</RootNamespace>
+    <AssemblyName>WatchFace.Parser.Net</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NLog" Version="4.4.12" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\.nuget\packages\newtonsoft.json\10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Include="Elements\Activity.cs" />
+    <Compile Include="Elements\ActivityElements\FormattedNumber.cs" />
+    <Compile Include="Elements\AnalogDialFace.cs" />
+    <Compile Include="Elements\Background.cs" />
+    <Compile Include="Elements\BasicElements\CircleScale.cs" />
+    <Compile Include="Elements\BasicElements\ClockHand.cs" />
+    <Compile Include="Elements\BasicElements\Coordinates.cs" />
+    <Compile Include="Elements\BasicElements\Image.cs" />
+    <Compile Include="Elements\BasicElements\ImageSet.cs" />
+    <Compile Include="Elements\BasicElements\Number.cs" />
+    <Compile Include="Elements\BasicElements\Scale.cs" />
+    <Compile Include="Elements\Battery.cs" />
+    <Compile Include="Elements\Date.cs" />
+    <Compile Include="Elements\DateElements\MonthAndDay.cs" />
+    <Compile Include="Elements\DateElements\OneLineMonthAndDay.cs" />
+    <Compile Include="Elements\DateElements\SeparateMonthAndDay.cs" />
+    <Compile Include="Elements\Scales.cs" />
+    <Compile Include="Elements\Status.cs" />
+    <Compile Include="Elements\StatusElements\Flag.cs" />
+    <Compile Include="Elements\StatusElements\Switch.cs" />
+    <Compile Include="Elements\Time.cs" />
+    <Compile Include="Elements\TimeElements\AmPm.cs" />
+    <Compile Include="Elements\TimeElements\TwoDigits.cs" />
+    <Compile Include="Elements\Weather.cs" />
+    <Compile Include="Elements\WeatherElements\AirPollution.cs" />
+    <Compile Include="Elements\WeatherElements\OneLineTemperature.cs" />
+    <Compile Include="Elements\WeatherElements\SeparateTemperature.cs" />
+    <Compile Include="Elements\WeatherElements\Temperature.cs" />
+    <Compile Include="Elements\WeatherElements\TemperatureNumber.cs" />
+    <Compile Include="Elements\WeatherElements\TodayTemperature.cs" />
+    <Compile Include="Elements\WeatherElements\WeatherIcon.cs" />
+    <Compile Include="ImageReader.cs" />
+    <Compile Include="InvalidParameterException.cs" />
+    <Compile Include="JsonConverters\HexStringJsonConverter.cs" />
+    <Compile Include="Models\Header.cs" />
+    <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\ParameterFlags.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reader.cs" />
+    <Compile Include="Utils\BitReader.cs" />
+    <Compile Include="Utils\BitWriter.cs" />
+    <Compile Include="Utils\ParametersConverter.cs" />
+    <Compile Include="Utils\RawParameterAttribute.cs" />
+    <Compile Include="WatchFace.cs" />
+    <Compile Include="Writer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

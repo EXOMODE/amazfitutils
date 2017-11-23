@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using SixLabors.ImageSharp;
 using WatchFace.Utils;
 
 namespace WatchFace
@@ -11,7 +11,7 @@ namespace WatchFace
         private readonly BinaryReader _reader;
         private ushort _bitsPerPixel;
         private ushort _height;
-        private List<Rgba32> _palette;
+        private List<Color> _palette;
         private ushort _paletteColors;
         private ushort _rowLengthInBytes;
         private ushort _transp;
@@ -22,7 +22,7 @@ namespace WatchFace
             _reader = new BinaryReader(stream);
         }
 
-        public Image<Rgba32> Read()
+        public Bitmap Read()
         {
             var signature = _reader.ReadChars(4);
             if (signature[0] != 'B' || signature[1] != 'M')
@@ -45,7 +45,7 @@ namespace WatchFace
 
         private void ReadPalette()
         {
-            _palette = new List<Rgba32>(_paletteColors);
+            _palette = new List<Color>(_paletteColors);
             for (var i = 0; i < _paletteColors; i++)
             {
                 var r = _reader.ReadByte();
@@ -53,13 +53,13 @@ namespace WatchFace
                 var b = _reader.ReadByte();
                 var a = _reader.ReadByte();
 
-                _palette.Add(new Rgba32 {A = a, R = r, G = g, B = b});
+                _palette.Add(Color.FromArgb(a, r, g, b));
             }
         }
 
-        private Image<Rgba32> ReadImage()
+        private Bitmap ReadImage()
         {
-            var image = new Image<Rgba32>(_width, _height);
+            var image = new Bitmap(_width, _height);
 
             for (var i = 0; i < _height; i++)
             {
@@ -69,7 +69,7 @@ namespace WatchFace
                 {
                     var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
                     var color = _palette[(int) pixelColorIndex];
-                    image[j, i] = color;
+                    image.SetPixel(j, i, color);
                 }
             }
             return image;

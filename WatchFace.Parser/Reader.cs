@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NLog;
-using SixLabors.ImageSharp;
+using System.Drawing;
 using WatchFace.Models;
 
 namespace WatchFace
@@ -19,7 +19,7 @@ namespace WatchFace
         }
 
         public List<Parameter> Resources { get; private set; }
-        public List<Image<Rgba32>> Images { get; private set; }
+        public List<Bitmap> Images { get; private set; }
 
         public void Read()
         {
@@ -75,7 +75,7 @@ namespace WatchFace
 
             var imagesOffset = _fileStream.Position;
 
-            Images = new List<Image<Rgba32>>((int) imagesTableLength);
+            Images = new List<Bitmap>((int) imagesTableLength);
             for (var i = 0; i < (int) imagesTableLength; i++)
             {
                 var imageOffset = BitConverter.ToUInt32(imagesOffsets, i * 4) + imagesOffset;
