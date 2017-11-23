@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using WatchFace.JsonConverters;
-using WatchFace.Utils;
+using WatchFace.Parser.JsonConverters;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements.BasicElements
+namespace WatchFace.Parser.Elements.BasicElements
 {
     public class ClockHand
     {

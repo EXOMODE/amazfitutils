@@ -5,7 +5,7 @@ using System.Text;
 using NLog;
 using NLog.Internal;
 
-namespace WatchFace.Models
+namespace WatchFace.Parser.Models
 {
     public class Parameter
     {

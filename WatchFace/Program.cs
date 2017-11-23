@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using WatchFace.Utils;
+using WatchFace.Parser.Utils;
+using WatchFace.Parser;
 
 namespace WatchFace
 {
@@ -62,7 +63,7 @@ namespace WatchFace
             ExportConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
         }
 
-        private static void WriteWatchFace(string outputFileName, WatchFace watchFace)
+        private static void WriteWatchFace(string outputFileName, Parser.WatchFace watchFace)
         {
             Logger.Debug("Writing watch face to '{0}'", outputFileName);
             try
@@ -100,12 +101,12 @@ namespace WatchFace
             }
         }
 
-        private static WatchFace ParseResources(Reader reader)
+        private static Parser.WatchFace ParseResources(Reader reader)
         {
             Logger.Debug("Parsing parameters...");
             try
             {
-                return ParametersConverter.Parse<WatchFace>(reader.Resources);
+                return ParametersConverter.Parse<Parser.WatchFace>(reader.Resources);
             }
             catch (Exception e)
             {
@@ -141,7 +142,7 @@ namespace WatchFace
             }
         }
 
-        private static WatchFace ReadConfig(string jsonFileName)
+        private static Parser.WatchFace ReadConfig(string jsonFileName)
         {
             Logger.Debug("Reading config...");
             try
@@ -149,7 +150,7 @@ namespace WatchFace
                 using (var fileStream = File.OpenRead(jsonFileName))
                 using (var reader = new StreamReader(fileStream))
                 {
-                    return JsonConvert.DeserializeObject<WatchFace>(reader.ReadToEnd());
+                    return JsonConvert.DeserializeObject<Parser.WatchFace>(reader.ReadToEnd());
                 }
             }
             catch (Exception e)
@@ -159,7 +160,7 @@ namespace WatchFace
             }
         }
 
-        private static void ExportConfig(WatchFace watchFace, string jsonFileName)
+        private static void ExportConfig(Parser.WatchFace watchFace, string jsonFileName)
         {
             Logger.Debug("Exporting config...");
             try

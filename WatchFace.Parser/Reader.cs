@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using NLog;
 using System.Drawing;
-using WatchFace.Models;
+using WatchFace.Parser.Models;
 
-namespace WatchFace
+namespace WatchFace.Parser
 {
     public class Reader
     {

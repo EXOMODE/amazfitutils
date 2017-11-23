@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NLog;
-using WatchFace.Models;
+using WatchFace.Parser.Models;
 
-namespace WatchFace.Utils
+namespace WatchFace.Parser.Utils
 {
     public class ParametersConverter
     {

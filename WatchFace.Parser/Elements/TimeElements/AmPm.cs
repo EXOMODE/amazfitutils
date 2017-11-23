@@ -1,6 +1,6 @@
-﻿using WatchFace.Utils;
+﻿using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements.TimeElements
+namespace WatchFace.Parser.Elements.TimeElements
 {
     public class AmPm
     {

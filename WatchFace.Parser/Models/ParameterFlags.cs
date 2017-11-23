@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WatchFace.Models
+namespace WatchFace.Parser.Models
 {
     [Flags]
     public enum ParameterFlags
