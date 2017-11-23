@@ -1,8 +1,7 @@
-﻿using WatchFace.Elements.BasicElements;
-using WatchFace.Elements.TimeElements;
-using WatchFace.Utils;
+﻿using WatchFace.Parser.Elements.TimeElements;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements
+namespace WatchFace.Parser.Elements
 {
     public class Time
     {

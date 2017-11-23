@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using WatchFace.Utils;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements.BasicElements
+namespace WatchFace.Parser.Elements.BasicElements
 {
     public class Scale
     {

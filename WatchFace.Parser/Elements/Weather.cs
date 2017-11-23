@@ -1,7 +1,7 @@
-﻿using WatchFace.Elements.WeatherElements;
-using WatchFace.Utils;
+﻿using WatchFace.Parser.Elements.WeatherElements;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements
+namespace WatchFace.Parser.Elements
 {
     public class Weather
     {

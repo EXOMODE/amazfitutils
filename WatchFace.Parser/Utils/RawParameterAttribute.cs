@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WatchFace.Utils
+namespace WatchFace.Parser.Utils
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class RawParameterAttribute : Attribute

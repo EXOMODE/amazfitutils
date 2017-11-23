@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using NLog;
-using WatchFace.Utils;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace
+namespace WatchFace.Parser
 {
     public class Writer
     {

@@ -1,7 +1,7 @@
-﻿using WatchFace.Elements;
-using WatchFace.Utils;
+﻿using WatchFace.Parser.Elements;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace
+namespace WatchFace.Parser
 {
     public class WatchFace
     {

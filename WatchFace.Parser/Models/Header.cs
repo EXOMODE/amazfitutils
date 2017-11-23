@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace WatchFace.Models
+namespace WatchFace.Parser.Models
 {
     public class Header
     {

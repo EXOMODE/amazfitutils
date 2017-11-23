@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace WatchFace.JsonConverters
+namespace WatchFace.Parser.JsonConverters
 {
     public class HexStringJsonConverter : JsonConverter
     {

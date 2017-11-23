@@ -1,6 +1,6 @@
-﻿using WatchFace.Utils;
+﻿using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements.WeatherElements
+namespace WatchFace.Parser.Elements.WeatherElements
 {
     public class TodayTemperature
     {

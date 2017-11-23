@@ -1,7 +1,7 @@
-﻿using WatchFace.Elements.BasicElements;
-using WatchFace.Utils;
+﻿using WatchFace.Parser.Elements.BasicElements;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements
+namespace WatchFace.Parser.Elements
 {
     public class Battery
     {

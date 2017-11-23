@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using WatchFace.Utils;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace
+namespace WatchFace.Parser
 {
     public class ImageReader
     {

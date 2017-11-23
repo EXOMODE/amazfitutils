@@ -1,6 +1,6 @@
-﻿using WatchFace.Utils;
+﻿using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements.DateElements
+namespace WatchFace.Parser.Elements.DateElements
 {
     public class MonthAndDay
     {

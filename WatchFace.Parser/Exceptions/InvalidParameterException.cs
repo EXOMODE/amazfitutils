@@ -1,5 +1,5 @@
 ﻿using System;
-using WatchFace.Models;
+using WatchFace.Parser.Models;
 
 namespace WatchFace
 {

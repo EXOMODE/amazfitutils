@@ -1,7 +1,7 @@
-﻿using WatchFace.Elements.StatusElements;
-using WatchFace.Utils;
+﻿using WatchFace.Parser.Elements.StatusElements;
+using WatchFace.Parser.Utils;
 
-namespace WatchFace.Elements
+namespace WatchFace.Parser.Elements
 {
     public class Status
     {
