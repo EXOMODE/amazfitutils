@@ -1,44 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using NLog;
-using WatchFace.Elements.BasicElements;
-using WatchFace.Models;
+﻿using WatchFace.Elements.BasicElements;
+using WatchFace.Utils;
 
 namespace WatchFace.Elements
 {
     public class AnalogDialFace
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        [RawParameter(Id = 1)]
         public ClockHand Hours { get; set; }
+
+        [RawParameter(Id = 2)]
         public ClockHand Minutes { get; set; }
+
+        [RawParameter(Id = 3)]
         public ClockHand Seconds { get; set; }
-
-        public static AnalogDialFace Parse(List<Parameter> descriptor, string path)
-        {
-            Logger.Trace("Reading {0}", path);
-            if (descriptor == null)
-                throw new ArgumentNullException(nameof(descriptor));
-
-            var result = new AnalogDialFace();
-            foreach (var parameter in descriptor)
-            {
-                var currentPath = string.Concat(path, '.', parameter.Id.ToString());
-                switch (parameter.Id)
-                {
-                    case 1:
-                        result.Hours = ClockHand.Parse(parameter.Children, currentPath);
-                        break;
-                    case 2:
-                        result.Minutes = ClockHand.Parse(parameter.Children, currentPath);
-                        break;
-                    case 3:
-                        result.Seconds = ClockHand.Parse(parameter.Children, currentPath);
-                        break;
-                    default:
-                        throw new InvalidParameterException(parameter, path);
-                }
-            }
-            return result;
-        }
     }
 }

@@ -1,60 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using NLog;
-using WatchFace.Models;
+﻿using WatchFace.Utils;
 
 namespace WatchFace.Elements.BasicElements
 {
     public class Number
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        [RawParameter(Id = 1)]
         public long TopLeftX { get; set; }
+
+        [RawParameter(Id = 2)]
         public long TopLeftY { get; set; }
+
+        [RawParameter(Id = 3)]
         public long BottomRightX { get; set; }
+
+        [RawParameter(Id = 4)]
         public long BottomRightY { get; set; }
+
+        [RawParameter(Id = 5)]
         public long Alignment { get; set; }
+
+        [RawParameter(Id = 6)]
         public long Unknown6 { get; set; }
+
+        [RawParameter(Id = 7)]
         public long ImageIndex { get; set; }
+
+        [RawParameter(Id = 8)]
         public long ImagesCount { get; set; }
-
-        public static Number Parse(List<Parameter> descriptor, string path)
-        {
-            Logger.Trace("Reading {0}", path);
-            if (descriptor == null)
-                throw new ArgumentNullException(nameof(descriptor));
-
-            var result = new Number();
-            foreach (var parameter in descriptor)
-                switch (parameter.Id)
-                {
-                    case 1:
-                        result.TopLeftX = parameter.Value;
-                        break;
-                    case 2:
-                        result.TopLeftY = parameter.Value;
-                        break;
-                    case 3:
-                        result.BottomRightX = parameter.Value;
-                        break;
-                    case 4:
-                        result.BottomRightY = parameter.Value;
-                        break;
-                    case 5:
-                        result.Alignment = parameter.Value;
-                        break;
-                    case 6:
-                        result.Unknown6 = parameter.Value;
-                        break;
-                    case 7:
-                        result.ImageIndex = parameter.Value;
-                        break;
-                    case 8:
-                        result.ImagesCount = parameter.Value;
-                        break;
-                    default:
-                        throw new InvalidParameterException(parameter, path);
-                }
-            return result;
-        }
     }
 }

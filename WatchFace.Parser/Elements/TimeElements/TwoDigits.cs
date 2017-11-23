@@ -2,12 +2,12 @@
 
 namespace WatchFace.Elements.BasicElements
 {
-    public class Coordinates
+    public class TwoDigits
     {
         [RawParameter(Id = 1)]
-        public long X { get; set; }
+        public ImageSet Tens { get; set; }
 
         [RawParameter(Id = 2)]
-        public long Y { get; set; }
+        public ImageSet Ones { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace WatchFace.Models
     public enum ParameterFlags
     {
         Unknown = 1,
-        hasChildren = 2,
+        HasChildren = 2,
         Unknown2 = 4
     }
 }

@@ -5,6 +5,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using SixLabors.ImageSharp;
+using WatchFace.Utils;
 
 namespace WatchFace
 {
@@ -30,13 +31,19 @@ namespace WatchFace
                 return;
             }
 
-            if (Path.GetExtension(inputFileName) == "json")
+            if (Path.GetExtension(inputFileName) == ".json")
                 PackWatchFace(inputFileName);
             else
                 UnpackWatchFace(inputFileName);
         }
 
-        private static void PackWatchFace(string inputFileName) { }
+        private static void PackWatchFace(string inputFileName)
+        {
+            var watchFace = ReadConfig(inputFileName);
+            var outputFileName = Path.ChangeExtension(inputFileName, "bin");
+            SetupLogger(Path.ChangeExtension(outputFileName, ".log"));
+            WriteWatchFace(outputFileName, watchFace);
+        }
 
         private static void UnpackWatchFace(string inputFileName)
         {
@@ -53,6 +60,24 @@ namespace WatchFace
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             ExportImages(reader, outputDirectory);
             ExportConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
+        }
+
+        private static void WriteWatchFace(string outputFileName, WatchFace watchFace)
+        {
+            Logger.Debug("Writing watch face to '{0}'", outputFileName);
+            try
+            {
+                using (var fileStream = File.OpenWrite(outputFileName))
+                {
+                    var writer = new Writer(fileStream);
+                    writer.Write(watchFace);
+                    fileStream.Flush();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+            }
         }
 
         private static Reader ReadWatchFace(string inputFileName)
@@ -80,7 +105,7 @@ namespace WatchFace
             Logger.Debug("Parsing parameters...");
             try
             {
-                return WatchFace.Parse(reader.Resources);
+                return ParametersConverter.Parse<WatchFace>(reader.Resources);
             }
             catch (Exception e)
             {
@@ -113,6 +138,24 @@ namespace WatchFace
             catch (Exception e)
             {
                 Logger.Fatal(e);
+            }
+        }
+
+        private static WatchFace ReadConfig(string jsonFileName)
+        {
+            Logger.Debug("Reading config...");
+            try
+            {
+                using (var fileStream = File.OpenRead(jsonFileName))
+                using (var reader = new StreamReader(fileStream))
+                {
+                    return JsonConvert.DeserializeObject<WatchFace>(reader.ReadToEnd());
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+                return null;
             }
         }
 

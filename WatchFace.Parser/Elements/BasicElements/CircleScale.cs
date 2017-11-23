@@ -1,64 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using NLog;
+﻿using Newtonsoft.Json;
 using WatchFace.JsonConverters;
-using WatchFace.Models;
+using WatchFace.Utils;
 
 namespace WatchFace.Elements.BasicElements
 {
     public class CircleScale
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        [RawParameter(Id = 1)]
         public long CenterX { get; set; }
+
+        [RawParameter(Id = 2)]
         public long CenterY { get; set; }
+
+        [RawParameter(Id = 3)]
         public long RadiusX { get; set; }
+
+        [RawParameter(Id = 4)]
         public long RadiusY { get; set; }
+
+        [RawParameter(Id = 5)]
         public long StartAngle { get; set; }
+
+        [RawParameter(Id = 6)]
         public long EndAngle { get; set; }
+
+        [RawParameter(Id = 7)]
         public long Width { get; set; }
 
         [JsonConverter(typeof(HexStringJsonConverter))]
+        [RawParameter(Id = 8)]
         public long Color { get; set; }
-
-        public static CircleScale Parse(List<Parameter> descriptor, string path)
-        {
-            Logger.Trace("Reading {0}", path);
-            if (descriptor == null)
-                throw new ArgumentNullException(nameof(descriptor));
-
-            var result = new CircleScale();
-            foreach (var parameter in descriptor)
-                switch (parameter.Id)
-                {
-                    case 1:
-                        result.CenterX = parameter.Value;
-                        break;
-                    case 2:
-                        result.CenterY = parameter.Value;
-                        break;
-                    case 3:
-                        result.RadiusX = parameter.Value;
-                        break;
-                    case 4:
-                        result.RadiusY = parameter.Value;
-                        break;
-                    case 5:
-                        result.StartAngle = parameter.Value;
-                        break;
-                    case 6:
-                        result.EndAngle = parameter.Value;
-                        break;
-                    case 7:
-                        result.Width = parameter.Value;
-                        break;
-                    case 8:
-                        result.Color = parameter.Value;
-                        break;
-                    default:
-                        throw new InvalidParameterException(parameter, path);
-                }
-            return result;
-        }
     }
 }

@@ -1,44 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using NLog;
-using WatchFace.Models;
+﻿using WatchFace.Utils;
 
 namespace WatchFace.Elements.TimeElements
 {
     public class AmPm
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        [RawParameter(Id = 4)]
         public long ImageIndexPm { get; set; }
+
+        [RawParameter(Id = 3)]
         public long ImageIndexAm { get; set; }
+
+        [RawParameter(Id = 1)]
         public long X { get; set; }
+
+        [RawParameter(Id = 2)]
         public long Y { get; set; }
-
-        public static AmPm Parse(List<Parameter> descriptor, string path)
-        {
-            Logger.Trace("Reading {0}", path);
-            if (descriptor == null)
-                throw new ArgumentNullException(nameof(descriptor));
-
-            var result = new AmPm();
-            foreach (var parameter in descriptor)
-                switch (parameter.Id)
-                {
-                    case 1:
-                        result.X = parameter.Value;
-                        break;
-                    case 2:
-                        result.Y = parameter.Value;
-                        break;
-                    case 3:
-                        result.ImageIndexAm = parameter.Value;
-                        break;
-                    case 4:
-                        result.ImageIndexPm = parameter.Value;
-                        break;
-                    default:
-                        throw new InvalidParameterException(parameter, path);
-                }
-            return result;
-        }
     }
 }
