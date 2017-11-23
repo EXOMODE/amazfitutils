@@ -48,6 +48,10 @@ namespace WatchFace.Utils
 
                 if (propertyType == typeof(long))
                 {
+                    dynamic propertyValue = propertyInfo.GetValue(result);
+                    if (propertyValue != 0)
+                        throw new DuplicateParameterException(parameter, path);
+
                     propertyInfo.SetValue(result, parameter.Value);
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
@@ -58,19 +62,37 @@ namespace WatchFace.Utils
                         propertyValue = Activator.CreateInstance(propertyType);
                         propertyInfo.SetValue(result, propertyValue);
                     }
-                        
-                    var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
-                    var itemType = propertyType.GetGenericArguments()[0];
-                    var generic = method.MakeGenericMethod(itemType);
-                    dynamic parsedValue = generic.Invoke(null, new dynamic[] {parameter.Children, currentPath});
-                    propertyValue.Add(parsedValue);
+
+                    try
+                    {
+                        var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
+                        var itemType = propertyType.GetGenericArguments()[0];
+                        var generic = method.MakeGenericMethod(itemType);
+                        dynamic parsedValue = generic.Invoke(null, new dynamic[] {parameter.Children, currentPath});
+                        propertyValue.Add(parsedValue);
+                    }
+                    catch (TargetInvocationException e)
+                    {
+                        throw e.InnerException;
+                    }
                 }
                 else
                 {
-                    var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
-                    var generic = method.MakeGenericMethod(propertyType);
-                    dynamic parsedValue = generic.Invoke(null, new dynamic[] {parameter.Children, currentPath});
-                    propertyInfo.SetValue(result, parsedValue);
+                    dynamic propertyValue = propertyInfo.GetValue(result);
+                    if (propertyValue != null)
+                        throw new DuplicateParameterException(parameter, path);
+
+                    try
+                    {
+                        var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
+                        var generic = method.MakeGenericMethod(propertyType);
+                        dynamic parsedValue = generic.Invoke(null, new dynamic[] {parameter.Children, currentPath});
+                        propertyInfo.SetValue(result, parsedValue);
+                    }
+                    catch (TargetInvocationException e)
+                    {
+                        throw e.InnerException;
+                    }
                 }
             }
             return result;

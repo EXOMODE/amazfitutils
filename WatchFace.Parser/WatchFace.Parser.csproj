@@ -76,8 +76,9 @@
     <Compile Include="Elements\WeatherElements\TemperatureNumber.cs" />
     <Compile Include="Elements\WeatherElements\TodayTemperature.cs" />
     <Compile Include="Elements\WeatherElements\WeatherIcon.cs" />
+    <Compile Include="Exceptions\DuplicateParameterException.cs" />
     <Compile Include="ImageReader.cs" />
-    <Compile Include="InvalidParameterException.cs" />
+    <Compile Include="Exceptions\InvalidParameterException.cs" />
     <Compile Include="JsonConverters\HexStringJsonConverter.cs" />
     <Compile Include="Models\Header.cs" />
     <Compile Include="Models\Parameter.cs" />
