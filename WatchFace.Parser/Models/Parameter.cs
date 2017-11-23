@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NLog;
@@ -90,6 +91,9 @@ namespace WatchFace.Models
             var rawId = fileStream.ReadByte();
             var id = (byte) ((rawId & 0xf8) >> 3);
             var flags = (ParameterFlags) (rawId & 0x7);
+
+            if (id == 0)
+                throw new ArgumentException("Parameter with zero Id is invalid.");
 
             var value = ReadValue(fileStream);
             if (flags.HasFlag(ParameterFlags.HasChildren))
