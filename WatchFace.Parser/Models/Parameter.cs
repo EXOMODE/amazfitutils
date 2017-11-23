@@ -88,7 +88,7 @@ namespace WatchFace.Models
 
         public static Parameter ReadFrom(Stream fileStream, int traceOffset = 0)
         {
-            var rawId = fileStream.ReadByte();
+            var rawId = ReadByte(fileStream);
             var id = (byte) ((rawId & 0xf8) >> 3);
             var flags = (ParameterFlags) (rawId & 0x7);
 
@@ -112,18 +112,31 @@ namespace WatchFace.Models
 
         private static long ReadValue(Stream fileStream)
         {
+            var bytesLength = 0;
             long value = 0;
             var offset = 0;
 
-            var currentByte = fileStream.ReadByte();
+            var currentByte = ReadByte(fileStream);
+            bytesLength += 1;
             while ((currentByte & 0x80) > 0)
             {
+                if (bytesLength > 9)
+                    throw new ArgumentException("Value of the parameter too long.");
                 value = value | ((long) (currentByte & 0x7f) << offset);
                 offset += 7;
-                currentByte = fileStream.ReadByte();
+                currentByte = ReadByte(fileStream);
+                bytesLength += 1;
             }
             value = value | ((long) (currentByte & 0x7f) << offset);
             return value;
+        }
+
+        private static byte ReadByte(Stream stream)
+        {
+            var currentByte = stream.ReadByte();
+            if (currentByte == -1)
+                throw new ArgumentException("Reading buffer is empty.");
+            return (byte) currentByte;
         }
 
         private static string TraceWithOffset(string message, int offset)
