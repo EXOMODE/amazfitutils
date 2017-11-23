@@ -7,8 +7,8 @@
     <ProjectGuid>{8D2E0224-DE7F-4EC9-AD23-9904B9D7B409}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WatchFace.Parser.Net</RootNamespace>
-    <AssemblyName>WatchFace.Parser.Net</AssemblyName>
+    <RootNamespace>WatchFace.Parser</RootNamespace>
+    <AssemblyName>WatchFace.Parser</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
