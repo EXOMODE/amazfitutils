@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using WatchFace.Parser.Utils;
 
-namespace WatchFace.Parser
+namespace Resources
 {
     public class ImageReader
     {
@@ -26,7 +25,7 @@ namespace WatchFace.Parser
         {
             var signature = _reader.ReadChars(4);
             if (signature[0] != 'B' || signature[1] != 'M')
-                throw new ArgumentOutOfRangeException("signature", "Signature doesn't match.");
+                throw new ArgumentException("Image signature doesn't match.");
 
             ReadHeader();
             ReadPalette();

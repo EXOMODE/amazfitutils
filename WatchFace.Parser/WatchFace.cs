@@ -21,7 +21,7 @@ namespace WatchFace.Parser
         public Weather Weather { get; set; }
 
         [RawParameter(Id = 7)]
-        public Scales Scales { get; set; }
+        public StepsProgress StepsProgress { get; set; }
 
         [RawParameter(Id = 8)]
         public Status Status { get; set; }

@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using WatchFace.Parser.Utils;
+using Resources;
 using WatchFace.Parser;
+using WatchFace.Parser.Utils;
 
 namespace WatchFace
 {
@@ -21,21 +24,47 @@ namespace WatchFace
             if (args.Length == 0 || args[0] == null)
             {
                 Console.WriteLine("{0} unpacks Amazfit Bip downloadable watch faces.", AppName);
-                Console.WriteLine("Usage: {0}.exe watchface.bin", AppName);
+                Console.WriteLine("Usage: {0}.exe wf.bin [wf2.bin] ...", AppName);
                 return;
             }
 
-            var inputFileName = args[0];
-            if (!File.Exists(inputFileName))
+            if (args.Length > 0)
+                Console.WriteLine("Multiple files unpacking.");
+
+            foreach (var inputFileName in args)
             {
-                Console.WriteLine("File '{0}' doesn't exists.", inputFileName);
-                return;
-            }
+                if (!File.Exists(inputFileName))
+                {
+                    Console.WriteLine("File '{0}' doesn't exists.", inputFileName);
+                    continue;
+                }
 
-            if (Path.GetExtension(inputFileName) == ".json")
-                PackWatchFace(inputFileName);
-            else
-                UnpackWatchFace(inputFileName);
+                Console.WriteLine("Processing file '{0}'", inputFileName);
+                var inputFileExtension = Path.GetExtension(inputFileName);
+                try
+                {
+                    switch (inputFileExtension)
+                    {
+                        case ".bin":
+                            UnpackWatchFace(inputFileName);
+                            break;
+                        case ".json":
+                            PackWatchFace(inputFileName);
+                            break;
+                        case ".res":
+                            UnpackResources(inputFileName);
+                            break;
+                        default:
+                            Console.WriteLine("The app doesn't support files with extension {0}.", inputFileExtension);
+                            Console.WriteLine("Only 'bin', 'res' and 'json' files are supported at this time.");
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Fatal(e);
+                }
+            }
         }
 
         private static void PackWatchFace(string inputFileName)
@@ -59,8 +88,23 @@ namespace WatchFace
             if (watchFace == null) return;
 
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
-            ExportImages(reader, outputDirectory);
+            new ResourcesExtractor(reader.Images).Extract(outputDirectory);
             ExportConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
+        }
+
+        private static void UnpackResources(string inputFileName)
+        {
+            var outputDirectory = CreateOutputDirectory(inputFileName);
+            var baseName = Path.GetFileNameWithoutExtension(inputFileName);
+            SetupLogger(Path.Combine(outputDirectory, $"{baseName}.log"));
+
+            Bitmap[] images;
+            using (var stream = File.OpenRead(inputFileName))
+            {
+                images = new ResourcesFileReader(stream).Read();
+            }
+
+            new ResourcesExtractor(images).Extract(outputDirectory);
         }
 
         private static void WriteWatchFace(string outputFileName, Parser.WatchFace watchFace)
@@ -106,7 +150,7 @@ namespace WatchFace
             Logger.Debug("Parsing parameters...");
             try
             {
-                return ParametersConverter.Parse<Parser.WatchFace>(reader.Resources);
+                return ParametersConverter.Parse<Parser.WatchFace>(reader.Parameters);
             }
             catch (Exception e)
             {
@@ -122,24 +166,6 @@ namespace WatchFace
             var unpackedPath = Path.Combine(path, $"{name}");
             if (!Directory.Exists(unpackedPath)) Directory.CreateDirectory(unpackedPath);
             return unpackedPath;
-        }
-
-        private static void ExportImages(Reader reader, string outputDirectory)
-        {
-            Logger.Debug("Exporting images...");
-            try
-            {
-                var index = 0;
-                foreach (var image in reader.Images)
-                {
-                    image.Save(Path.Combine(outputDirectory, $"{index}.bmp"), ImageFormat.Bmp);
-                    index++;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Fatal(e);
-            }
         }
 
         private static Parser.WatchFace ReadConfig(string jsonFileName)

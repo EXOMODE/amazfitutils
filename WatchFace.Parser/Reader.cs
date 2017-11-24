@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using NLog;
-using System.Drawing;
+using Resources;
 using WatchFace.Parser.Models;
 
 namespace WatchFace.Parser
@@ -18,8 +18,8 @@ namespace WatchFace.Parser
             _fileStream = streamReader;
         }
 
-        public List<Parameter> Resources { get; private set; }
-        public List<Bitmap> Images { get; private set; }
+        public List<Parameter> Parameters { get; private set; }
+        public Bitmap[] Images { get; private set; }
 
         public void Read()
         {
@@ -38,51 +38,36 @@ namespace WatchFace.Parser
             Logger.Trace("Reading parameters descriptor...");
             var mainParam = Parameter.ReadFrom(parametersStream);
             Logger.Trace("Parameters descriptor was read:");
-            var coordinatesTableSize = mainParam.Children[0].Value;
-            var imagesTableLength = mainParam.Children[1].Value;
-            Logger.Trace($"CoordinatesTableSize: {coordinatesTableSize}, ImagesTableLength: {imagesTableLength}");
+            var parametrsTableLength = mainParam.Children[0].Value;
+            var imagesCount = mainParam.Children[1].Value;
+            Logger.Trace($"ParametrsTableLength: {parametrsTableLength}, ImagesCount: {imagesCount}");
 
-            Logger.Trace("Reading face parameters...");
-            var parameters = Parameter.ReadList(parametersStream);
-            Logger.Trace("Watch face parameters were read:");
+            Logger.Trace("Reading parameters locations...");
+            var parametersLocations = Parameter.ReadList(parametersStream);
+            Logger.Trace("Watch face parameters locations were read:");
 
-            ParseResources(coordinatesTableSize, parameters);
-            ParseImages(imagesTableLength);
+            Parameters = ReadParameters(parametrsTableLength, parametersLocations);
+            Images = new ResourcesReader(_fileStream).Read((uint) imagesCount);
         }
 
-        private void ParseResources(long coordinatesTableSize, IReadOnlyCollection<Parameter> parameters)
+        private List<Parameter> ReadParameters(long coordinatesTableSize,
+            IReadOnlyCollection<Parameter> parametersDescriptors)
         {
-            var coordsStream = StreamBlock(_fileStream, (int) coordinatesTableSize);
+            var parametersStream = StreamBlock(_fileStream, (int) coordinatesTableSize);
 
-            Resources = new List<Parameter>(parameters.Count);
-            foreach (var parameter in parameters)
+            var result = new List<Parameter>(parametersDescriptors.Count);
+            foreach (var prameterDescriptor in parametersDescriptors)
             {
-                Logger.Trace("Reading descriptor for parameter {0}", parameter.Id);
-                var descriptorOffset = parameter.Children[0].Value;
-                var descriptorLength = parameter.Children[1].Value;
+                var descriptorOffset = prameterDescriptor.Children[0].Value;
+                var descriptorLength = prameterDescriptor.Children[1].Value;
+                Logger.Trace("Reading descriptor for parameter {0}", prameterDescriptor.Id);
                 Logger.Trace("Descriptor offset: {0}, Descriptor length: {1}", descriptorOffset, descriptorLength);
-                coordsStream.Seek(descriptorOffset, SeekOrigin.Begin);
-                var descriptorStream = StreamBlock(coordsStream, (int) descriptorLength);
-                Logger.Trace("Parsing descriptor for parameter {0}...", parameter.Id);
-                Resources.Add(new Parameter(parameter.Id, Parameter.ReadList(descriptorStream)));
+                parametersStream.Seek(descriptorOffset, SeekOrigin.Begin);
+                var descriptorStream = StreamBlock(parametersStream, (int) descriptorLength);
+                Logger.Trace("Parsing descriptor for parameter {0}...", prameterDescriptor.Id);
+                result.Add(new Parameter(prameterDescriptor.Id, Parameter.ReadList(descriptorStream)));
             }
-        }
-
-        private void ParseImages(long imagesTableLength)
-        {
-            var imagesOffsets = new byte[imagesTableLength * 4];
-            _fileStream.Read(imagesOffsets, 0, imagesOffsets.Length);
-
-            var imagesOffset = _fileStream.Position;
-
-            Images = new List<Bitmap>((int) imagesTableLength);
-            for (var i = 0; i < (int) imagesTableLength; i++)
-            {
-                var imageOffset = BitConverter.ToUInt32(imagesOffsets, i * 4) + imagesOffset;
-                _fileStream.Seek(imageOffset, SeekOrigin.Begin);
-                var image = new ImageReader(_fileStream).Read();
-                Images.Add(image);
-            }
+            return result;
         }
 
         private static Stream StreamBlock(Stream stream, int size)

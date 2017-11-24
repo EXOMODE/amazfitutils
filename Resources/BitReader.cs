@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace WatchFace.Parser.Utils
+namespace Resources
 {
     public class BitReader
     {

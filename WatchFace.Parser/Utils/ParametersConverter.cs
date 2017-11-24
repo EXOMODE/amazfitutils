@@ -31,26 +31,31 @@ namespace WatchFace.Parser.Utils
             return result;
         }
 
-        public static T Parse<T>(List<Parameter> descriptor, string path = "") where T : new()
+        public static T Parse<T>(List<Parameter> descriptor, string path = "", int traceOffset = 0) where T : new()
         {
             var properties = SortedPropertiesDictionary<T>();
-
             var result = new T();
-            Logger.Trace("Reading {0} {1}", typeof(T).Name, path);
+            var currentType = typeof(T);
+
+            if (!string.IsNullOrEmpty(path))
+                Logger.Trace("{0} '{1}'", path, currentType.Name);
             foreach (var parameter in descriptor)
             {
-                var currentPath = string.Concat(path, '.', parameter.Id.ToString());
-                var propertyInfo = properties[parameter.Id];
-                if (propertyInfo == null)
-                    throw new InvalidParameterException(parameter, path);
+                var currentPath = string.IsNullOrEmpty(path)
+                    ? parameter.Id.ToString()
+                    : string.Concat(path, '.', parameter.Id.ToString());
+                if (!properties.ContainsKey(parameter.Id))
+                    throw new ArgumentException($"Parameter {parameter.Id} isn't supported for {currentType.Name}");
 
+                var propertyInfo = properties[parameter.Id];
                 var propertyType = propertyInfo.PropertyType;
 
                 if (propertyType == typeof(long))
                 {
+                    Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, parameter.Value);
                     dynamic propertyValue = propertyInfo.GetValue(result);
                     if (propertyValue != 0)
-                        throw new DuplicateParameterException(parameter, path);
+                        throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
                     propertyInfo.SetValue(result, parameter.Value);
                 }
@@ -68,7 +73,8 @@ namespace WatchFace.Parser.Utils
                         var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
                         var itemType = propertyType.GetGenericArguments()[0];
                         var generic = method.MakeGenericMethod(itemType);
-                        dynamic parsedValue = generic.Invoke(null, new dynamic[] {parameter.Children, currentPath});
+                        dynamic parsedValue = generic.Invoke(null,
+                            new dynamic[] {parameter.Children, currentPath, traceOffset + 1});
                         propertyValue.Add(parsedValue);
                     }
                     catch (TargetInvocationException e)
@@ -80,13 +86,14 @@ namespace WatchFace.Parser.Utils
                 {
                     dynamic propertyValue = propertyInfo.GetValue(result);
                     if (propertyValue != null)
-                        throw new DuplicateParameterException(parameter, path);
+                        throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
                     try
                     {
                         var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
                         var generic = method.MakeGenericMethod(propertyType);
-                        dynamic parsedValue = generic.Invoke(null, new dynamic[] {parameter.Children, currentPath});
+                        dynamic parsedValue = generic.Invoke(null,
+                            new dynamic[] {parameter.Children, currentPath, traceOffset + 1});
                         propertyInfo.SetValue(result, parsedValue);
                     }
                     catch (TargetInvocationException e)

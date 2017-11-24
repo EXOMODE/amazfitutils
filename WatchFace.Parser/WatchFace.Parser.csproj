@@ -61,7 +61,7 @@
     <Compile Include="Elements\DateElements\MonthAndDay.cs" />
     <Compile Include="Elements\DateElements\OneLineMonthAndDay.cs" />
     <Compile Include="Elements\DateElements\SeparateMonthAndDay.cs" />
-    <Compile Include="Elements\Scales.cs" />
+    <Compile Include="Elements\StepsProgress.cs" />
     <Compile Include="Elements\Status.cs" />
     <Compile Include="Elements\StatusElements\Flag.cs" />
     <Compile Include="Elements\StatusElements\Switch.cs" />
@@ -76,16 +76,12 @@
     <Compile Include="Elements\WeatherElements\TemperatureNumber.cs" />
     <Compile Include="Elements\WeatherElements\TodayTemperature.cs" />
     <Compile Include="Elements\WeatherElements\WeatherIcon.cs" />
-    <Compile Include="Exceptions\DuplicateParameterException.cs" />
-    <Compile Include="ImageReader.cs" />
-    <Compile Include="Exceptions\InvalidParameterException.cs" />
     <Compile Include="JsonConverters\HexStringJsonConverter.cs" />
     <Compile Include="Models\Header.cs" />
     <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\ParameterFlags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="Utils\BitReader.cs" />
     <Compile Include="Utils\BitWriter.cs" />
     <Compile Include="Utils\ParametersConverter.cs" />
     <Compile Include="Utils\RawParameterAttribute.cs" />
@@ -94,6 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Resources\Resources.csproj">
+      <Project>{edd55d5d-9e80-451b-ac8a-0746ba6dc6e9}</Project>
+      <Name>Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
