@@ -4,10 +4,10 @@ namespace WatchFace.Parser.Elements.WeatherElements
 {
     public class Temperature
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public TemperatureNumber Current { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public TodayTemperature Today { get; set; }
     }
 }

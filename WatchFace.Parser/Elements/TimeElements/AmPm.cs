@@ -4,16 +4,18 @@ namespace WatchFace.Parser.Elements.TimeElements
 {
     public class AmPm
     {
-        [RawParameter(Id = 4)]
-        public long ImageIndexPm { get; set; }
-
-        [RawParameter(Id = 3)]
-        public long ImageIndexAm { get; set; }
-
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public long X { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public long Y { get; set; }
+
+        [ParameterId(3)]
+        [ParameterImageIndex]
+        public long ImageIndexAm { get; set; }
+
+        [ParameterId(4)]
+        [ParameterImageIndex]
+        public long ImageIndexPm { get; set; }
     }
 }

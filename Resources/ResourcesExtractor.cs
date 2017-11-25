@@ -20,9 +20,9 @@ namespace Resources
         {
             for (var i = 0; i < _images.Length; i++)
             {
-                var fileName = Path.Combine(outputDirectory, $"{i}.bmp");
+                var fileName = Path.Combine(outputDirectory, $"{i}.png");
                 Logger.Debug("Exporting {0}...", fileName);
-                _images[i].Save(fileName, ImageFormat.Bmp);
+                _images[i].Save(fileName, ImageFormat.Png);
             }
         }
     }

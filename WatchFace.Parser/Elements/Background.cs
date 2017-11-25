@@ -5,7 +5,7 @@ namespace WatchFace.Parser.Elements
 {
     public class Background
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Image Image { get; set; }
     }
 }

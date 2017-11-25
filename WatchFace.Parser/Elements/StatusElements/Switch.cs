@@ -5,13 +5,15 @@ namespace WatchFace.Parser.Elements.StatusElements
 {
     public class Switch
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Coordinates Coordinates { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
+        [ParameterImageIndex]
         public long ImageIndexOn { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
+        [ParameterImageIndex]
         public long ImageIndexOff { get; set; }
     }
 }

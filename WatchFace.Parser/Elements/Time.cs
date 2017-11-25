@@ -5,16 +5,16 @@ namespace WatchFace.Parser.Elements
 {
     public class Time
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public TwoDigits Hours { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public TwoDigits Minutes { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
         public TwoDigits Seconds { get; set; }
 
-        [RawParameter(Id = 4)]
+        [ParameterId(4)]
         public AmPm AmPm { get; set; }
     }
 }

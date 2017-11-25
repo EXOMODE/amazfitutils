@@ -5,31 +5,31 @@ namespace WatchFace.Parser
 {
     public class WatchFace
     {
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public Background Background { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
         public Time Time { get; set; }
 
-        [RawParameter(Id = 4)]
+        [ParameterId(4)]
         public Activity Activity { get; set; }
 
-        [RawParameter(Id = 5)]
+        [ParameterId(5)]
         public Date Date { get; set; }
 
-        [RawParameter(Id = 6)]
+        [ParameterId(6)]
         public Weather Weather { get; set; }
 
-        [RawParameter(Id = 7)]
+        [ParameterId(7)]
         public StepsProgress StepsProgress { get; set; }
 
-        [RawParameter(Id = 8)]
+        [ParameterId(8)]
         public Status Status { get; set; }
 
-        [RawParameter(Id = 9)]
+        [ParameterId(9)]
         public Battery Battery { get; set; }
 
-        [RawParameter(Id = 10)]
+        [ParameterId(10)]
         public AnalogDialFace AnalogDialFace { get; set; }
     }
 }

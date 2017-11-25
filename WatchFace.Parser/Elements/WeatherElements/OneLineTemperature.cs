@@ -5,19 +5,22 @@ namespace WatchFace.Parser.Elements.WeatherElements
 {
     public class OneLineTemperature
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Number Number { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
+        [ParameterImageIndex]
         public long MinusSignImageIndex { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
+        [ParameterImageIndex]
         public long DelimiterImageIndex { get; set; }
 
-        [RawParameter(Id = 4)]
+        [ParameterId(4)]
         public long AppendDegreesForBoth { get; set; }
 
-        [RawParameter(Id = 5)]
+        [ParameterId(5)]
+        [ParameterImageIndex]
         public long DegreesImageIndex { get; set; }
     }
 }

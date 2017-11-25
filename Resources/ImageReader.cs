@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using NLog;
 
 namespace Resources
 {
     public class ImageReader
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly BinaryReader _reader;
         private ushort _bitsPerPixel;
         private ushort _height;
-        private List<Color> _palette;
+        private Color[] _palette;
         private ushort _paletteColors;
         private ushort _rowLengthInBytes;
-        private ushort _transp;
+        private ushort _transparency;
         private ushort _width;
 
         public ImageReader(Stream stream)
@@ -34,25 +36,35 @@ namespace Resources
 
         private void ReadHeader()
         {
+            Logger.Trace("Reading image header...");
             _width = _reader.ReadUInt16();
             _height = _reader.ReadUInt16();
             _rowLengthInBytes = _reader.ReadUInt16();
             _bitsPerPixel = _reader.ReadUInt16();
             _paletteColors = _reader.ReadUInt16();
-            _transp = _reader.ReadUInt16();
+            _transparency = _reader.ReadUInt16();
+            Logger.Trace("Image header was read:");
+            Logger.Trace("Width: {0}, Height: {1}, RowLength: {2}", _width, _height, _rowLengthInBytes);
+            Logger.Trace("BPP: {0}, PaletteColors: {1}, Transaparency: {2}",
+                _bitsPerPixel, _paletteColors, _transparency
+            );
         }
 
         private void ReadPalette()
         {
-            _palette = new List<Color>(_paletteColors);
+            Logger.Trace("Reading palette...");
+            _palette = new Color[_paletteColors];
             for (var i = 0; i < _paletteColors; i++)
             {
                 var r = _reader.ReadByte();
                 var g = _reader.ReadByte();
                 var b = _reader.ReadByte();
                 var a = _reader.ReadByte();
+                Logger.Trace("Palette item {0}: R {1:x2}, G {2:x2}, B {3:x2}, A {4:x2}", i, r, g, b, a);
 
-                _palette.Add(Color.FromArgb(a, r, g, b));
+                var color = _transparency > 0 && i == 0 ? Color.Transparent : Color.FromArgb(0xff, r, g, b);
+
+                _palette[i] = color;
             }
         }
 

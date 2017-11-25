@@ -6,10 +6,10 @@ namespace WatchFace.Parser.Elements
 {
     public class Date
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public MonthAndDay MonthAndDay { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public ImageSet WeekDay { get; set; }
     }
 }

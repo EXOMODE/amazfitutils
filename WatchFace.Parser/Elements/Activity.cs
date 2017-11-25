@@ -6,19 +6,19 @@ namespace WatchFace.Parser.Elements
 {
     public class Activity
     {
-        [RawParameter(Id = 3)]
-        public Number Calories { get; set; }
-
-        [RawParameter(Id = 4)]
-        public Number Pulse { get; set; }
-
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Number Steps { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public Number StepsGoal { get; set; }
 
-        [RawParameter(Id = 5)]
+        [ParameterId(3)]
+        public Number Calories { get; set; }
+
+        [ParameterId(4)]
+        public Number Pulse { get; set; }
+
+        [ParameterId(5)]
         public FormattedNumber Distance { get; set; }
     }
 }

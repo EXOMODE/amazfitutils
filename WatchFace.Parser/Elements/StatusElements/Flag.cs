@@ -5,10 +5,11 @@ namespace WatchFace.Parser.Elements.StatusElements
 {
     public class Flag
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Coordinates Coordinates { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
+        [ParameterImageIndex]
         public long ImageIndex { get; set; }
     }
 }

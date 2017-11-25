@@ -5,13 +5,15 @@ namespace WatchFace.Parser.Elements.WeatherElements
 {
     public class TemperatureNumber
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Number Number { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
+        [ParameterImageIndex]
         public long MinusImageIndex { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
+        [ParameterImageIndex]
         public long DegreesImageIndex { get; set; }
     }
 }

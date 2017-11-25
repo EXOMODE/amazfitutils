@@ -50,7 +50,7 @@
     <Compile Include="Elements\AnalogDialFace.cs" />
     <Compile Include="Elements\Background.cs" />
     <Compile Include="Elements\BasicElements\CircleScale.cs" />
-    <Compile Include="Elements\BasicElements\ClockHand.cs" />
+    <Compile Include="Elements\AnalogDialFaceElements\ClockHand.cs" />
     <Compile Include="Elements\BasicElements\Coordinates.cs" />
     <Compile Include="Elements\BasicElements\Image.cs" />
     <Compile Include="Elements\BasicElements\ImageSet.cs" />
@@ -83,8 +83,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="Utils\BitWriter.cs" />
+    <Compile Include="Utils\ParameterImagesCountAttribute.cs" />
     <Compile Include="Utils\ParametersConverter.cs" />
-    <Compile Include="Utils\RawParameterAttribute.cs" />
+    <Compile Include="Utils\ParameterImageIndexAttribute.cs" />
+    <Compile Include="Utils\ParameterIdAttribute.cs" />
     <Compile Include="WatchFace.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>

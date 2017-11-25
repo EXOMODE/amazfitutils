@@ -5,13 +5,13 @@ namespace WatchFace.Parser.Elements
 {
     public class Weather
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public WeatherIcon Icon { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public Temperature Temperature { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
         public AirPollution AirPollution { get; set; }
     }
 }

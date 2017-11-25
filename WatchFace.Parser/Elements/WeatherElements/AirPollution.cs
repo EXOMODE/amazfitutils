@@ -5,7 +5,9 @@ namespace WatchFace.Parser.Elements.WeatherElements
 {
     public class AirPollution
     {
-        [RawParameter(Id = 2)]
+        // TODO: Looks like here should be Id 1 also
+
+        [ParameterId(2)]
         public ImageSet Icon { get; set; }
     }
 }

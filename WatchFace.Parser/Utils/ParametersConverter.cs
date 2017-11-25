@@ -128,18 +128,18 @@ namespace WatchFace.Parser.Utils
             var properties = new Dictionary<byte, PropertyInfo>();
             foreach (var propertyInfo in typeInfo.DeclaredProperties)
             {
-                var rawParameterAttribute =
-                    (RawParameterAttribute) propertyInfo.GetCustomAttribute(typeof(RawParameterAttribute));
-                if (rawParameterAttribute == null)
+                var parameterIdAttribute =
+                    (ParameterIdAttribute) propertyInfo.GetCustomAttribute(typeof(ParameterIdAttribute));
+                if (parameterIdAttribute == null)
                     throw new ArgumentException(
-                        $"Class {typeInfo.Name} doesn't have RawParameterAttribute on property {propertyInfo.Name}"
+                        $"Class {typeInfo.Name} doesn't have ParameterIdAttribute on property {propertyInfo.Name}"
                     );
-                if (properties.ContainsKey(rawParameterAttribute.Id))
+                if (properties.ContainsKey(parameterIdAttribute.Id))
                     throw new ArgumentException(
-                        $"Class {typeInfo.Name} already has RawParameterAttribute with Id {rawParameterAttribute.Id}"
+                        $"Class {typeInfo.Name} already has ParameterIdAttribute with Id {parameterIdAttribute.Id}"
                     );
 
-                properties[rawParameterAttribute.Id] = propertyInfo;
+                properties[parameterIdAttribute.Id] = propertyInfo;
             }
             return properties.OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value);
         }

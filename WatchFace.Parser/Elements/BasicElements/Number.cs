@@ -4,28 +4,30 @@ namespace WatchFace.Parser.Elements.BasicElements
 {
     public class Number
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public long TopLeftX { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public long TopLeftY { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
         public long BottomRightX { get; set; }
 
-        [RawParameter(Id = 4)]
+        [ParameterId(4)]
         public long BottomRightY { get; set; }
 
-        [RawParameter(Id = 5)]
+        [ParameterId(5)]
         public long Alignment { get; set; }
 
-        [RawParameter(Id = 6)]
+        [ParameterId(6)]
         public long Unknown6 { get; set; }
 
-        [RawParameter(Id = 7)]
+        [ParameterId(7)]
+        [ParameterImageIndex]
         public long ImageIndex { get; set; }
 
-        [RawParameter(Id = 8)]
+        [ParameterId(8)]
+        [ParameterImagesCount]
         public long ImagesCount { get; set; }
     }
 }

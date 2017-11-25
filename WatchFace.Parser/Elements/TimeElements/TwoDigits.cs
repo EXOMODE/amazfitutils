@@ -5,10 +5,10 @@ namespace WatchFace.Parser.Elements.TimeElements
 {
     public class TwoDigits
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public ImageSet Tens { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public ImageSet Ones { get; set; }
     }
 }

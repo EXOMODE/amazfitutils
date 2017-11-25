@@ -4,10 +4,10 @@ namespace WatchFace.Parser.Elements.BasicElements
 {
     public class Coordinates
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public long X { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public long Y { get; set; }
     }
 }

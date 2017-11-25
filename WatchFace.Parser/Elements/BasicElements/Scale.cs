@@ -5,10 +5,12 @@ namespace WatchFace.Parser.Elements.BasicElements
 {
     public class Scale
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
+        [ParameterImageIndex]
         public long StartImageIndex { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
+        [ParameterImagesCount]
         public List<Coordinates> Segments { get; set; }
     }
 }

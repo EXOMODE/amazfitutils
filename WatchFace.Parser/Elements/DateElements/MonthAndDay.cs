@@ -4,16 +4,16 @@ namespace WatchFace.Parser.Elements.DateElements
 {
     public class MonthAndDay
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public SeparateMonthAndDay Separate { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public OneLineMonthAndDay OneLine { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
         public long Unknown3 { get; set; }
 
-        [RawParameter(Id = 4)]
+        [ParameterId(4)]
         public long Unknown4 { get; set; }
     }
 }

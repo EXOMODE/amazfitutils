@@ -5,10 +5,12 @@ namespace WatchFace.Parser.Elements.DateElements
 {
     public class SeparateMonthAndDay
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Number Month { get; set; }
 
-        [RawParameter(Id = 3)]
+        // TODO: Looks like here should be Id 2 also
+
+        [ParameterId(3)]
         public Number Day { get; set; }
     }
 }

@@ -4,16 +4,18 @@ namespace WatchFace.Parser.Elements.BasicElements
 {
     public class ImageSet
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public long X { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
         public long Y { get; set; }
 
-        [RawParameter(Id = 3)]
+        [ParameterId(3)]
+        [ParameterImageIndex]
         public long ImageIndex { get; set; }
 
-        [RawParameter(Id = 4)]
+        [ParameterId(4)]
+        [ParameterImagesCount]
         public long ImagesCount { get; set; }
     }
 }

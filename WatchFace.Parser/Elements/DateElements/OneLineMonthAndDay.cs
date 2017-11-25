@@ -5,10 +5,11 @@ namespace WatchFace.Parser.Elements.DateElements
 {
     public class OneLineMonthAndDay
     {
-        [RawParameter(Id = 1)]
+        [ParameterId(1)]
         public Number Number { get; set; }
 
-        [RawParameter(Id = 2)]
+        [ParameterId(2)]
+        [ParameterImageIndex]
         public long DelimiterImageIndex { get; set; }
     }
 }
