@@ -11,11 +11,11 @@ namespace WatchFace.Parser
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private readonly FileStream _fileStream;
+        private readonly Stream _stream;
 
-        public Reader(FileStream streamReader)
+        public Reader(Stream stream)
         {
-            _fileStream = streamReader;
+            _stream = stream;
         }
 
         public List<Parameter> Parameters { get; private set; }
@@ -24,7 +24,7 @@ namespace WatchFace.Parser
         public void Read()
         {
             Logger.Trace("Reading header...");
-            var header = Header.ReadFrom(_fileStream);
+            var header = Header.ReadFrom(_stream);
             Logger.Trace("Header was read:");
             Logger.Trace("Signature: {0}, Unknown: {1}, ParametersSize: {2}, IsValid: {3}", header.Signature,
                 header.Unknown,
@@ -32,7 +32,7 @@ namespace WatchFace.Parser
             if (!header.IsValid) return;
 
             Logger.Trace("Reading parameter offsets...");
-            var parametersStream = StreamBlock(_fileStream, (int) header.ParametersSize);
+            var parametersStream = StreamBlock(_stream, (int) header.ParametersSize);
             Logger.Trace("Parameter offsets were read from file");
 
             Logger.Trace("Reading parameters descriptor...");
@@ -47,13 +47,13 @@ namespace WatchFace.Parser
             Logger.Trace("Watch face parameters locations were read:");
 
             Parameters = ReadParameters(parametrsTableLength, parametersLocations);
-            Images = new ResourcesReader(_fileStream).Read((uint) imagesCount);
+            Images = new ResourcesReader(_stream).Read((uint) imagesCount);
         }
 
         private List<Parameter> ReadParameters(long coordinatesTableSize,
             IReadOnlyCollection<Parameter> parametersDescriptors)
         {
-            var parametersStream = StreamBlock(_fileStream, (int) coordinatesTableSize);
+            var parametersStream = StreamBlock(_stream, (int) coordinatesTableSize);
 
             var result = new List<Parameter>(parametersDescriptors.Count);
             foreach (var prameterDescriptor in parametersDescriptors)

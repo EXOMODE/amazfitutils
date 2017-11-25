@@ -28,7 +28,7 @@ namespace Resources
             var imagesOffsets = _binaryReader.ReadBytes(offsetsTableLength);
             var imagesOffset = _stream.Position;
 
-            Logger.Trace("Reading {0} resources", imagesTableLength);
+            Logger.Debug("Reading {0} images...", imagesTableLength);
             var images = new Bitmap[imagesTableLength];
             for (var i = 0; i < imagesTableLength; i++)
             {
@@ -39,6 +39,7 @@ namespace Resources
                     Logger.Warn("Found {0} bytes gap before resource number {1}", bytesGap, i);
                     _stream.Seek(imageOffset, SeekOrigin.Begin);
                 }
+                Logger.Debug("Reading image {0}...", i);
                 images[i] = new ImageReader(_stream).Read();
             }
             return images;
