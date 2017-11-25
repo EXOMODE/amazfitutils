@@ -8,23 +8,39 @@ namespace WatchFace.Parser.Models
     {
         public const int HeaderSize = 40;
         private const string DialSignature = "HMDIAL\0";
-        private readonly byte[] _header;
 
-        public Header(byte[] header)
-        {
-            _header = header;
-        }
+        public string Signature { get; private set; } = DialSignature;
+        public uint Unknown { get; set; }
+        public uint ParametersSize { get; set; }
 
-        public string Signature => Encoding.ASCII.GetString(_header, 0, 7);
         public bool IsValid => Signature == DialSignature;
-        public uint Unknown => BitConverter.ToUInt32(_header, 32);
-        public uint ParametersSize => BitConverter.ToUInt32(_header, 36);
 
-        public static Header ReadFrom(Stream fileStream)
+        public void WriteTo(Stream stream)
         {
             var buffer = new byte[HeaderSize];
-            fileStream.Read(buffer, 0, HeaderSize);
-            return new Header(buffer);
+            for (var i = 0; i < buffer.Length; i++) buffer[i] = 0xff;
+
+            var signature = Encoding.ASCII.GetBytes(Signature);
+            var unknown = BitConverter.GetBytes(Unknown);
+            var parametersSize = BitConverter.GetBytes(ParametersSize);
+
+            signature.CopyTo(buffer, 0);
+            unknown.CopyTo(buffer, 32);
+            parametersSize.CopyTo(buffer, 36);
+            stream.Write(buffer, 0, HeaderSize);
+        }
+
+        public static Header ReadFrom(Stream stream)
+        {
+            var buffer = new byte[HeaderSize];
+            stream.Read(buffer, 0, HeaderSize);
+
+            return new Header
+            {
+                Signature = Encoding.ASCII.GetString(buffer, 0, 7),
+                Unknown = BitConverter.ToUInt32(buffer, 32),
+                ParametersSize = BitConverter.ToUInt32(buffer, 36)
+            };
         }
     }
 }

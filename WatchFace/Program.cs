@@ -70,7 +70,8 @@ namespace WatchFace
             var watchFace = ReadConfig(inputFileName);
             var outputFileName = Path.ChangeExtension(inputFileName, "bin");
             SetupLogger(Path.ChangeExtension(outputFileName, ".log"));
-            WriteWatchFace(outputFileName, watchFace);
+            var imagesDirectory = Path.GetDirectoryName(inputFileName);
+            WriteWatchFace(outputFileName, imagesDirectory, watchFace);
         }
 
         private static void UnpackWatchFace(string inputFileName)
@@ -105,14 +106,18 @@ namespace WatchFace
             new ResourcesExtractor(images).Extract(outputDirectory);
         }
 
-        private static void WriteWatchFace(string outputFileName, Parser.WatchFace watchFace)
+        private static void WriteWatchFace(string outputFileName, string imagesDirectory, Parser.WatchFace watchFace)
         {
-            Logger.Debug("Writing watch face to '{0}'", outputFileName);
             try
             {
+                Logger.Debug("Reading referenced images from '{0}'", imagesDirectory);
+                var imagesReader = new ImagesLoader(imagesDirectory);
+                imagesReader.Process(watchFace);
+
+                Logger.Debug("Writing watch face to '{0}'", outputFileName);
                 using (var fileStream = File.OpenWrite(outputFileName))
                 {
-                    var writer = new Writer(fileStream);
+                    var writer = new Writer(fileStream, imagesReader.Images);
                     writer.Write(watchFace);
                     fileStream.Flush();
                 }

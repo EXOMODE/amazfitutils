@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using NLog;
 using WatchFace.Parser.Utils;
+using WatchFace.Parser.Models;
 
 namespace WatchFace.Parser
 {
@@ -9,11 +11,13 @@ namespace WatchFace.Parser
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private readonly FileStream _fileStream;
+        private readonly Stream _stream;
+        private readonly List<Bitmap> _images;
 
-        public Writer(FileStream streamReader)
+        public Writer(Stream stream, List<Bitmap> images)
         {
-            _fileStream = streamReader;
+            _stream = stream;
+            _images = images;
         }
 
         public void Write(WatchFace watchFace)
@@ -26,6 +30,9 @@ namespace WatchFace.Parser
                 parameter.Write(memoryStream);
                 encodedParameters[parameter.Id] = memoryStream;
             }
+
+            var header = new Header {ParametersSize = 20};
+            header.WriteTo(_stream);
         }
     }
 }
