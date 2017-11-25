@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using WatchFace.Parser.Attributes;
 using WatchFace.Parser.Elements.BasicElements;
 using WatchFace.Parser.JsonConverters;
-using WatchFace.Parser.Utils;
 
 namespace WatchFace.Parser.Elements.AnalogDialFaceElements
 {

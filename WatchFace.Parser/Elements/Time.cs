@@ -1,5 +1,5 @@
-﻿using WatchFace.Parser.Elements.TimeElements;
-using WatchFace.Parser.Utils;
+﻿using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Elements.TimeElements;
 
 namespace WatchFace.Parser.Elements
 {

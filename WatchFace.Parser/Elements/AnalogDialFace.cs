@@ -1,5 +1,5 @@
-﻿using WatchFace.Parser.Elements.AnalogDialFaceElements;
-using WatchFace.Parser.Utils;
+﻿using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Elements.AnalogDialFaceElements;
 
 namespace WatchFace.Parser.Elements
 {

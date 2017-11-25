@@ -1,5 +1,5 @@
-﻿using WatchFace.Parser.Elements.WeatherElements;
-using WatchFace.Parser.Utils;
+﻿using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Elements.WeatherElements;
 
 namespace WatchFace.Parser.Elements
 {

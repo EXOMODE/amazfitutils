@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using NLog;
+using WatchFace.Parser.Attributes;
 
 namespace WatchFace.Parser.Utils
 {
@@ -13,7 +14,7 @@ namespace WatchFace.Parser.Utils
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly string _imagesDirectory;
 
-        private Dictionary<long, long> _mapping;
+        private readonly Dictionary<long, long> _mapping;
 
         public ImagesLoader(string imagesDirectory)
         {

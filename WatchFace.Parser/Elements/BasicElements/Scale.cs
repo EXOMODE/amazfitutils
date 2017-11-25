@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WatchFace.Parser.Utils;
+using WatchFace.Parser.Attributes;
 
 namespace WatchFace.Parser.Elements.BasicElements
 {

@@ -1,5 +1,5 @@
-﻿using WatchFace.Parser.Elements.StatusElements;
-using WatchFace.Parser.Utils;
+﻿using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Elements.StatusElements;
 
 namespace WatchFace.Parser.Elements
 {

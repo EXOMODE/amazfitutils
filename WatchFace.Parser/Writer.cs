@@ -2,17 +2,17 @@
 using System.Drawing;
 using System.IO;
 using NLog;
-using WatchFace.Parser.Utils;
 using WatchFace.Parser.Models;
+using WatchFace.Parser.Utils;
 
 namespace WatchFace.Parser
 {
     public class Writer
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private readonly List<Bitmap> _images;
 
         private readonly Stream _stream;
-        private readonly List<Bitmap> _images;
 
         public Writer(Stream stream, List<Bitmap> images)
         {

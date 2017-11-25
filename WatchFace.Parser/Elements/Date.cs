@@ -1,6 +1,6 @@
-﻿using WatchFace.Parser.Elements.BasicElements;
+﻿using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Elements.BasicElements;
 using WatchFace.Parser.Elements.DateElements;
-using WatchFace.Parser.Utils;
 
 namespace WatchFace.Parser.Elements
 {

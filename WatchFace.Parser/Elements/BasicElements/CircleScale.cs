@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
+using WatchFace.Parser.Attributes;
 using WatchFace.Parser.JsonConverters;
-using WatchFace.Parser.Utils;
 
 namespace WatchFace.Parser.Elements.BasicElements
 {
