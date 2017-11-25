@@ -11,31 +11,52 @@ namespace WatchFace.Parser.Utils
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static List<Parameter> Build<T>(T serializable)
+        public static List<Parameter> Build<T>(T serializable, string path = "")
         {
             var result = new List<Parameter>();
+            var currentType = typeof(T);
+
+            if (!string.IsNullOrEmpty(path))
+                Logger.Trace("{0} '{1}'", path, currentType.Name);
             foreach (var kv in SortedPropertiesDictionary<T>())
             {
                 var id = kv.Key;
+                var currentPath = string.IsNullOrEmpty(path)
+                    ? id.ToString()
+                    : string.Concat(path, '.', id.ToString());
+
                 var propertyInfo = kv.Value;
                 var propertyType = propertyInfo.PropertyType;
                 dynamic propertyValue = propertyInfo.GetValue(serializable, null);
 
+                if (propertyValue == null)
+                    continue;
+
                 if (propertyType == typeof(long))
-                    result.Add(new Parameter(id, (long) propertyValue));
+                {
+                    Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, propertyValue);
+                    result.Add(new Parameter(id, propertyValue));
+                }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
-                    throw new NotImplementedException();
+                {
+                    foreach (var item in propertyValue)
+                        result.Add(new Parameter(id, Build(item, currentPath)));
+                }
                 else
-                    result.Add(new Parameter(id, Build(propertyValue)));
+                {
+                    result.Add(new Parameter(id, Build(propertyValue, currentPath)));
+                }
             }
             return result;
         }
 
-        public static T Parse<T>(List<Parameter> descriptor, string path = "", int traceOffset = 0) where T : new()
+        public static T Parse<T>(List<Parameter> descriptor, string path = "") where T : new()
         {
             var properties = SortedPropertiesDictionary<T>();
             var result = new T();
             var currentType = typeof(T);
+
+            var thisMethod = typeof(ParametersConverter).GetMethod(nameof(Parse));
 
             if (!string.IsNullOrEmpty(path))
                 Logger.Trace("{0} '{1}'", path, currentType.Name);
@@ -70,11 +91,9 @@ namespace WatchFace.Parser.Utils
 
                     try
                     {
-                        var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
-                        var itemType = propertyType.GetGenericArguments()[0];
-                        var generic = method.MakeGenericMethod(itemType);
+                        var generic = thisMethod.MakeGenericMethod(propertyType.GetGenericArguments()[0]);
                         dynamic parsedValue = generic.Invoke(null,
-                            new dynamic[] {parameter.Children, currentPath, traceOffset + 1});
+                            new dynamic[] {parameter.Children, currentPath});
                         propertyValue.Add(parsedValue);
                     }
                     catch (TargetInvocationException e)
@@ -90,10 +109,8 @@ namespace WatchFace.Parser.Utils
 
                     try
                     {
-                        var method = typeof(ParametersConverter).GetMethod(nameof(Parse));
-                        var generic = method.MakeGenericMethod(propertyType);
-                        dynamic parsedValue = generic.Invoke(null,
-                            new dynamic[] {parameter.Children, currentPath, traceOffset + 1});
+                        var generic = thisMethod.MakeGenericMethod(propertyType);
+                        dynamic parsedValue = generic.Invoke(null, new object[] {parameter.Children, currentPath});
                         propertyInfo.SetValue(result, parsedValue);
                     }
                     catch (TargetInvocationException e)
