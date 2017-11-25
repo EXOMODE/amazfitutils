@@ -10,10 +10,10 @@ namespace WatchFace.Parser.Elements.ActivityElements
 
         [ParameterId(2)]
         [ParameterImageIndex]
-        public long SuffixImageIndex { get; set; }
+        public long? SuffixImageIndex { get; set; }
 
         [ParameterId(3)]
         [ParameterImageIndex]
-        public long DecimalPointImageIndex { get; set; }
+        public long? DecimalPointImageIndex { get; set; }
     }
 }

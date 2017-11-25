@@ -10,10 +10,10 @@ namespace WatchFace.Parser.Elements.WeatherElements
 
         [ParameterId(2)]
         [ParameterImageIndex]
-        public long MinusImageIndex { get; set; }
+        public long? MinusImageIndex { get; set; }
 
         [ParameterId(3)]
         [ParameterImageIndex]
-        public long DegreesImageIndex { get; set; }
+        public long? DegreesImageIndex { get; set; }
     }
 }

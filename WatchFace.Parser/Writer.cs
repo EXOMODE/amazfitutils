@@ -61,7 +61,7 @@ namespace WatchFace.Parser
             var header = new Header
             {
                 ParametersSize = (uint) encodedParametersPositions.Length,
-                Unknown = 0x37 // Value from Sydney (watchface with 0 doesn't work)
+                Unknown = 0x159 // Maybe some kind of layers (the bigger number needed for more complex watch faces)
             };
             header.WriteTo(_stream);
 

@@ -38,6 +38,11 @@ namespace WatchFace.Parser.Utils
                     Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, propertyValue);
                     result.Add(new Parameter(id, propertyValue));
                 }
+                else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, propertyValue);
+                    result.Add(new Parameter(id, propertyValue));
+                }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     foreach (var item in propertyValue)
@@ -72,11 +77,16 @@ namespace WatchFace.Parser.Utils
                 var propertyInfo = properties[parameter.Id];
                 var propertyType = propertyInfo.PropertyType;
 
-                if (propertyType == typeof(long))
+                if (propertyType == typeof(long) || propertyType.IsGenericType &&
+                    propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, parameter.Value);
                     dynamic propertyValue = propertyInfo.GetValue(result);
-                    if (propertyValue != 0)
+
+                    if (propertyType.IsGenericType && propertyValue != null)
+                        throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
+
+                    if (!propertyType.IsGenericType && propertyValue != 0)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
                     propertyInfo.SetValue(result, parameter.Value);

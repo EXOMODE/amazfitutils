@@ -54,12 +54,17 @@ namespace WatchFace.Parser.Utils
                         $"Property {propertyInfo.Name} can't have both ParameterImageIndexAttribute and ParameterImagesCountAttribute"
                     );
 
-                if (propertyType == typeof(long) || (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>)))
+                if (propertyType == typeof(long) || propertyType.IsGenericType &&
+                    (propertyType.GetGenericTypeDefinition() == typeof(List<>) ||
+                     propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)))
                 {
                     if (imageIndexAttribute != null)
                     {
-                        lastImageIndexValue = propertyValue;
-                        var mappedIndex = LoadImage(propertyValue);
+                        if (propertyValue == null) continue;
+                        long imageIndex = propertyValue;
+
+                        lastImageIndexValue = imageIndex;
+                        var mappedIndex = LoadImage(imageIndex);
                         propertyInfo.SetValue(serializable, mappedIndex);
                     }
                     else if (imagesCountAttribute != null)
@@ -69,7 +74,11 @@ namespace WatchFace.Parser.Utils
                                 $"Property {propertyInfo.Name} can't be processed becuase ImageIndex isn't present or it is zero"
                             );
 
-                        var imagesCount = propertyType.IsGenericType ? propertyValue.Count : propertyValue;
+                        var imagesCount = propertyType.IsGenericType
+                            ? (propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)
+                                ? propertyValue.Value
+                                : propertyValue.Count)
+                            : propertyValue;
 
                         for (var i = lastImageIndexValue + 1; i < lastImageIndexValue + imagesCount; i++)
                             LoadImage(i.Value);

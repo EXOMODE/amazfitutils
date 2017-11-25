@@ -38,8 +38,9 @@ namespace WatchFace.Parser.Models
             size += 1;
             if (HasChildren)
             {
+                Logger.Trace(() => TraceWithOffset($"{Id} ({rawId:X2}):", traceOffset));
                 size += WriteList(stream, traceOffset + 1);
-                Logger.Trace(() => TraceWithOffset($"{Id} ({rawId:X2}): {size} bytes", traceOffset));
+                Logger.Trace(() => TraceWithOffset($"{size} bytes", traceOffset));
                 return size;
             }
             size += WriteValue(stream, Value, traceOffset);
@@ -60,16 +61,17 @@ namespace WatchFace.Parser.Models
 
         public long WriteValue(Stream stream, long value, int traceOffset)
         {
+            var unsignedValue = (ulong) value;
             var size = 0;
             byte currentByte;
-            while (value >= 0x80)
+            while (unsignedValue >= 0x80)
             {
-                currentByte = (byte) ((value & 0x7f) | 0x80);
+                currentByte = (byte) ((unsignedValue & 0x7f) | 0x80);
                 stream.WriteByte(currentByte);
                 size += 1;
-                value = value >> 7;
+                unsignedValue = unsignedValue >> 7;
             }
-            currentByte = (byte) (value & 0x7f);
+            currentByte = (byte) (unsignedValue & 0x7f);
             stream.WriteByte(currentByte);
             size += 1;
             return size;
