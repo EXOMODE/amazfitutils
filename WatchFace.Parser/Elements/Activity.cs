@@ -1,5 +1,5 @@
-﻿using WatchFace.Parser.Elements.BasicElements;
-using WatchFace.Parser.Elements.ActivityElements;
+﻿using WatchFace.Parser.Elements.ActivityElements;
+using WatchFace.Parser.Elements.BasicElements;
 using WatchFace.Parser.Utils;
 
 namespace WatchFace.Parser.Elements

@@ -38,7 +38,7 @@ namespace WatchFace.Parser.Models
             size += 1;
             if (HasChildren)
             {
-                size += WriteList(stream, traceOffset +1);
+                size += WriteList(stream, traceOffset + 1);
                 Logger.Trace(() => TraceWithOffset($"{Id} ({rawId:X2}): {size} bytes", traceOffset));
                 return size;
             }

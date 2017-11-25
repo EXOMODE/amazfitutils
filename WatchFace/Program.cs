@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using Newtonsoft.Json;
 using NLog;
@@ -212,13 +210,12 @@ namespace WatchFace
             var fileTarget = new FileTarget
             {
                 FileName = logFileName,
-                Layout = "${message}"
+                Layout = "${level}|${message}"
             };
             config.AddTarget("file", fileTarget);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, fileTarget));
 
-            var consoleTarget = new ColoredConsoleTarget
-                {Layout = @"${message}"};
+            var consoleTarget = new ColoredConsoleTarget {Layout = @"${message}"};
             config.AddTarget("console", consoleTarget);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
 

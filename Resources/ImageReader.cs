@@ -57,18 +57,18 @@ namespace Resources
             for (var i = 0; i < _paletteColors; i++)
             {
                 var r = _reader.ReadByte();
-                if (r != 0 && r != 0xff) Logger.Warn("Palette item {0} R value isn't supported: {1:X2}", i, r);
-
                 var g = _reader.ReadByte();
-                if (g != 0 && g != 0xff) Logger.Warn("Palette item {0} G value isn't supported: {1:X2}", i, g);
-
                 var b = _reader.ReadByte();
-                if (b != 0 && b != 0xff) Logger.Warn("Palette item {0} B value isn't supported: {1:X2}", i, b);
-
                 var padding = _reader.ReadByte(); // always 0 maybe padding
+
                 if (padding != 0) Logger.Warn("Palette item {0} last byte is not zero: {1:X2}", i, padding);
 
-                Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}", i, r, g, b);
+                var isColorValid = (r == 0 || r == 0xff) && (g == 0 || g == 0xff) && (b == 0 || b == 0xff);
+
+                if (isColorValid)
+                    Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}", i, r, g, b);
+                else
+                    Logger.Warn("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, color isn't supported!", i, r, g, b);
 
                 _palette[i] = Color.FromArgb(_transparency && i == 0 ? 0x00 : 0xff, r, g, b);
             }
