@@ -20,7 +20,7 @@ namespace WatchFace.Parser.Elements.BasicElements
         public long Alignment { get; set; }
 
         [ParameterId(6)]
-        public long Unknown6 { get; set; }
+        public long Spacing { get; set; }
 
         [ParameterId(7)]
         [ParameterImageIndex]
