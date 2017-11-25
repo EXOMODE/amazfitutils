@@ -9,7 +9,7 @@ namespace WatchFace.Parser.Elements.AnalogDialFaceElements
     public class ClockHand
     {
         [ParameterId(1)]
-        public long Unknown1 { get; set; }
+        public long OnlyBorder { get; set; }
 
         [JsonConverter(typeof(HexStringJsonConverter))]
         [ParameterId(2)]
