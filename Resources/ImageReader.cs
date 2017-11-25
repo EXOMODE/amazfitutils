@@ -77,16 +77,15 @@ namespace Resources
         private Bitmap ReadImage()
         {
             var image = new Bitmap(_width, _height);
-
-            for (var i = 0; i < _height; i++)
+            for (var y = 0; y < _height; y++)
             {
-                var row = _reader.ReadBytes(_rowLengthInBytes);
-                var bitReader = new BitReader(row);
-                for (var j = 0; j < _width; j++)
+                var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
+                var bitReader = new BitReader(rowBytes);
+                for (var x = 0; x < _width; x++)
                 {
                     var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
                     var color = _palette[(int) pixelColorIndex];
-                    image.SetPixel(j, i, color);
+                    image.SetPixel(x, y, color);
                 }
             }
             return image;

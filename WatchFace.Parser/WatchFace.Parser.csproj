@@ -82,7 +82,6 @@
     <Compile Include="Models\ParameterFlags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="Utils\BitWriter.cs" />
     <Compile Include="Attributes\ParameterImagesCountAttribute.cs" />
     <Compile Include="Utils\ImagesLoader.cs" />
     <Compile Include="Utils\ParametersConverter.cs" />

@@ -18,10 +18,10 @@ namespace WatchFace.Parser.JsonConverters
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
             JsonSerializer serializer)
         {
-            var str = reader.ReadAsString();
+            var str = (string)reader.Value;
             if (str == null || !str.StartsWith("0x"))
                 throw new JsonSerializationException();
-            return Convert.ToUInt32(str);
+            return Convert.ToInt64(str.Substring(2), 16);
         }
     }
 }

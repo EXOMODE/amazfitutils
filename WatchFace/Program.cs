@@ -68,7 +68,11 @@ namespace WatchFace
         private static void PackWatchFace(string inputFileName)
         {
             var watchFace = ReadConfig(inputFileName);
-            var outputFileName = Path.ChangeExtension(inputFileName, "bin");
+            if (watchFace == null) return;
+
+            var baseName = Path.GetFileNameWithoutExtension(inputFileName);
+            var outputDirectory = Path.GetDirectoryName(inputFileName);
+            var outputFileName = Path.Combine(outputDirectory, baseName + "_packed.bin");
             SetupLogger(Path.ChangeExtension(outputFileName, ".log"));
             var imagesDirectory = Path.GetDirectoryName(inputFileName);
             WriteWatchFace(outputFileName, imagesDirectory, watchFace);

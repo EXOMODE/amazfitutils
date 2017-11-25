@@ -54,7 +54,7 @@ namespace WatchFace.Parser.Utils
                         $"Property {propertyInfo.Name} can't have both ParameterImageIndexAttribute and ParameterImagesCountAttribute"
                     );
 
-                if (propertyType == typeof(long))
+                if (propertyType == typeof(long) || (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>)))
                 {
                     if (imageIndexAttribute != null)
                     {
@@ -68,7 +68,10 @@ namespace WatchFace.Parser.Utils
                             throw new ArgumentException(
                                 $"Property {propertyInfo.Name} can't be processed becuase ImageIndex isn't present or it is zero"
                             );
-                        for (var i = lastImageIndexValue + 1; i < lastImageIndexValue + propertyValue; i++)
+
+                        var imagesCount = propertyType.IsGenericType ? propertyValue.Count : propertyValue;
+
+                        for (var i = lastImageIndexValue + 1; i < lastImageIndexValue + imagesCount; i++)
                             LoadImage(i.Value);
                     }
                 }

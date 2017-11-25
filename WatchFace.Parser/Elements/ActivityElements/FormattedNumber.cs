@@ -13,7 +13,7 @@ namespace WatchFace.Parser.Elements.ActivityElements
         public long SuffixImageIndex { get; set; }
 
         [ParameterId(3)]
-        [ParameterImagesCount]
+        [ParameterImageIndex]
         public long DecimalPointImageIndex { get; set; }
     }
 }
