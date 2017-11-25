@@ -21,12 +21,16 @@ namespace WatchFace
         {
             if (args.Length == 0 || args[0] == null)
             {
-                Console.WriteLine("{0} unpacks Amazfit Bip downloadable watch faces.", AppName);
-                Console.WriteLine("Usage: {0}.exe wf.bin [wf2.bin] ...", AppName);
+                Console.WriteLine("{0}.exe unpacks and packs Amazfit Bip downloadable watch faces and unpacks res files.", AppName);
+                Console.WriteLine();
+                Console.WriteLine("Usage examples:");
+                Console.WriteLine("  {0}.exe watchface.bin  - unpacks watchface images and config", AppName);
+                Console.WriteLine("  {0}.exe watchface.res  - unpacks resource file images", AppName);
+                Console.WriteLine("  {0}.exe watchface.json - packs config and referenced images to bin file", AppName);
                 return;
             }
 
-            if (args.Length > 0)
+            if (args.Length > 1)
                 Console.WriteLine("Multiple files unpacking.");
 
             foreach (var inputFileName in args)
@@ -60,20 +64,21 @@ namespace WatchFace
                 }
                 catch (Exception e)
                 {
-                    Logger.Fatal(e);
+                    Logger.Fatal(e.Message);
                 }
             }
         }
 
         private static void PackWatchFace(string inputFileName)
         {
-            var watchFace = ReadConfig(inputFileName);
-            if (watchFace == null) return;
-
             var baseName = Path.GetFileNameWithoutExtension(inputFileName);
             var outputDirectory = Path.GetDirectoryName(inputFileName);
             var outputFileName = Path.Combine(outputDirectory, baseName + "_packed.bin");
             SetupLogger(Path.ChangeExtension(outputFileName, ".log"));
+
+            var watchFace = ReadConfig(inputFileName);
+            if (watchFace == null) return;
+
             var imagesDirectory = Path.GetDirectoryName(inputFileName);
             WriteWatchFace(outputFileName, imagesDirectory, watchFace);
         }
@@ -128,7 +133,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e);
+                Logger.Fatal(e.Message);
             }
         }
 
@@ -147,7 +152,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e);
+                Logger.Fatal(e.Message);
                 return null;
             }
         }
@@ -161,7 +166,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e);
+                Logger.Fatal(e.Message);
                 return null;
             }
         }
@@ -183,12 +188,17 @@ namespace WatchFace
                 using (var fileStream = File.OpenRead(jsonFileName))
                 using (var reader = new StreamReader(fileStream))
                 {
-                    return JsonConvert.DeserializeObject<Parser.WatchFace>(reader.ReadToEnd());
+                    return JsonConvert.DeserializeObject<Parser.WatchFace>(reader.ReadToEnd(),
+                        new JsonSerializerSettings
+                        {
+                            MissingMemberHandling = MissingMemberHandling.Error,
+                            NullValueHandling = NullValueHandling.Ignore
+                        });
                 }
             }
             catch (Exception e)
             {
-                Logger.Fatal(e);
+                Logger.Fatal(e.Message);
                 return null;
             }
         }
@@ -208,7 +218,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e);
+                Logger.Fatal(e.Message);
             }
         }
 
