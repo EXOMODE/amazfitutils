@@ -40,8 +40,8 @@ namespace Resources
 
             _paletteColors = (ushort) _palette.Count;
             _bitsPerPixel = (ushort) Math.Ceiling(Math.Log(_paletteColors, 2));
-            if (_bitsPerPixel == 3)
-                _bitsPerPixel = 4;
+            if (_bitsPerPixel == 3) _bitsPerPixel = 4;
+            if (_bitsPerPixel == 0) _bitsPerPixel = 1;
 
             if (_bitsPerPixel != 1 && _bitsPerPixel != 2 && _bitsPerPixel != 4)
                 throw new ArgumentException($"{0} bits per pixel doesn't supported.");
