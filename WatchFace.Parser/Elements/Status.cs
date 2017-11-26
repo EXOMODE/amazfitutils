@@ -9,12 +9,12 @@ namespace WatchFace.Parser.Elements
         public Switch Bluetooth { get; set; }
 
         [ParameterId(2)]
-        public Flag Alarm { get; set; }
+        public Switch Alarm { get; set; }
 
         [ParameterId(3)]
-        public Flag Lock { get; set; }
+        public Switch Lock { get; set; }
 
         [ParameterId(4)]
-        public Flag DoNotDisturb { get; set; }
+        public Switch DoNotDisturb { get; set; }
     }
 }

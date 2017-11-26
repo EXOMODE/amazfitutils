@@ -63,7 +63,6 @@
     <Compile Include="Elements\DateElements\SeparateMonthAndDay.cs" />
     <Compile Include="Elements\StepsProgress.cs" />
     <Compile Include="Elements\Status.cs" />
-    <Compile Include="Elements\StatusElements\Flag.cs" />
     <Compile Include="Elements\StatusElements\Switch.cs" />
     <Compile Include="Elements\Time.cs" />
     <Compile Include="Elements\TimeElements\AmPm.cs" />
