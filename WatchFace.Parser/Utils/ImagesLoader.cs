@@ -31,7 +31,7 @@ namespace WatchFace.Parser.Utils
 
             long? lastImageIndexValue = null;
 
-            foreach (var kv in SortedPropertiesDictionary<T>())
+            foreach (var kv in ElementsHelper.SortedProperties<T>())
             {
                 var id = kv.Key;
                 var currentPath = string.IsNullOrEmpty(path)
@@ -42,12 +42,8 @@ namespace WatchFace.Parser.Utils
                 var propertyType = propertyInfo.PropertyType;
                 dynamic propertyValue = propertyInfo.GetValue(serializable, null);
 
-                var imageIndexAttribute = (ParameterImageIndexAttribute) propertyInfo.GetCustomAttribute(
-                    typeof(ParameterImageIndexAttribute)
-                );
-                var imagesCountAttribute = (ParameterImagesCountAttribute) propertyInfo.GetCustomAttribute(
-                    typeof(ParameterImagesCountAttribute)
-                );
+                var imageIndexAttribute =ElementsHelper.GetCustomAttributeFor<ParameterImageIndexAttribute>(propertyInfo);
+                var imagesCountAttribute =ElementsHelper.GetCustomAttributeFor<ParameterImagesCountAttribute>(propertyInfo);
 
                 if (imagesCountAttribute != null && imageIndexAttribute != null)
                     throw new ArgumentException(
@@ -65,7 +61,7 @@ namespace WatchFace.Parser.Utils
 
                         lastImageIndexValue = imageIndex;
                         var mappedIndex = LoadImage(imageIndex);
-                        propertyInfo.SetValue(serializable, mappedIndex);
+                        propertyInfo.SetValue(serializable, mappedIndex, null);
                     }
                     else if (imagesCountAttribute != null)
                     {
@@ -111,28 +107,6 @@ namespace WatchFace.Parser.Utils
             Images.Add((Bitmap) Image.FromFile(fileName));
             _mapping[index] = newImageIndex;
             return newImageIndex;
-        }
-
-        private static Dictionary<byte, PropertyInfo> SortedPropertiesDictionary<T>()
-        {
-            var typeInfo = typeof(T).GetTypeInfo();
-            var properties = new Dictionary<byte, PropertyInfo>();
-            foreach (var propertyInfo in typeInfo.DeclaredProperties)
-            {
-                var parameterIdAttribute =
-                    (ParameterIdAttribute) propertyInfo.GetCustomAttribute(typeof(ParameterIdAttribute));
-                if (parameterIdAttribute == null)
-                    throw new ArgumentException(
-                        $"Class {typeInfo.Name} doesn't have ParameterIdAttribute on property {propertyInfo.Name}"
-                    );
-                if (properties.ContainsKey(parameterIdAttribute.Id))
-                    throw new ArgumentException(
-                        $"Class {typeInfo.Name} already has ParameterIdAttribute with Id {parameterIdAttribute.Id}"
-                    );
-
-                properties[parameterIdAttribute.Id] = propertyInfo;
-            }
-            return properties.OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
     }
 }
