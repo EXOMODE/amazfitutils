@@ -19,7 +19,7 @@ namespace WatchFace.Parser.Utils
 
             if (!string.IsNullOrEmpty(path))
                 Logger.Trace("{0} '{1}'", path, currentType.Name);
-            foreach (var kv in SortedPropertiesDictionary<T>())
+            foreach (var kv in ElementsHelper.SortedProperties<T>())
             {
                 var id = kv.Key;
                 var currentPath = string.IsNullOrEmpty(path)
@@ -58,7 +58,7 @@ namespace WatchFace.Parser.Utils
 
         public static T Parse<T>(List<Parameter> descriptor, string path = "") where T : new()
         {
-            var properties = SortedPropertiesDictionary<T>();
+            var properties = ElementsHelper.SortedProperties<T>();
             var result = new T();
             var currentType = typeof(T);
 
@@ -81,7 +81,7 @@ namespace WatchFace.Parser.Utils
                     propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, parameter.Value);
-                    dynamic propertyValue = propertyInfo.GetValue(result);
+                    dynamic propertyValue = propertyInfo.GetValue(result, null);
 
                     if (propertyType.IsGenericType && propertyValue != null)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
@@ -89,15 +89,15 @@ namespace WatchFace.Parser.Utils
                     if (!propertyType.IsGenericType && propertyValue != 0)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
-                    propertyInfo.SetValue(result, parameter.Value);
+                    propertyInfo.SetValue(result, parameter.Value, null);
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    dynamic propertyValue = propertyInfo.GetValue(result);
+                    dynamic propertyValue = propertyInfo.GetValue(result, null);
                     if (propertyValue == null)
                     {
                         propertyValue = Activator.CreateInstance(propertyType);
-                        propertyInfo.SetValue(result, propertyValue);
+                        propertyInfo.SetValue(result, propertyValue, null);
                     }
 
                     try
@@ -114,7 +114,7 @@ namespace WatchFace.Parser.Utils
                 }
                 else
                 {
-                    dynamic propertyValue = propertyInfo.GetValue(result);
+                    dynamic propertyValue = propertyInfo.GetValue(result, null);
                     if (propertyValue != null)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
@@ -122,7 +122,7 @@ namespace WatchFace.Parser.Utils
                     {
                         var generic = thisMethod.MakeGenericMethod(propertyType);
                         dynamic parsedValue = generic.Invoke(null, new object[] {parameter.Children, currentPath});
-                        propertyInfo.SetValue(result, parsedValue);
+                        propertyInfo.SetValue(result, parsedValue, null);
                     }
                     catch (TargetInvocationException e)
                     {
@@ -131,28 +131,6 @@ namespace WatchFace.Parser.Utils
                 }
             }
             return result;
-        }
-
-        private static Dictionary<byte, PropertyInfo> SortedPropertiesDictionary<T>()
-        {
-            var typeInfo = typeof(T).GetTypeInfo();
-            var properties = new Dictionary<byte, PropertyInfo>();
-            foreach (var propertyInfo in typeInfo.DeclaredProperties)
-            {
-                var parameterIdAttribute =
-                    (ParameterIdAttribute) propertyInfo.GetCustomAttribute(typeof(ParameterIdAttribute));
-                if (parameterIdAttribute == null)
-                    throw new ArgumentException(
-                        $"Class {typeInfo.Name} doesn't have ParameterIdAttribute on property {propertyInfo.Name}"
-                    );
-                if (properties.ContainsKey(parameterIdAttribute.Id))
-                    throw new ArgumentException(
-                        $"Class {typeInfo.Name} already has ParameterIdAttribute with Id {parameterIdAttribute.Id}"
-                    );
-
-                properties[parameterIdAttribute.Id] = propertyInfo;
-            }
-            return properties.OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
     }
 }

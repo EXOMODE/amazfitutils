@@ -50,8 +50,7 @@ namespace WatchFace.Parser
             Images = new ResourcesReader(_stream).Read((uint) imagesCount);
         }
 
-        private List<Parameter> ReadParameters(long coordinatesTableSize,
-            IReadOnlyCollection<Parameter> parametersDescriptors)
+        private List<Parameter> ReadParameters(long coordinatesTableSize, ICollection<Parameter> parametersDescriptors)
         {
             var parametersStream = StreamBlock(_stream, (int) coordinatesTableSize);
 
