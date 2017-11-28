@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using NLog;
 using WatchFace.Parser.Attributes;
 
@@ -42,8 +40,10 @@ namespace WatchFace.Parser.Utils
                 var propertyType = propertyInfo.PropertyType;
                 dynamic propertyValue = propertyInfo.GetValue(serializable, null);
 
-                var imageIndexAttribute =ElementsHelper.GetCustomAttributeFor<ParameterImageIndexAttribute>(propertyInfo);
-                var imagesCountAttribute =ElementsHelper.GetCustomAttributeFor<ParameterImagesCountAttribute>(propertyInfo);
+                var imageIndexAttribute =
+                    ElementsHelper.GetCustomAttributeFor<ParameterImageIndexAttribute>(propertyInfo);
+                var imagesCountAttribute =
+                    ElementsHelper.GetCustomAttributeFor<ParameterImagesCountAttribute>(propertyInfo);
 
                 if (imagesCountAttribute != null && imageIndexAttribute != null)
                     throw new ArgumentException(

@@ -1,60 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using NLog;
+using Resources.Dithering;
 
 namespace Resources
 {
     public class ImageWriter
     {
-        private const int MaxSupportedColors = 9;
-        private static readonly byte[] Signature = {(byte) 'B', (byte) 'M', (byte) 'd', 0};
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Bitmap _image;
+        private static readonly byte[] Signature = {(byte) 'B', (byte) 'M', (byte) 'd', 0};
         private readonly List<Color> _palette;
 
         private readonly BinaryWriter _writer;
 
         private ushort _bitsPerPixel;
         private ushort _height;
+        private Bitmap _image;
         private ushort _paletteColors;
         private ushort _rowLengthInBytes;
         private ushort _transparency;
         private ushort _width;
 
-        public ImageWriter(Stream stream, Bitmap image)
+        public ImageWriter(Stream stream)
         {
             _writer = new BinaryWriter(stream);
-            _image = image;
             _palette = new List<Color>();
         }
 
-        public void Write()
+        public void Write(Bitmap image)
         {
-            _writer.Write(Signature);
+            _image = image;
+            _width = (ushort) image.Width;
+            _height = (ushort) image.Height;
 
-            _width = (ushort) _image.Width;
-            _height = (ushort) _image.Height;
+            ApplyDithering();
             ExtractPalette();
 
-            _paletteColors = (ushort) _palette.Count;
-            _bitsPerPixel = (ushort) Math.Ceiling(Math.Log(_paletteColors, 2));
             if (_bitsPerPixel == 3) _bitsPerPixel = 4;
             if (_bitsPerPixel == 0) _bitsPerPixel = 1;
 
-            if (_bitsPerPixel != 1 && _bitsPerPixel != 2 && _bitsPerPixel != 4)
-                throw new ArgumentException($"{0} bits per pixel doesn't supported.");
+            if (_bitsPerPixel > 4)
+                throw new ArgumentException(
+                    $"The image has {_bitsPerPixel} bit/pixel and can't be packed used on the watches. Looks like dithering works wincorrectly on the image."
+                );
 
             _rowLengthInBytes = (ushort) Math.Ceiling(_width * _bitsPerPixel / 8.0);
 
-            if (_paletteColors > MaxSupportedColors)
-                Logger.Warn($"Image cotains {0} colors but biggest known supported values is {1} colors",
-                    _paletteColors, MaxSupportedColors);
+            _writer.Write(Signature);
 
             WriteHeader();
             WritePalette();
             WriteImage();
+        }
+
+        private void ApplyDithering()
+        {
+            var clone = new Bitmap(_image.Width, _image.Height, PixelFormat.Format32bppArgb);
+            using (var gr = Graphics.FromImage(clone))
+            {
+                gr.DrawImage(_image, new Rectangle(0, 0, clone.Width, clone.Height));
+            }
+            FloydSteinbergDitherer.Process(clone);
+            _image = clone;
         }
 
         private void ExtractPalette()
@@ -66,7 +76,7 @@ namespace Resources
                 var color = _image.GetPixel(x, y);
                 if (_palette.Contains(color)) continue;
 
-                if (color.A == 0 && _transparency == 0)
+                if (color.A < 0x80 && _transparency == 0)
                 {
                     Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, Transaparent color",
                         _palette.Count, color.R, color.G, color.B
@@ -82,6 +92,8 @@ namespace Resources
                     _palette.Add(color);
                 }
             }
+            _paletteColors = (ushort) _palette.Count;
+            _bitsPerPixel = (ushort) Math.Ceiling(Math.Log(_paletteColors, 2));
         }
 
         private void WriteHeader()
@@ -132,8 +144,15 @@ namespace Resources
                 for (var x = 0; x < _width; x++)
                 {
                     var color = _image.GetPixel(x, y);
-                    var paletteIndex = paletteHash[color];
-                    bitWriter.WriteBits(paletteIndex, _bitsPerPixel);
+                    if (color.A < 0x80 && _transparency == 1)
+                    {
+                        bitWriter.WriteBits(0, _bitsPerPixel);
+                    }
+                    else
+                    {
+                        var paletteIndex = paletteHash[color];
+                        bitWriter.WriteBits(paletteIndex, _bitsPerPixel);
+                    }
                 }
                 bitWriter.Flush();
                 _writer.Write(rowData);

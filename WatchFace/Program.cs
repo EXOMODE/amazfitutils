@@ -21,7 +21,8 @@ namespace WatchFace
         {
             if (args.Length == 0 || args[0] == null)
             {
-                Console.WriteLine("{0}.exe unpacks and packs Amazfit Bip downloadable watch faces and unpacks res files.", AppName);
+                Console.WriteLine(
+                    "{0}.exe unpacks and packs Amazfit Bip downloadable watch faces and unpacks res files.", AppName);
                 Console.WriteLine();
                 Console.WriteLine("Usage examples:");
                 Console.WriteLine("  {0}.exe watchface.bin  - unpacks watchface images and config", AppName);
@@ -64,7 +65,7 @@ namespace WatchFace
                 }
                 catch (Exception e)
                 {
-                    Logger.Fatal(e.Message);
+                    Logger.Fatal(e);
                 }
             }
         }
@@ -80,7 +81,15 @@ namespace WatchFace
             if (watchFace == null) return;
 
             var imagesDirectory = Path.GetDirectoryName(inputFileName);
-            WriteWatchFace(outputFileName, imagesDirectory, watchFace);
+            try
+            {
+                WriteWatchFace(outputFileName, imagesDirectory, watchFace);
+            }
+            catch (Exception)
+            {
+                File.Delete(outputFileName);
+                throw;
+            }
         }
 
         private static void UnpackWatchFace(string inputFileName)

@@ -70,7 +70,8 @@ namespace Resources
                 else
                     Logger.Warn("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, color isn't supported!", i, r, g, b);
 
-                _palette[i] = Color.FromArgb(_transparency && i == 0 ? 0x00 : 0xff, r, g, b);
+                var alpha = _transparency && i == 0 ? 0x00 : 0xff;
+                _palette[i] = Color.FromArgb(alpha, r, g, b);
             }
         }
 

@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="BitReader.cs" />
     <Compile Include="BitWriter.cs" />
+    <Compile Include="Dithering\ColorError.cs" />
+    <Compile Include="Dithering\FloydSteinbergDitherer.cs" />
     <Compile Include="ImageWriter.cs" />
     <Compile Include="ResourcesExtractor.cs" />
     <Compile Include="ResourcesHeader.cs" />

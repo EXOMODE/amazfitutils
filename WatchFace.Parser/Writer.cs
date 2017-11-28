@@ -90,7 +90,7 @@ namespace WatchFace.Parser
 
                 var encodedImage = new MemoryStream();
                 Logger.Debug("Writing image {0}...", i);
-                new ImageWriter(encodedImage, _images[i]).Write();
+                new ImageWriter(encodedImage).Write(_images[i]);
                 offset += (uint) encodedImage.Length;
                 encodedImages[i] = encodedImage;
             }

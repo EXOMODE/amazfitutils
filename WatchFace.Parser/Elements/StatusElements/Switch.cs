@@ -10,7 +10,7 @@ namespace WatchFace.Parser.Elements.StatusElements
 
         [ParameterId(2)]
         [ParameterImageIndex]
-        public long ImageIndexOn { get; set; }
+        public long? ImageIndexOn { get; set; }
 
         [ParameterId(3)]
         [ParameterImageIndex]
