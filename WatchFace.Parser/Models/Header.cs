@@ -20,13 +20,9 @@ namespace WatchFace.Parser.Models
             var buffer = new byte[HeaderSize];
             for (var i = 0; i < buffer.Length; i++) buffer[i] = 0xff;
 
-            var signature = Encoding.ASCII.GetBytes(Signature);
-            var unknown = BitConverter.GetBytes(Unknown);
-            var parametersSize = BitConverter.GetBytes(ParametersSize);
-
-            signature.CopyTo(buffer, 0);
-            unknown.CopyTo(buffer, 32);
-            parametersSize.CopyTo(buffer, 36);
+            Encoding.ASCII.GetBytes(Signature).CopyTo(buffer, 0);
+            BitConverter.GetBytes(Unknown).CopyTo(buffer, 32);
+            BitConverter.GetBytes(ParametersSize).CopyTo(buffer, 36);
             stream.Write(buffer, 0, HeaderSize);
         }
 

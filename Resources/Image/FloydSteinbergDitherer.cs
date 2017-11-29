@@ -1,7 +1,7 @@
 using System.Drawing;
 using NLog;
 
-namespace Resources.Dithering
+namespace Resources.Image
 {
     public class FloydSteinbergDitherer
     {

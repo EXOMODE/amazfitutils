@@ -4,11 +4,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using NLog;
-using Resources.Dithering;
+using Resources.Utils;
 
-namespace Resources
+namespace Resources.Image
 {
-    public class ImageWriter
+    public class Writer
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly byte[] Signature = {(byte) 'B', (byte) 'M', (byte) 'd', 0};
@@ -24,7 +24,7 @@ namespace Resources
         private ushort _transparency;
         private ushort _width;
 
-        public ImageWriter(Stream stream)
+        public Writer(Stream stream)
         {
             _writer = new BinaryWriter(stream);
             _palette = new List<Color>();

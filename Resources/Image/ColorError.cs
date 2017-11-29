@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Resources.Dithering
+namespace Resources.Image
 {
     public class ColorError
     {

@@ -104,6 +104,7 @@ namespace WatchFace.Parser.Utils
 
             var fileName = Path.Combine(_imagesDirectory, $"{index}.png");
             var newImageIndex = Images.Count;
+            Logger.Trace("Loading {0} image from file {1}", newImageIndex, fileName);
             Images.Add((Bitmap) Image.FromFile(fileName));
             _mapping[index] = newImageIndex;
             return newImageIndex;

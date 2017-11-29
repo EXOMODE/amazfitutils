@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Resources
+namespace Resources.Utils
 {
     public class BitWriter
     {

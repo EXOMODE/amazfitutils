@@ -2,10 +2,11 @@
 using System.Drawing;
 using System.IO;
 using NLog;
+using Resources.Utils;
 
-namespace Resources
+namespace Resources.Image
 {
-    public class ImageReader
+    public class Reader
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -18,7 +19,7 @@ namespace Resources
         private bool _transparency;
         private ushort _width;
 
-        public ImageReader(Stream stream)
+        public Reader(Stream stream)
         {
             _reader = new BinaryReader(stream);
         }

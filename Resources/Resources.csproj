@@ -44,20 +44,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitReader.cs" />
-    <Compile Include="BitWriter.cs" />
-    <Compile Include="Dithering\ColorError.cs" />
-    <Compile Include="Dithering\FloydSteinbergDitherer.cs" />
-    <Compile Include="ImageWriter.cs" />
-    <Compile Include="ResourcesExtractor.cs" />
-    <Compile Include="ResourcesHeader.cs" />
-    <Compile Include="ImageReader.cs" />
-    <Compile Include="ResourcesFileReader.cs" />
+    <Compile Include="Models\FileDescriptor.cs" />
+    <Compile Include="Utils\BitReader.cs" />
+    <Compile Include="Utils\BitWriter.cs" />
+    <Compile Include="Image\ColorError.cs" />
+    <Compile Include="Image\FloydSteinbergDitherer.cs" />
+    <Compile Include="Image\Writer.cs" />
+    <Compile Include="Writer.cs" />
+    <Compile Include="Extractor.cs" />
+    <Compile Include="FileWriter.cs" />
+    <Compile Include="Models\Header.cs" />
+    <Compile Include="Image\Reader.cs" />
+    <Compile Include="FileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourcesReader.cs" />
+    <Compile Include="Reader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using NLog;
-using Resources;
 using WatchFace.Parser.Models;
 using WatchFace.Parser.Utils;
 
@@ -24,7 +22,10 @@ namespace WatchFace.Parser
 
         public void Write(WatchFace watchFace)
         {
+            Logger.Trace("Building parameters for watch face...");
             var descriptor = ParametersConverter.Build(watchFace);
+
+            Logger.Trace("Encoding parameters...");
             var encodedParameters = new Dictionary<byte, MemoryStream>(descriptor.Count);
             foreach (var parameter in descriptor)
             {
@@ -34,9 +35,9 @@ namespace WatchFace.Parser
                 encodedParameters[parameter.Id] = memoryStream;
             }
 
+            Logger.Trace("Encoding offsets and lengths...");
             var parametersPositions = new List<Parameter>(descriptor.Count + 1);
             var offset = (long) 0;
-
             foreach (var encodedParameter in encodedParameters)
             {
                 var encodedParameterId = encodedParameter.Key;
@@ -58,6 +59,7 @@ namespace WatchFace.Parser
             foreach (var parametersPosition in parametersPositions)
                 parametersPosition.Write(encodedParametersPositions);
 
+            Logger.Trace("Writing header...");
             var header = new Header
             {
                 ParametersSize = (uint) encodedParametersPositions.Length,
@@ -65,43 +67,19 @@ namespace WatchFace.Parser
             };
             header.WriteTo(_stream);
 
+            Logger.Trace("Writing parameters offsets and lengths...");
             encodedParametersPositions.Seek(0, SeekOrigin.Begin);
             encodedParametersPositions.WriteTo(_stream);
 
+            Logger.Trace("Writing parameters...");
             foreach (var encodedParameter in encodedParameters)
             {
                 var stream = encodedParameter.Value;
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.WriteTo(_stream);
             }
-            WriteImages();
-        }
-
-        public void WriteImages()
-        {
-            var offsetsTable = new byte[_images.Count * 4];
-            var encodedImages = new MemoryStream[_images.Count];
-
-            var offset = (uint) 0;
-            for (var i = 0; i < _images.Count; i++)
-            {
-                var offsetBytes = BitConverter.GetBytes(offset);
-                offsetBytes.CopyTo(offsetsTable, i * 4);
-
-                var encodedImage = new MemoryStream();
-                Logger.Debug("Writing image {0}...", i);
-                new ImageWriter(encodedImage).Write(_images[i]);
-                offset += (uint) encodedImage.Length;
-                encodedImages[i] = encodedImage;
-            }
-
-            _stream.Write(offsetsTable, 0, offsetsTable.Length);
-
-            foreach (var encodedImage in encodedImages)
-            {
-                encodedImage.Seek(0, SeekOrigin.Begin);
-                encodedImage.CopyTo(_stream);
-            }
+            Logger.Trace("Writing images...");
+            new Resources.Writer(_stream).Write(_images);
         }
     }
 }

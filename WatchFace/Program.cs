@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
@@ -6,8 +7,10 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using Resources;
-using WatchFace.Parser;
+using Resources.Models;
 using WatchFace.Parser.Utils;
+using Reader = WatchFace.Parser.Reader;
+using Writer = WatchFace.Parser.Writer;
 
 namespace WatchFace
 {
@@ -22,12 +25,13 @@ namespace WatchFace
             if (args.Length == 0 || args[0] == null)
             {
                 Console.WriteLine(
-                    "{0}.exe unpacks and packs Amazfit Bip downloadable watch faces and unpacks res files.", AppName);
+                    "{0}.exe unpacks and packs Amazfit Bip downloadable watch faces and resource files.", AppName);
                 Console.WriteLine();
                 Console.WriteLine("Usage examples:");
-                Console.WriteLine("  {0}.exe watchface.bin  - unpacks watchface images and config", AppName);
-                Console.WriteLine("  {0}.exe watchface.res  - unpacks resource file images", AppName);
-                Console.WriteLine("  {0}.exe watchface.json - packs config and referenced images to bin file", AppName);
+                Console.WriteLine("  {0}.exe watchface.bin   - unpacks watchface images and config", AppName);
+                Console.WriteLine("  {0}.exe watchface.json  - packs config and referenced images to bin file", AppName);
+                Console.WriteLine("  {0}.exe mili_chaohu.res - unpacks resource file images", AppName);
+                Console.WriteLine("  {0}.exe mili_chaohu     - packs folder content to res file", AppName);
                 return;
             }
 
@@ -36,9 +40,24 @@ namespace WatchFace
 
             foreach (var inputFileName in args)
             {
-                if (!File.Exists(inputFileName))
+                var isDirectory = Directory.Exists(inputFileName);
+                var isFile = File.Exists(inputFileName);
+                if (!isDirectory && !isFile)
                 {
-                    Console.WriteLine("File '{0}' doesn't exists.", inputFileName);
+                    Console.WriteLine("File or directory '{0}' doesn't exists.", inputFileName);
+                    continue;
+                }
+                if (isDirectory)
+                {
+                    Console.WriteLine("Processing directory '{0}'", inputFileName);
+                    try
+                    {
+                        PackResources(inputFileName);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Fatal(e);
+                    }
                     continue;
                 }
 
@@ -105,8 +124,42 @@ namespace WatchFace
             if (watchFace == null) return;
 
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
-            new ResourcesExtractor(reader.Images).Extract(outputDirectory);
+            var reDescriptor = new FileDescriptor {Images = reader.Images};
+            new Extractor(reDescriptor).Extract(outputDirectory);
             ExportConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
+        }
+
+        private static void PackResources(string inputDirectory)
+        {
+            var outputDirectory = Path.GetDirectoryName(inputDirectory);
+            var baseName = Path.GetFileName(inputDirectory);
+            var outputFileName = Path.Combine(outputDirectory, $"{baseName}_packed.res");
+            var logFileName = Path.Combine(outputDirectory, $"{baseName}_packed.log");
+            SetupLogger(logFileName);
+
+            var versionFileName = Path.Combine(inputDirectory, "version");
+            var resDescriptor = new FileDescriptor();
+            using (var stream = File.OpenRead(versionFileName))
+            using (var reader = new BinaryReader(stream))
+            {
+                resDescriptor.Version = reader.ReadByte();
+            }
+            var i = 0;
+            var images = new List<Bitmap>();
+            while (true)
+            {
+                var fileName = Path.Combine(inputDirectory, $"{i}.png");
+                if (!File.Exists(fileName)) break;
+
+                images.Add((Bitmap) Image.FromFile(fileName));
+                i++;
+            }
+            resDescriptor.Images = images;
+
+            using (var stream = File.OpenWrite(outputFileName))
+            {
+                new FileWriter(stream).Write(resDescriptor);
+            }
         }
 
         private static void UnpackResources(string inputFileName)
@@ -115,13 +168,13 @@ namespace WatchFace
             var baseName = Path.GetFileNameWithoutExtension(inputFileName);
             SetupLogger(Path.Combine(outputDirectory, $"{baseName}.log"));
 
-            Bitmap[] images;
+            FileDescriptor resDescriptor;
             using (var stream = File.OpenRead(inputFileName))
             {
-                images = new ResourcesFileReader(stream).Read();
+                resDescriptor = FileReader.Read(stream);
             }
 
-            new ResourcesExtractor(images).Extract(outputDirectory);
+            new Extractor(resDescriptor).Extract(outputDirectory);
         }
 
         private static void WriteWatchFace(string outputFileName, string imagesDirectory, Parser.WatchFace watchFace)
