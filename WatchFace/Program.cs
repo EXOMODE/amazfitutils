@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using Newtonsoft.Json;
 using NLog;
@@ -8,6 +9,7 @@ using NLog.Config;
 using NLog.Targets;
 using Resources;
 using Resources.Models;
+using WatchFace.Parser.Models;
 using WatchFace.Parser.Utils;
 using Reader = WatchFace.Parser.Reader;
 using Writer = WatchFace.Parser.Writer;
@@ -29,7 +31,8 @@ namespace WatchFace
                 Console.WriteLine();
                 Console.WriteLine("Usage examples:");
                 Console.WriteLine("  {0}.exe watchface.bin   - unpacks watchface images and config", AppName);
-                Console.WriteLine("  {0}.exe watchface.json  - packs config and referenced images to bin file", AppName);
+                Console.WriteLine("  {0}.exe watchface.json  - packs config and referenced images to bin file",
+                    AppName);
                 Console.WriteLine("  {0}.exe mili_chaohu.res - unpacks resource file images", AppName);
                 Console.WriteLine("  {0}.exe mili_chaohu     - packs folder content to res file", AppName);
                 return;
@@ -123,6 +126,14 @@ namespace WatchFace
             var watchFace = ParseResources(reader);
             if (watchFace == null) return;
 
+            Logger.Debug("Generating preview...");
+            var previewWatchFace = new Parser.Models.Elements.WatchFace(reader.Parameters);
+
+            var preview = new Bitmap(176, 176);
+            var graphics = Graphics.FromImage(preview);
+            previewWatchFace.Draw(graphics, reader.Images.ToArray(), new WatchState());
+            preview.Save(Path.Combine(outputDirectory, $"{baseName}.png"), ImageFormat.Png);
+
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             var reDescriptor = new FileDescriptor {Images = reader.Images};
             new Extractor(reDescriptor).Extract(outputDirectory);
@@ -185,11 +196,22 @@ namespace WatchFace
                 var imagesReader = new ImagesLoader(imagesDirectory);
                 imagesReader.Process(watchFace);
 
+                Logger.Trace("Building parameters for watch face...");
+                var descriptor = ParametersConverter.Build(watchFace);
+
+                Logger.Debug("Generating preview...");
+                var previewWatchFace = new Parser.Models.Elements.WatchFace(descriptor);
+
+                var preview = new Bitmap(176, 176);
+                var graphics = Graphics.FromImage(preview);
+                previewWatchFace.Draw(graphics, imagesReader.Images.ToArray(), new WatchState());
+                preview.Save(Path.ChangeExtension(outputFileName, ".png"));
+
                 Logger.Debug("Writing watch face to '{0}'", outputFileName);
                 using (var fileStream = File.OpenWrite(outputFileName))
                 {
                     var writer = new Writer(fileStream, imagesReader.Images);
-                    writer.Write(watchFace);
+                    writer.Write(descriptor);
                     fileStream.Flush();
                 }
             }

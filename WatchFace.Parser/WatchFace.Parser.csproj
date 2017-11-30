@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -76,10 +77,77 @@
     <Compile Include="Elements\WeatherElements\TemperatureNumber.cs" />
     <Compile Include="Elements\WeatherElements\TodayTemperature.cs" />
     <Compile Include="Elements\WeatherElements\WeatherIcon.cs" />
+    <Compile Include="Helpers\DrawerHelper.cs" />
+    <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="JsonConverters\HexStringJsonConverter.cs" />
+    <Compile Include="Models\Elements\Activity\CaloriesElement.cs" />
+    <Compile Include="Models\Elements\Activity\StepsElement.cs" />
+    <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
+    <Compile Include="Models\Elements\Activity\PulseElement.cs" />
+    <Compile Include="Models\Elements\AnalogDial\SecondsClockHandElement.cs" />
+    <Compile Include="Models\Elements\AnalogDial\MinutesClockHandElement.cs" />
+    <Compile Include="Models\Elements\AnalogDial\HoursClockHandElement.cs" />
+    <Compile Include="Models\Elements\Basic\ContainerElement.cs" />
+    <Compile Include="Models\Elements\Battery\BatteryLenearProgressElement.cs" />
+    <Compile Include="Models\Elements\Battery\BatteryNumberElement.cs" />
+    <Compile Include="Models\Elements\Common\ImageSetElement.cs" />
+    <Compile Include="Models\Elements\Common\CircularProgressElement.cs" />
+    <Compile Include="Models\Elements\Common\ClockHandElement.cs" />
+    <Compile Include="Models\Elements\GoalProgressElement.cs" />
+    <Compile Include="Models\Elements\GoalProgress\GoalReachedElement.cs" />
+    <Compile Include="Models\Elements\Common\LinearProgressElement.cs" />
+    <Compile Include="Models\Elements\GoalProgress\CircularGoalProgressElement.cs" />
+    <Compile Include="Models\Elements\GoalProgress\LinearGoalProgressElement.cs" />
+    <Compile Include="Models\Elements\Battery\BatteryImageSetElement.cs" />
+    <Compile Include="Models\Elements\BatteryElement.cs" />
+    <Compile Include="Models\Elements\StatusElement.cs" />
+    <Compile Include="Models\Elements\AnalogDialElement.cs" />
+    <Compile Include="Models\Elements\WeatherElement.cs" />
+    <Compile Include="Models\Elements\DateElement.cs" />
+    <Compile Include="Models\Elements\Activity\DistanceElement.cs" />
+    <Compile Include="Models\Elements\BackgroundElement.cs" />
+    <Compile Include="Models\Elements\ActivityElement.cs" />
+    <Compile Include="Models\Elements\Date\MonthAndDay\SeparateMonthAndDayElement.cs" />
+    <Compile Include="Models\Elements\Date\MonthAndDay\OneLineMonthAndDayElement.cs" />
+    <Compile Include="Models\Elements\Date\MonthAndDayElement.cs" />
+    <Compile Include="Models\Elements\Date\WeekDayElement.cs" />
+    <Compile Include="Models\Elements\TimeElement.cs" />
+    <Compile Include="Models\Elements\Time\SecondsElement.cs" />
+    <Compile Include="Models\Elements\Time\MinutesElement.cs" />
+    <Compile Include="Models\Elements\Time\HoursElement.cs" />
+    <Compile Include="Models\Elements\Common\TwoDigitsElement.cs" />
+    <Compile Include="Models\Elements\WatchFace.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\Today\OnelineTemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\Today\TodayNightTemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\Today\TodayDayTemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\CurrentTemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\AirPollution\AirPollutionImageElement.cs" />
+    <Compile Include="Models\Elements\Weather\AirPollutionElement.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\Today\SeparateTemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\TodayTemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\Temperature\TemperatureNumberElement.cs" />
+    <Compile Include="Models\Elements\Weather\TemperatureElement.cs" />
+    <Compile Include="Models\Elements\Weather\WeatherIconsElement.cs" />
+    <Compile Include="Models\TextAlignment.cs" />
+    <Compile Include="Models\Elements\Common\DigitElement.cs" />
+    <Compile Include="Models\Elements\Basic\ValueElement.cs" />
+    <Compile Include="Models\Elements\Status\UnlockedElement.cs" />
+    <Compile Include="Models\Elements\Status\DoNotDisturbElement.cs" />
+    <Compile Include="Models\Elements\Status\AlarmElement.cs" />
+    <Compile Include="Models\Elements\Status\BluetoothElement.cs" />
+    <Compile Include="Models\Elements\Common\SwitchElement.cs" />
+    <Compile Include="Models\Elements\Basic\CompositeElement.cs" />
+    <Compile Include="Models\Elements\Basic\Element.cs" />
+    <Compile Include="Models\Elements\Time\AmPmElement.cs" />
+    <Compile Include="Models\Elements\Common\ImageElement.cs" />
+    <Compile Include="Models\Elements\Common\CoordinatesElement.cs" />
+    <Compile Include="Models\Elements\Common\NumberElement.cs" />
     <Compile Include="Models\Header.cs" />
     <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\ParameterFlags.cs" />
+    <Compile Include="Models\WatchState.cs" />
+    <Compile Include="Models\AirCondition.cs" />
+    <Compile Include="Models\WeatherCondition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="Attributes\ParameterImagesCountAttribute.cs" />
@@ -100,5 +168,14 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="WeatherIcons\247.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WeatherIcons\279.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

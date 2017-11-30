@@ -20,11 +20,8 @@ namespace WatchFace.Parser
             _images = images;
         }
 
-        public void Write(WatchFace watchFace)
+        public void Write(IList<Parameter> descriptor)
         {
-            Logger.Trace("Building parameters for watch face...");
-            var descriptor = ParametersConverter.Build(watchFace);
-
             Logger.Trace("Encoding parameters...");
             var encodedParameters = new Dictionary<byte, MemoryStream>(descriptor.Count);
             foreach (var parameter in descriptor)
