@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using BumpKit;
 using NLog;
 using Resources.Utils;
 
@@ -70,26 +71,30 @@ namespace Resources.Image
         private void ExtractPalette()
         {
             Logger.Trace("Extracting palette...");
-            for (var y = 0; y < _height; y++)
-            for (var x = 0; x < _width; x++)
-            {
-                var color = _image.GetPixel(x, y);
-                if (_palette.Contains(color)) continue;
 
-                if (color.A < 0x80 && _transparency == 0)
+            using (var context = _image.CreateUnsafeContext())
+            {
+                for (var y = 0; y < _height; y++)
+                for (var x = 0; x < _width; x++)
                 {
-                    Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, Transaparent color",
-                        _palette.Count, color.R, color.G, color.B
-                    );
-                    _palette.Insert(0, color);
-                    _transparency = 1;
-                }
-                else
-                {
-                    Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}",
-                        _palette.Count, color.R, color.G, color.B
-                    );
-                    _palette.Add(color);
+                    var color = context.GetPixel(x, y);
+                    if (_palette.Contains(color)) continue;
+
+                    if (color.A < 0x80 && _transparency == 0)
+                    {
+                        Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, Transaparent color",
+                            _palette.Count, color.R, color.G, color.B
+                        );
+                        _palette.Insert(0, color);
+                        _transparency = 1;
+                    }
+                    else
+                    {
+                        Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}",
+                            _palette.Count, color.R, color.G, color.B
+                        );
+                        _palette.Add(color);
+                    }
                 }
             }
             _paletteColors = (ushort) _palette.Count;
@@ -136,26 +141,29 @@ namespace Resources.Image
                 i++;
             }
 
-            for (var y = 0; y < _height; y++)
+            using (var context = _image.CreateUnsafeContext())
             {
-                var rowData = new byte[_rowLengthInBytes];
-                var memoryStream = new MemoryStream(rowData);
-                var bitWriter = new BitWriter(memoryStream);
-                for (var x = 0; x < _width; x++)
+                for (var y = 0; y < _height; y++)
                 {
-                    var color = _image.GetPixel(x, y);
-                    if (color.A < 0x80 && _transparency == 1)
+                    var rowData = new byte[_rowLengthInBytes];
+                    var memoryStream = new MemoryStream(rowData);
+                    var bitWriter = new BitWriter(memoryStream);
+                    for (var x = 0; x < _width; x++)
                     {
-                        bitWriter.WriteBits(0, _bitsPerPixel);
+                        var color = context.GetPixel(x, y);
+                        if (color.A < 0x80 && _transparency == 1)
+                        {
+                            bitWriter.WriteBits(0, _bitsPerPixel);
+                        }
+                        else
+                        {
+                            var paletteIndex = paletteHash[color];
+                            bitWriter.WriteBits(paletteIndex, _bitsPerPixel);
+                        }
                     }
-                    else
-                    {
-                        var paletteIndex = paletteHash[color];
-                        bitWriter.WriteBits(paletteIndex, _bitsPerPixel);
-                    }
+                    bitWriter.Flush();
+                    _writer.Write(rowData);
                 }
-                bitWriter.Flush();
-                _writer.Write(rowData);
             }
         }
     }

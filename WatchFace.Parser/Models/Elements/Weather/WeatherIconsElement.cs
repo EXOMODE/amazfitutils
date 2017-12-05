@@ -15,18 +15,19 @@ namespace WatchFace.Parser.Models.Elements
 
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            if (state.CurrentWeather != WeatherCondition.Unknown)
+            if (state.CurrentWeather != WeatherCondition.Unknown && Current != null)
                 drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), Current.X, Current.Y);
-            else if (state.TodayWeather != WeatherCondition.Unknown)
+            else if (state.TodayWeather != WeatherCondition.Unknown && Today != null)
                 drawer.DrawImage(LoadWeatherImage(state.TodayWeather), Today.X, Today.Y);
-            else if (state.TomorrowWeather != WeatherCondition.Unknown)
+            else if (state.TomorrowWeather != WeatherCondition.Unknown && Tomorrow != null)
                 drawer.DrawImage(LoadWeatherImage(state.TomorrowWeather), Tomorrow.X, Tomorrow.Y);
         }
 
         private static Bitmap LoadWeatherImage(WeatherCondition weather)
         {
-            var appLocation = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return (Bitmap) Image.FromFile(System.IO.Path.Combine(appLocation, "WeatherIcons", $"{(int) weather}.png"));
+            var assembly = Assembly.GetExecutingAssembly();
+            var imageStream = assembly.GetManifestResourceStream($"WatchFace.Parser.WeatherIcons.{(int) weather}.png");
+            return (Bitmap) Image.FromStream(imageStream);
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)

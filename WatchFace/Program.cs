@@ -9,7 +9,7 @@ using NLog.Config;
 using NLog.Targets;
 using Resources;
 using Resources.Models;
-using WatchFace.Parser.Models;
+using WatchFace.Parser;
 using WatchFace.Parser.Utils;
 using Reader = WatchFace.Parser.Reader;
 using Writer = WatchFace.Parser.Writer;
@@ -126,13 +126,13 @@ namespace WatchFace
             var watchFace = ParseResources(reader);
             if (watchFace == null) return;
 
-            Logger.Debug("Generating preview...");
-            var previewWatchFace = new Parser.Models.Elements.WatchFace(reader.Parameters);
-
-            var preview = new Bitmap(176, 176);
-            var graphics = Graphics.FromImage(preview);
-            previewWatchFace.Draw(graphics, reader.Images.ToArray(), new WatchState());
-            preview.Save(Path.Combine(outputDirectory, $"{baseName}.png"), ImageFormat.Png);
+            Logger.Debug("Generating previews...");
+            var preview = PreviewGenerator.CreateImage(reader.Parameters, reader.Images.ToArray());
+            preview.Save(Path.Combine(outputDirectory, $"{baseName}_preview.png"), ImageFormat.Png);
+            using (var gifOutput = File.OpenWrite(Path.Combine(outputDirectory, $"{baseName}_preview.gif")))
+            {
+                PreviewGenerator.CreateGif(reader.Parameters, reader.Images.ToArray(), gifOutput);
+            }
 
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             var reDescriptor = new FileDescriptor {Images = reader.Images};
@@ -200,12 +200,12 @@ namespace WatchFace
                 var descriptor = ParametersConverter.Build(watchFace);
 
                 Logger.Debug("Generating preview...");
-                var previewWatchFace = new Parser.Models.Elements.WatchFace(descriptor);
-
-                var preview = new Bitmap(176, 176);
-                var graphics = Graphics.FromImage(preview);
-                previewWatchFace.Draw(graphics, imagesReader.Images.ToArray(), new WatchState());
+                var preview = PreviewGenerator.CreateImage(descriptor, imagesReader.Images.ToArray());
                 preview.Save(Path.ChangeExtension(outputFileName, ".png"));
+                using (var gifOutput = File.OpenWrite(Path.ChangeExtension(outputFileName, ".gif")))
+                {
+                    PreviewGenerator.CreateGif(descriptor, imagesReader.Images.ToArray(), gifOutput);
+                }
 
                 Logger.Debug("Writing watch face to '{0}'", outputFileName);
                 using (var fileStream = File.OpenWrite(outputFileName))
@@ -218,6 +218,7 @@ namespace WatchFace
             catch (Exception e)
             {
                 Logger.Fatal(e.Message);
+                File.Delete(outputFileName);
             }
         }
 

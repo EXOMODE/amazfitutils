@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using BumpKit;
 using NLog;
 using Resources.Utils;
 
@@ -79,15 +80,18 @@ namespace Resources.Image
         private Bitmap ReadImage()
         {
             var image = new Bitmap(_width, _height);
-            for (var y = 0; y < _height; y++)
+            using (var context = image.CreateUnsafeContext())
             {
-                var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
-                var bitReader = new BitReader(rowBytes);
-                for (var x = 0; x < _width; x++)
+                for (var y = 0; y < _height; y++)
                 {
-                    var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
-                    var color = _palette[(int) pixelColorIndex];
-                    image.SetPixel(x, y, color);
+                    var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
+                    var bitReader = new BitReader(rowBytes);
+                    for (var x = 0; x < _width; x++)
+                    {
+                        var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
+                        var color = _palette[(int) pixelColorIndex];
+                        context.SetPixel(x, y, color);
+                    }
                 }
             }
             return image;

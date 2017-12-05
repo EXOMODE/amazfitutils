@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using WatchFace.Parser.Interfaces;
 
@@ -29,7 +30,7 @@ namespace WatchFace.Parser.Models.Elements.Common
             }
             else
             {
-                drawer.FillPolygon(new SolidBrush(Color), points);
+                drawer.FillPolygon(new SolidBrush(Color), points, FillMode.Alternate);
                 drawer.DrawPolygon(new Pen(Color, 1), points);
             }
 
@@ -40,8 +41,8 @@ namespace WatchFace.Parser.Models.Elements.Common
         {
             var radians = degrees / 180 * Math.PI;
             var x = element.X * Math.Cos(radians) + element.Y * Math.Sin(radians);
-            var y = element.X * Math.Sin(radians) + element.Y * Math.Cos(radians);
-            return new Point((int) Math.Round(x + Center.X), (int) Math.Round(y + Center.Y));
+            var y = element.X * Math.Sin(radians) - element.Y * Math.Cos(radians);
+            return new Point((int) Math.Floor(x + Center.X), (int) Math.Floor(y + Center.Y));
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)
