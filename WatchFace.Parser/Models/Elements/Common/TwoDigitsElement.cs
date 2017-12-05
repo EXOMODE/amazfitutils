@@ -12,8 +12,8 @@ namespace WatchFace.Parser.Models.Elements
         {
             if (number > 99) number = number % 100;
 
-            Tens.Draw(drawer, images, number / 10);
-            Ones.Draw(drawer, images, number % 10);
+            Tens?.Draw(drawer, images, number / 10);
+            Ones?.Draw(drawer, images, number % 10);
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)
