@@ -4,13 +4,14 @@ namespace WatchFace.Parser.Models.Elements
 {
     public class ImageSetElement : ImageElement
     {
-        public ImageSetElement(Parameter parameter, Element parent, string name = null) : base(parameter, parent, name) { }
+        public ImageSetElement(Parameter parameter, Element parent, string name = null) :
+            base(parameter, parent, name) { }
 
         public long ImagesCount { get; set; }
 
         public void Draw(Graphics drawer, Bitmap[] resources, int index)
         {
-            if (index >= ImagesCount) return;
+            if (index >= ImagesCount) index = (int) ImagesCount - 1;
 
             var imageIndex = ImageIndex + index;
             drawer.DrawImage(resources[imageIndex], new Point((int) X, (int) Y));
