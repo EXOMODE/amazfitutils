@@ -21,8 +21,8 @@ namespace WatchFace.Parser.Models.Elements.GoalProgress
         {
             var sectorAngle = (EndAngle - StartAngle) * value / total;
             var pen = new Pen(Color, Width);
-            var rect = new Rectangle((int) (X - RadiusX + Width / 2), (int) (Y - RadiusY + Width / 2),
-                (int) (RadiusX * 2 - Width / 2 - 1), (int) (RadiusY * 2 - Width / 2 - 1));
+            var rect = new Rectangle((int) (X - RadiusX), (int) (Y - RadiusY),
+                (int) (RadiusX * 2), (int) (RadiusY * 2));
             drawer.DrawArc(pen, rect, StartAngle - 90, sectorAngle);
         }
 
