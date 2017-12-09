@@ -217,7 +217,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e.Message);
+                Logger.Fatal(e);
                 File.Delete(outputFileName);
             }
         }
@@ -237,7 +237,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e.Message);
+                Logger.Fatal(e);
                 return null;
             }
         }
@@ -251,7 +251,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e.Message);
+                Logger.Fatal(e);
                 return null;
             }
         }
@@ -283,7 +283,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e.Message);
+                Logger.Fatal(e);
                 return null;
             }
         }
@@ -303,7 +303,7 @@ namespace WatchFace
             }
             catch (Exception e)
             {
-                Logger.Fatal(e.Message);
+                Logger.Fatal(e);
             }
         }
 

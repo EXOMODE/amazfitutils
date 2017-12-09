@@ -31,10 +31,18 @@ namespace WatchFace.Parser.Utils
                 if (propertyValue == null)
                     continue;
 
-                if (propertyType == typeof(long))
+                if (propertyType == typeof(long) ||
+                    propertyType == typeof(TextAlignment) ||
+                    propertyType == typeof(bool))
                 {
-                    Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, propertyValue);
-                    result.Add(new Parameter(id, propertyValue));
+                    long value;
+                    if (propertyType == typeof(bool))
+                        value = propertyValue ? 1 : 0;
+                    else
+                        value = (long) propertyValue;
+
+                    Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, value);
+                    result.Add(new Parameter(id, value));
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
@@ -51,6 +59,7 @@ namespace WatchFace.Parser.Utils
                     result.Add(new Parameter(id, Build(propertyValue, currentPath)));
                 }
             }
+
             return result;
         }
 
@@ -75,8 +84,10 @@ namespace WatchFace.Parser.Utils
                 var propertyInfo = properties[parameter.Id];
                 var propertyType = propertyInfo.PropertyType;
 
-                if (propertyType == typeof(long) || propertyType.IsGenericType &&
-                    propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (propertyType == typeof(long) ||
+                    propertyType == typeof(TextAlignment) ||
+                    propertyType == typeof(bool) ||
+                    propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, parameter.Value);
                     dynamic propertyValue = propertyInfo.GetValue(result, null);
@@ -84,10 +95,15 @@ namespace WatchFace.Parser.Utils
                     if (propertyType.IsGenericType && propertyValue != null)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
-                    if (!propertyType.IsGenericType && propertyValue != 0)
+                    if (!propertyType.IsGenericType && propertyType == typeof(long) && propertyValue != 0)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");
 
-                    propertyInfo.SetValue(result, parameter.Value, null);
+                    if (propertyType == typeof(TextAlignment))
+                        propertyInfo.SetValue(result, (TextAlignment) parameter.Value, null);
+                    else if (propertyType == typeof(bool))
+                        propertyInfo.SetValue(result, parameter.Value > 0, null);
+                    else
+                        propertyInfo.SetValue(result, parameter.Value, null);
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
@@ -128,6 +144,7 @@ namespace WatchFace.Parser.Utils
                     }
                 }
             }
+
             return result;
         }
     }

@@ -17,7 +17,7 @@ namespace WatchFace.Parser.Elements.WeatherElements
         public long DelimiterImageIndex { get; set; }
 
         [ParameterId(4)]
-        public long AppendDegreesForBoth { get; set; }
+        public bool AppendDegreesForBoth { get; set; }
 
         [ParameterId(5)]
         [ParameterImageIndex]

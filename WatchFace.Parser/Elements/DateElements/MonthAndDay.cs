@@ -11,9 +11,9 @@ namespace WatchFace.Parser.Elements.DateElements
         public OneLineMonthAndDay OneLine { get; set; }
 
         [ParameterId(3)]
-        public long TwoDigitsMonth { get; set; }
+        public bool TwoDigitsMonth { get; set; }
 
         [ParameterId(4)]
-        public long TwoDigitsDay { get; set; }
+        public bool TwoDigitsDay { get; set; }
     }
 }

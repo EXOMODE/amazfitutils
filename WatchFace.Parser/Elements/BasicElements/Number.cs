@@ -1,4 +1,7 @@
-﻿using WatchFace.Parser.Attributes;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Models;
 
 namespace WatchFace.Parser.Elements.BasicElements
 {
@@ -17,7 +20,8 @@ namespace WatchFace.Parser.Elements.BasicElements
         public long BottomRightY { get; set; }
 
         [ParameterId(5)]
-        public long Alignment { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public TextAlignment Alignment { get; set; }
 
         [ParameterId(6)]
         public long Spacing { get; set; }
