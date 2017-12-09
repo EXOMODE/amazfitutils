@@ -156,6 +156,7 @@
     <Compile Include="Reader.cs" />
     <Compile Include="Attributes\ParameterImagesCountAttribute.cs" />
     <Compile Include="Utils\ElementsHelper.cs" />
+    <Compile Include="Utils\ImageLoader.cs" />
     <Compile Include="Utils\ImagesLoader.cs" />
     <Compile Include="Utils\ParametersConverter.cs" />
     <Compile Include="Attributes\ParameterImageIndexAttribute.cs" />

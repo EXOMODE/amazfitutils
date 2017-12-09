@@ -7,6 +7,7 @@ namespace Resources
 {
     public class Extractor
     {
+        public static readonly int NumericPartLength = 3;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly FileDescriptor _descriptor;
@@ -27,9 +28,11 @@ namespace Resources
                     writer.Write(_descriptor.Version.Value);
                 }
             }
+
             for (var i = 0; i < _descriptor.Images.Count; i++)
             {
-                var fileName = Path.Combine(outputDirectory, $"{i}.png");
+                var numericPart = i.ToString().PadLeft(NumericPartLength, '0');
+                var fileName = Path.Combine(outputDirectory, numericPart + ".png");
                 Logger.Debug("Extracting {0}...", fileName);
                 _descriptor.Images[i].Save(fileName, ImageFormat.Png);
             }

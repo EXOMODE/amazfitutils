@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using NLog;
 using WatchFace.Parser.Attributes;
 
@@ -102,10 +101,9 @@ namespace WatchFace.Parser.Utils
             if (_mapping.ContainsKey(index))
                 return _mapping[index];
 
-            var fileName = Path.Combine(_imagesDirectory, $"{index}.png");
             var newImageIndex = Images.Count;
-            Logger.Trace("Loading {0} image from file {1}", newImageIndex, fileName);
-            Images.Add((Bitmap) Image.FromFile(fileName));
+            Logger.Trace("Loading image {0}...", newImageIndex);
+            Images.Add(ImageLoader.LoadImageForNumber(_imagesDirectory, index));
             _mapping[index] = newImageIndex;
             return newImageIndex;
         }
