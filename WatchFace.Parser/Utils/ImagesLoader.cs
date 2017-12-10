@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using NLog;
+using Resources;
 using WatchFace.Parser.Attributes;
 
 namespace WatchFace.Parser.Utils

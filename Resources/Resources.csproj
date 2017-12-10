@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageLoader.cs" />
     <Compile Include="Models\FileDescriptor.cs" />
     <Compile Include="Utils\BitReader.cs" />
     <Compile Include="Utils\BitWriter.cs" />

@@ -159,10 +159,16 @@ namespace WatchFace
             var images = new List<Bitmap>();
             while (true)
             {
-                var fileName = Path.Combine(inputDirectory, $"{i}.png");
-                if (!File.Exists(fileName)) break;
-
-                images.Add((Bitmap) Image.FromFile(fileName));
+                try
+                {
+                    var image = ImageLoader.LoadImageForNumber(inputDirectory, i);
+                    images.Add(image);
+                }
+                catch (FileNotFoundException)
+                {
+                    Logger.Info("All images with sequenced names are loaded. Latest loaded image: {0}", i - 1);
+                    break;
+                }
                 i++;
             }
             resDescriptor.Images = images;
