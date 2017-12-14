@@ -44,7 +44,7 @@ namespace Resources.Image
 
             if (_bitsPerPixel > 4)
                 throw new ArgumentException(
-                    $"The image has {_bitsPerPixel} bit/pixel and can't be packed for using on the watches. Looks like dithering works wincorrectly on the image."
+                    $"The image has {_bitsPerPixel} bit/pixel and can't be packed for using on the watches. Looks like dithering works incorrectly on the image."
                 );
 
             _rowLengthInBytes = (ushort) Math.Ceiling(_width * _bitsPerPixel / 8.0);
