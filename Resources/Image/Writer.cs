@@ -37,7 +37,6 @@ namespace Resources.Image
             _width = (ushort) image.Width;
             _height = (ushort) image.Height;
 
-            ApplyDithering();
             ExtractPalette();
 
             if (_bitsPerPixel == 3) _bitsPerPixel = 4;
@@ -55,17 +54,6 @@ namespace Resources.Image
             WriteHeader();
             WritePalette();
             WriteImage();
-        }
-
-        private void ApplyDithering()
-        {
-            var clone = new Bitmap(_image.Width, _image.Height, PixelFormat.Format32bppArgb);
-            using (var gr = Graphics.FromImage(clone))
-            {
-                gr.DrawImage(_image, new Rectangle(0, 0, clone.Width, clone.Height));
-            }
-            FloydSteinbergDitherer.Process(clone);
-            _image = clone;
         }
 
         private void ExtractPalette()

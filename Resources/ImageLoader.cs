@@ -1,7 +1,9 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using NLog;
+using Resources.Image;
 
 namespace Resources
 {
@@ -27,11 +29,25 @@ namespace Resources
                     continue;
                 }
 
+                var image = (Bitmap) System.Drawing.Image.FromFile(fullFileName);
                 Logger.Trace("Image was loaded from file {0}", fullFileName);
-                return (Bitmap) System.Drawing.Image.FromFile(fullFileName);
+                return ApplyDithering(image);
             }
 
             throw new FileNotFoundException($"File referenced by index {index} not found.");
+        }
+
+        private static Bitmap ApplyDithering(Bitmap image)
+        {
+            var clone = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
+            using (var gr = Graphics.FromImage(clone))
+            {
+                gr.DrawImage(image, new Rectangle(0, 0, clone.Width, clone.Height));
+            }
+
+            FloydSteinbergDitherer.Process(clone);
+            clone.Save("tmp.png");
+            return clone;
         }
     }
 }
