@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.2.4] - 2017-12-14
+### Changed
+- Changed calculated block element position according to watches behavior. Text with width bigger than block width will be rendered with left alignment and text with height bigger than block height will be rendered with top alighnment.
+- Fixed error "The image has (5,6,7...) bit/pixel". It was caused by not applying dithering to alpha-channel (#8).
+- Dithering is now applied right after image load, so preview uses dithered instead of original image.
+
 ## [1.0.2.3] - 2017-12-10
 ### Changed
 - Fixed packing .res files which was unpacked with latest version (using leading zeroes in image file names).
@@ -55,7 +61,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Implemented watchfaces unpacking and packing.
 - Implemented .res file unpacking.
 
-[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.3
+[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.4
+[1.0.2.4]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.4..1.0.2.3
 [1.0.2.3]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.3..1.0.2.2
 [1.0.2.2]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.2..1.0.2.1
 [1.0.2.1]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.1..1.0.2.0
