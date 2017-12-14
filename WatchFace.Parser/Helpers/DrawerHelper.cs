@@ -41,6 +41,9 @@ namespace WatchFace.Parser.Helpers
             else
                 y = (box.Top + box.Bottom - bitmap.Height) >> 1;
 
+            if (x < box.Left) x = box.Left;
+            if (y < box.Top) y = box.Top;
+
             foreach (var image in images)
             {
                 drawer.DrawImage(image, x, y);
