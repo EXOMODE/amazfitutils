@@ -15,12 +15,12 @@ namespace WatchFace.Parser.Models.Elements
         public TwoDigitsElement Minutes { get; set; }
         public TwoDigitsElement Seconds { get; set; }
         public AmPmElement AmPm { get; set; }
-        public long DrawingOrder { get; set; }
+        public long? DrawingOrder { get; set; }
 
         public override void Draw(Graphics drawer, Bitmap[] images, WatchState state)
         {
             var hours = AmPm == null ? state.Time.Hour : state.Time.Hour % 12;
-            var drawingOrder = DrawingOrder == 0 ? 0x1234 : DrawingOrder;
+            var drawingOrder = DrawingOrder ?? 0x1234;
 
             foreach (var position in DrawingOrderIterator.Iterate(drawingOrder))
                 switch (position)
