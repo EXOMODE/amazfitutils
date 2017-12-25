@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.2.5] - 2017-12-25
+### Added
+- Added support for digits drawing order in Time block used by new official watchface (Winter).
+
+### Changed
+- Renamed `Unknown3` property of `Weather.Icon` element to `CurrentAlt`.
+- Renamed `Unknown3` and `Unknown4` properties of `Weather.Temperature.Today.Separate` element to `DayAlt` and `NightAlt`.
+
 ## [1.0.2.4] - 2017-12-14
 ### Changed
 - Changed calculated block element position according to watches behavior. Text with width bigger than block width will be rendered with left alignment and text with height bigger than block height will be rendered with top alighnment.
@@ -61,7 +69,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Implemented watchfaces unpacking and packing.
 - Implemented .res file unpacking.
 
-[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.4
+[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.5
+[1.0.2.5]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.5..1.0.2.4
 [1.0.2.4]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.4..1.0.2.3
 [1.0.2.3]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.3..1.0.2.2
 [1.0.2.2]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.2..1.0.2.1
