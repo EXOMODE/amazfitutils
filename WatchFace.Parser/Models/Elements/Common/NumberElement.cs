@@ -22,6 +22,11 @@ namespace WatchFace.Parser.Models.Elements
             return new Rectangle((int) X, (int) Y, (int) (BottomRightX - X), (int) (BottomRightY - Y));
         }
 
+        public Rectangle GetAltBox(CoordinatesElement altCoordinates)
+        {
+            return new Rectangle((int) altCoordinates.X, (int) altCoordinates.Y, (int) (BottomRightX - X), (int) (BottomRightY - Y));
+        }
+
         public void Draw(Graphics drawer, Bitmap[] images, int number, int minimumDigits = 1)
         {
             DrawerHelper.DrawImages(drawer, GetImagesForNumber(images, number, minimumDigits), (int) Spacing, Alignment, GetBox());

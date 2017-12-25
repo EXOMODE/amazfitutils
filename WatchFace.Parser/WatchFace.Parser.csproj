@@ -82,7 +82,9 @@
     <Compile Include="Elements\WeatherElements\WeatherIcon.cs" />
     <Compile Include="Helpers\DrawerHelper.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
-    <Compile Include="JsonConverters\HexStringJsonConverter.cs" />
+    <Compile Include="JsonConverters\DrawingOrderJsonConverter.cs" />
+    <Compile Include="JsonConverters\ColorJsonConverter.cs" />
+    <Compile Include="Models\DrawingOrderPosition.cs" />
     <Compile Include="Models\Elements\Activity\CaloriesElement.cs" />
     <Compile Include="Models\Elements\Activity\StepsElement.cs" />
     <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
@@ -115,14 +117,9 @@
     <Compile Include="Models\Elements\Date\MonthAndDayElement.cs" />
     <Compile Include="Models\Elements\Date\WeekDayElement.cs" />
     <Compile Include="Models\Elements\TimeElement.cs" />
-    <Compile Include="Models\Elements\Time\SecondsElement.cs" />
-    <Compile Include="Models\Elements\Time\MinutesElement.cs" />
-    <Compile Include="Models\Elements\Time\HoursElement.cs" />
     <Compile Include="Models\Elements\Common\TwoDigitsElement.cs" />
     <Compile Include="Models\Elements\WatchFace.cs" />
     <Compile Include="Models\Elements\Weather\Temperature\Today\OnelineTemperatureElement.cs" />
-    <Compile Include="Models\Elements\Weather\Temperature\Today\TodayNightTemperatureElement.cs" />
-    <Compile Include="Models\Elements\Weather\Temperature\Today\TodayDayTemperatureElement.cs" />
     <Compile Include="Models\Elements\Weather\Temperature\CurrentTemperatureElement.cs" />
     <Compile Include="Models\Elements\Weather\AirPollution\AirPollutionImageElement.cs" />
     <Compile Include="Models\Elements\Weather\AirPollutionElement.cs" />
@@ -155,6 +152,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="Attributes\ParameterImagesCountAttribute.cs" />
+    <Compile Include="Utils\DrawingOrderIterator.cs" />
     <Compile Include="Utils\ElementsHelper.cs" />
     <Compile Include="Utils\ImagesLoader.cs" />
     <Compile Include="Utils\ParametersConverter.cs" />
@@ -173,12 +171,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WeatherIcons\247.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WeatherIcons\279.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="WeatherIcons\247.png" />
+    <EmbeddedResource Include="WeatherIcons\279.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

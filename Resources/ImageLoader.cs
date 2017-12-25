@@ -46,7 +46,6 @@ namespace Resources
             }
 
             FloydSteinbergDitherer.Process(clone);
-            clone.Save("tmp.png");
             return clone;
         }
     }

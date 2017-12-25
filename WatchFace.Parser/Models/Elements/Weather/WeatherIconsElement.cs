@@ -10,17 +10,15 @@ namespace WatchFace.Parser.Models.Elements
             base(parameter, parent, name) { }
 
         public CoordinatesElement Current { get; set; }
-        public CoordinatesElement Today { get; set; }
-        public CoordinatesElement Tomorrow { get; set; }
+        public CoordinatesElement CurrentAlt { get; set; }
+        public CoordinatesElement Unknown4 { get; set; }
 
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            if (state.CurrentWeather != WeatherCondition.Unknown && Current != null)
+            if (state.CurrentTemperature != null)
                 drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), Current.X, Current.Y);
-            else if (state.TodayWeather != WeatherCondition.Unknown && Today != null)
-                drawer.DrawImage(LoadWeatherImage(state.TodayWeather), Today.X, Today.Y);
-            else if (state.TomorrowWeather != WeatherCondition.Unknown && Tomorrow != null)
-                drawer.DrawImage(LoadWeatherImage(state.TomorrowWeather), Tomorrow.X, Tomorrow.Y);
+            else
+                drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), CurrentAlt.X, CurrentAlt.Y);
         }
 
         private static Bitmap LoadWeatherImage(WeatherCondition weather)
@@ -38,11 +36,11 @@ namespace WatchFace.Parser.Models.Elements
                     Current = new CoordinatesElement(parameter, this);
                     return Current;
                 case 3:
-                    Today = new CoordinatesElement(parameter, this);
-                    return Today;
+                    CurrentAlt = new CoordinatesElement(parameter, this);
+                    return CurrentAlt;
                 case 4:
-                    Tomorrow = new CoordinatesElement(parameter, this);
-                    return Tomorrow;
+                    Unknown4 = new CoordinatesElement(parameter, this);
+                    return Unknown4;
                 default:
                     return base.CreateChildForParameter(parameter);
             }

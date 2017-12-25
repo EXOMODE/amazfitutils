@@ -1,31 +1,51 @@
-﻿namespace WatchFace.Parser.Models.Elements
+﻿using System.Drawing;
+
+namespace WatchFace.Parser.Models.Elements
 {
     public class SeparateTemperatureElement : ContainerElement
     {
         public SeparateTemperatureElement(Parameter parameter, Element parent = null, string name = null) :
             base(parameter, parent, name) { }
 
-        public TodayDayTemperatureElement Day { get; set; }
-        public TodayNightTemperatureElement Night { get; set; }
-        public CoordinatesElement Unknown3 { get; set; }
-        public CoordinatesElement Unknown4 { get; set; }
+        public TemperatureNumberElement Day { get; set; }
+        public TemperatureNumberElement Night { get; set; }
+        public CoordinatesElement DayAlt { get; set; }
+        public CoordinatesElement NightAlt { get; set; }
+
+        public override void Draw(Graphics drawer, Bitmap[] images, WatchState state)
+        {
+            if (state.CurrentTemperature != null)
+            {
+                if (state.DayTemperature != null)
+                    Day?.Draw(drawer, images, state.DayTemperature.Value);
+                if (state.NightTemperature != null)
+                    Night?.Draw(drawer, images, state.NightTemperature.Value);
+            }
+            else
+            {
+                if (state.DayTemperature != null)
+                    Day?.Draw(drawer, images, state.DayTemperature.Value, DayAlt);
+                if (state.NightTemperature != null)
+                    Night?.Draw(drawer, images, state.NightTemperature.Value, NightAlt);
+            }
+        }
 
         protected override Element CreateChildForParameter(Parameter parameter)
         {
             switch (parameter.Id)
             {
                 case 1:
-                    Day = new TodayDayTemperatureElement(parameter, this);
+                    Day = new TemperatureNumberElement(parameter, this);
                     return Day;
                 case 2:
-                    Night = new TodayNightTemperatureElement(parameter, this);
+                    Night = new TemperatureNumberElement(parameter, this);
                     return Night;
                 case 3:
-                    Unknown3 = new CoordinatesElement(parameter, this);
-                    return Unknown3;
+                    DayAlt = new CoordinatesElement(parameter, this);
+                    return DayAlt;
                 case 4:
-                    Unknown4 = new CoordinatesElement(parameter, this);
-                    return Unknown4;
+                    NightAlt = new CoordinatesElement(parameter, this);
+                    return NightAlt;
                 default:
                     return base.CreateChildForParameter(parameter);
             }

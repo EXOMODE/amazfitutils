@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace WatchFace.Parser.JsonConverters
 {
-    public class HexStringJsonConverter : JsonConverter
+    public class ColorJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

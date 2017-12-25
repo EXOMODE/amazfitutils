@@ -18,8 +18,6 @@ namespace WatchFace.Parser.Models
         public int? TomorrowDayTemperature { get; set; }
         public int? TomorrowNightTemperature { get; set; }
         public WeatherCondition CurrentWeather { get; set; } = WeatherCondition.Cloudy;
-        public WeatherCondition TodayWeather { get; set; } = WeatherCondition.Unknown;
-        public WeatherCondition TomorrowWeather { get; set; } = WeatherCondition.Unknown;
         public AirCondition Air { get; set; } = AirCondition.Excellent;
 
         public int BatteryLevel { get; set; } = 67;

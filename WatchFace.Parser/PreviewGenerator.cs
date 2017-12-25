@@ -35,7 +35,13 @@ namespace WatchFace.Parser
 
                     watchState.DayTemperature += 2;
                     watchState.NightTemperature += 4;
-                    watchState.CurrentTemperature += 3;
+
+                    if (num < 3)
+                        watchState.CurrentTemperature = null;
+                    else if (num == 3)
+                        watchState.CurrentTemperature = -10;
+                    else
+                        watchState.CurrentTemperature += 6;
 
                     watchState.Time = new DateTime(time.Year, num, num * 2 + 5, i * 2, i * 6, i);
                     using (var image = CreateFrame(previewWatchFace, images, watchState))

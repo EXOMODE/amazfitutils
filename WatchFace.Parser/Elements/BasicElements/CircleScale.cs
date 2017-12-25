@@ -27,7 +27,7 @@ namespace WatchFace.Parser.Elements.BasicElements
         [ParameterId(7)]
         public long Width { get; set; }
 
-        [JsonConverter(typeof(HexStringJsonConverter))]
+        [JsonConverter(typeof(ColorJsonConverter))]
         [ParameterId(8)]
         public long Color { get; set; }
     }

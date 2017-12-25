@@ -3,7 +3,6 @@ using System.Drawing;
 using System.IO;
 using NLog;
 using WatchFace.Parser.Models;
-using WatchFace.Parser.Utils;
 
 namespace WatchFace.Parser
 {

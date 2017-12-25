@@ -11,7 +11,7 @@ namespace WatchFace.Parser.Elements.AnalogDialFaceElements
         [ParameterId(1)]
         public bool OnlyBorder { get; set; }
 
-        [JsonConverter(typeof(HexStringJsonConverter))]
+        [JsonConverter(typeof(ColorJsonConverter))]
         [ParameterId(2)]
         public long Color { get; set; }
 

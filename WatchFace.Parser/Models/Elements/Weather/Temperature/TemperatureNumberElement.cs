@@ -14,10 +14,11 @@ namespace WatchFace.Parser.Models.Elements
         public long MinusImageIndex { get; set; }
         public long? DegreesImageIndex { get; set; }
 
-        public void Draw(Graphics drawer, Bitmap[] resources, int temperature)
+        public void Draw(Graphics drawer, Bitmap[] resources, int temperature, CoordinatesElement altCoordinates = null)
         {
+            var drawingBox = altCoordinates == null ? Number.GetBox() : Number.GetAltBox(altCoordinates);
             var images = GetImagesForTemperature(resources, temperature);
-            DrawerHelper.DrawImages(drawer, images, (int) Number.Spacing, Number.Alignment, Number.GetBox());
+            DrawerHelper.DrawImages(drawer, images, (int) Number.Spacing, Number.Alignment, drawingBox);
         }
 
         public List<Bitmap> GetImagesForTemperature(Bitmap[] resources, int temperature)

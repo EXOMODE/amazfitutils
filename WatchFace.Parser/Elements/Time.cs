@@ -1,5 +1,7 @@
-﻿using WatchFace.Parser.Attributes;
+﻿using Newtonsoft.Json;
+using WatchFace.Parser.Attributes;
 using WatchFace.Parser.Elements.TimeElements;
+using WatchFace.Parser.JsonConverters;
 
 namespace WatchFace.Parser.Elements
 {
@@ -16,5 +18,9 @@ namespace WatchFace.Parser.Elements
 
         [ParameterId(4)]
         public AmPm AmPm { get; set; }
+
+        [JsonConverter(typeof(DrawingOrderJsonConverter))]
+        [ParameterId(5)]
+        public long DrawingOrder { get; set; }
     }
 }
