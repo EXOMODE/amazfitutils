@@ -15,10 +15,10 @@ namespace WatchFace.Parser.Models.Elements
 
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            if (state.CurrentTemperature != null)
-                drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), Current.X, Current.Y);
-            else
-                drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), CurrentAlt.X, CurrentAlt.Y);
+            var useAltCoordinates = CurrentAlt != null && state.CurrentTemperature == null;
+            var iconCoordinates = useAltCoordinates ? CurrentAlt : Current;
+
+            drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), iconCoordinates.X, iconCoordinates.Y);
         }
 
         private static Bitmap LoadWeatherImage(WeatherCondition weather)
