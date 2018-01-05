@@ -31,7 +31,7 @@ namespace Resources
 
                 var image = (Bitmap) System.Drawing.Image.FromFile(fullFileName);
                 Logger.Trace("Image was loaded from file {0}", fullFileName);
-                return ApplyDithering(image);
+                return image; // ApplyDithering(image);
             }
 
             throw new FileNotFoundException($"File referenced by index {index} not found.");

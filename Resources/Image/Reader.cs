@@ -34,6 +34,10 @@ namespace Resources.Image
             ReadHeader();
             if (_paletteColors > 0)
                 ReadPalette();
+            else if (_bitsPerPixel == 16 || _bitsPerPixel == 24 || _bitsPerPixel == 32)
+                Logger.Debug("The image doesn't use a palette.");
+            else
+                throw new ArgumentException("The image format is not supported. Please report the issue on https://bitbucket.org/valeronm/amazfitbiptools");
             return ReadImage();
         }
 
@@ -95,10 +99,32 @@ namespace Resources.Image
                             var color = _palette[(int) pixelColorIndex];
                             context.SetPixel(x, y, color);
                         }
-                        else
+                        else if (_bitsPerPixel == 16)
                         {
-                            var pixelColor = bitReader.ReadBits(_bitsPerPixel) | 0xff000000;
-                            var color = Color.FromArgb((int) pixelColor);
+                            var firstByte = bitReader.ReadByte();
+                            var secondByte = bitReader.ReadByte();
+                            var b = (secondByte >> 3 & 0x1f) << 3;
+                            var g = (secondByte & 0x07 << 2 | firstByte & 0x40 >> 5) << 3;
+                            var r = (firstByte & 0x1f) << 3;
+                            var color = Color.FromArgb(0xff, r, g, b);
+                            context.SetPixel(x, y, color);
+                        }
+                        else if (_bitsPerPixel == 24)
+                        {
+                            var alpha = (int)bitReader.ReadByte();
+                            var b = (int)(bitReader.ReadBits(5) << 3);
+                            var g = (int)(bitReader.ReadBits(6) << 2);
+                            var r = (int)(bitReader.ReadBits(5) << 3);
+                            var color = Color.FromArgb(0xff - alpha, r, g, b);
+                            context.SetPixel(x, y, color);
+                        }
+                        else if (_bitsPerPixel == 32)
+                        {
+                            var alpha = (int)bitReader.ReadByte();
+                            var b = (int)bitReader.ReadByte();
+                            var g = (int)bitReader.ReadByte();
+                            var r = (int)bitReader.ReadByte();
+                            var color = Color.FromArgb(0xff - alpha, r, g, b);
                             context.SetPixel(x, y, color);
                         }
                     }
