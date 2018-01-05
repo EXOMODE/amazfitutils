@@ -32,7 +32,8 @@ namespace Resources.Image
                 throw new ArgumentException("Image signature doesn't match.");
 
             ReadHeader();
-            ReadPalette();
+            if (_paletteColors > 0)
+                ReadPalette();
             return ReadImage();
         }
 
@@ -88,9 +89,18 @@ namespace Resources.Image
                     var bitReader = new BitReader(rowBytes);
                     for (var x = 0; x < _width; x++)
                     {
-                        var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
-                        var color = _palette[(int) pixelColorIndex];
-                        context.SetPixel(x, y, color);
+                        if (_paletteColors > 0)
+                        {
+                            var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
+                            var color = _palette[(int) pixelColorIndex];
+                            context.SetPixel(x, y, color);
+                        }
+                        else
+                        {
+                            var pixelColor = bitReader.ReadBits(_bitsPerPixel) | 0xff000000;
+                            var color = Color.FromArgb((int) pixelColor);
+                            context.SetPixel(x, y, color);
+                        }
                     }
                 }
             }

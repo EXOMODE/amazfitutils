@@ -57,6 +57,7 @@
     <Compile Include="Elements\BasicElements\CircleScale.cs" />
     <Compile Include="Elements\AnalogDialFaceElements\ClockHand.cs" />
     <Compile Include="Elements\BasicElements\Coordinates.cs" />
+    <Compile Include="Elements\BasicElements\UnknownBlock.cs" />
     <Compile Include="Elements\BasicElements\Image.cs" />
     <Compile Include="Elements\BasicElements\ImageSet.cs" />
     <Compile Include="Elements\BasicElements\Number.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Elements\StepsProgress.cs" />
     <Compile Include="Elements\Status.cs" />
     <Compile Include="Elements\StatusElements\Switch.cs" />
+    <Compile Include="Elements\Unknown12.cs" />
     <Compile Include="Elements\Time.cs" />
     <Compile Include="Elements\TimeElements\AmPm.cs" />
     <Compile Include="Elements\TimeElements\TwoDigits.cs" />
