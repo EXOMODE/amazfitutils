@@ -1,11 +1,11 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using WatchFace.Parser.Models;
 
 namespace WatchFace.Parser.Utils
 {
     public class DrawingOrderIterator
     {
-        public static IEnumerable Iterate(long drawingOrder)
+        public static IEnumerable<DrawingOrderPosition> Iterate(long drawingOrder)
         {
             var order = drawingOrder;
             while (order != 0)

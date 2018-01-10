@@ -22,7 +22,7 @@ namespace WatchFace.Parser.Elements.WeatherElements
         [JsonProperty("Unknown3")]
         private Coordinates Unknown3
         {
-            set => CoordinatesAlt = value;
+            set { CoordinatesAlt = value; }
         }
     }
 }

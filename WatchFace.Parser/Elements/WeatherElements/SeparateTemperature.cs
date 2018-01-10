@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using WatchFace.Parser.Attributes;
 using WatchFace.Parser.Elements.BasicElements;
 
@@ -23,14 +22,14 @@ namespace WatchFace.Parser.Elements.WeatherElements
         [JsonProperty("Unknown3")]
         private Coordinates Unknown3
         {
-            set => DayAlt = value;
+            set { DayAlt = value; }
         }
 
         // For compatibility with "Unknown4" JSON attribute
         [JsonProperty("Unknown4")]
         private Coordinates Unknown4
         {
-            set => NightAlt = value;
+            set { NightAlt = value; }
         }
     }
 }
