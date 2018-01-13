@@ -3,7 +3,7 @@ using WatchFace.Parser.Interfaces;
 
 namespace WatchFace.Parser.Models.Elements
 {
-    public class CaloriesElement : NumberElement, IDrawable
+    public class CaloriesElement : CompositeNumberElement, IDrawable
     {
         public CaloriesElement(Parameter parameter, Element parent, string name = null) :
             base(parameter, parent, name) { }

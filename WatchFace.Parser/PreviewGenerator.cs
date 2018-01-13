@@ -23,7 +23,10 @@ namespace WatchFace.Parser
                     var num = i + 1;
                     watchState.BatteryLevel = num * 10;
 
-                    watchState.Pulse = 60 + num * 2;
+                    if (i < 2)
+                        watchState.Pulse = null;
+                    else
+                        watchState.Pulse = 65 + num * 2;
                     watchState.Steps = num * 1000;
                     watchState.Calories = num * 75;
                     watchState.Distance = num * 700;

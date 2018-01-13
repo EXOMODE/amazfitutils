@@ -13,7 +13,6 @@ namespace WatchFace.Parser.Models.Elements
         public long KilometerImageIndex { get; set; }
         public long DecimalPointImageIndex { get; set; }
 
-
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
             var kilometers = state.Distance / 1000;
@@ -22,7 +21,8 @@ namespace WatchFace.Parser.Models.Elements
             var images = Number.GetImagesForNumber(resources, kilometers);
             images.Add(resources[DecimalPointImageIndex]);
             images.AddRange(Number.GetImagesForNumber(resources, decimals));
-            images.Add(resources[KilometerImageIndex]);
+            if (KilometerImageIndex != DecimalPointImageIndex)
+                images.Add(resources[KilometerImageIndex]);
 
             DrawerHelper.DrawImages(drawer, images, (int) Number.Spacing, Number.Alignment, Number.GetBox());
         }

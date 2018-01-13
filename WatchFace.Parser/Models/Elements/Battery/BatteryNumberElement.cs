@@ -3,7 +3,7 @@ using WatchFace.Parser.Interfaces;
 
 namespace WatchFace.Parser.Models.Elements.Battery
 {
-    public class BatteryNumberElement : NumberElement, IDrawable
+    public class BatteryNumberElement : CompositeNumberElement, IDrawable
     {
         public BatteryNumberElement(Parameter parameter, Element parent, string name = null) :
             base(parameter, parent, name) { }

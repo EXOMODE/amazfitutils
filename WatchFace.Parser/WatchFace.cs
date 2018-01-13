@@ -30,9 +30,12 @@ namespace WatchFace.Parser
         public Battery Battery { get; set; }
 
         [ParameterId(10)]
-        public AnalogDialFace AnalogDialFace { get; set; }
+        public AnalogDialVector AnalogDialFace { get; set; }
 
         [ParameterId(12)]
-        public Unknown12 Unknown12 { get; set; }
+        public AnalogDialBitmaps AnalogDialBitmaps { get; set; }
+
+        [ParameterId(13)]
+        public PulseProgress PulseProgress { get; set; }
     }
 }

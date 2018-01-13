@@ -3,21 +3,21 @@ using WatchFace.Parser.Elements.BasicElements;
 
 namespace WatchFace.Parser.Elements
 {
-    public class Unknown12
+    public class AnalogDialBitmaps
     {
         [ParameterId(1)]
-        public UnknownBlock Unknown1 { get; set; }
+        public Rectangle RedrawBlock { get; set; }
 
         [ParameterId(2)]
-        public Image Unknown2 { get; set; }
+        public Image Hours { get; set; }
 
         [ParameterId(3)]
-        public Image Unknown3 { get; set; }
+        public Image Minutes { get; set; }
 
         [ParameterId(4)]
-        public Image Unknown4 { get; set; }
+        public Image Seconds { get; set; }
 
         [ParameterId(5)]
-        public Image Unknown5 { get; set; }
+        public Image CenterImage { get; set; }
     }
 }

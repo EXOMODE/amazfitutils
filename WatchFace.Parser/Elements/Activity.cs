@@ -7,16 +7,16 @@ namespace WatchFace.Parser.Elements
     public class Activity
     {
         [ParameterId(1)]
-        public Number Steps { get; set; }
+        public CompositeNumber Steps { get; set; }
 
         [ParameterId(2)]
-        public Number StepsGoal { get; set; }
+        public CompositeNumber StepsGoal { get; set; }
 
         [ParameterId(3)]
-        public Number Calories { get; set; }
+        public CompositeNumber Calories { get; set; }
 
         [ParameterId(4)]
-        public Number Pulse { get; set; }
+        public CompositeNumber Pulse { get; set; }
 
         [ParameterId(5)]
         public FormattedNumber Distance { get; set; }

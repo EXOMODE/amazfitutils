@@ -1,4 +1,5 @@
 ﻿using WatchFace.Parser.Attributes;
+using WatchFace.Parser.Elements.ActivityElements;
 using WatchFace.Parser.Elements.BasicElements;
 
 namespace WatchFace.Parser.Elements
@@ -6,7 +7,7 @@ namespace WatchFace.Parser.Elements
     public class Battery
     {
         [ParameterId(1)]
-        public Number Text { get; set; }
+        public CompositeNumber Text { get; set; }
 
         [ParameterId(2)]
         public ImageSet Icon { get; set; }

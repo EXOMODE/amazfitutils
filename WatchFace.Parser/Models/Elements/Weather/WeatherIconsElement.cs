@@ -18,6 +18,8 @@ namespace WatchFace.Parser.Models.Elements
         {
             var useAltCoordinates = CurrentAlt != null && state.CurrentTemperature == null;
             var iconCoordinates = useAltCoordinates ? CurrentAlt : Current;
+            if (iconCoordinates != null)
+                drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), iconCoordinates.X, iconCoordinates.Y);
 
             if (iconCoordinates != null)
                 drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), iconCoordinates.X, iconCoordinates.Y);

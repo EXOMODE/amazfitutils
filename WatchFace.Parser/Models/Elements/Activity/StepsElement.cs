@@ -3,7 +3,7 @@ using WatchFace.Parser.Interfaces;
 
 namespace WatchFace.Parser.Models.Elements
 {
-    public class StepsElement : NumberElement, IDrawable
+    public class StepsElement : CompositeNumberElement, IDrawable
     {
         public StepsElement(Parameter parameter, Element parent, string name = null) :
             base(parameter, parent, name) { }

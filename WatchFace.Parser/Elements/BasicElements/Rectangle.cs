@@ -2,13 +2,13 @@
 
 namespace WatchFace.Parser.Elements.BasicElements
 {
-    public class UnknownBlock
+    public class Rectangle
     {
         [ParameterId(1)]
-        public long TopLeftX { get; set; }
+        public long X { get; set; }
 
         [ParameterId(2)]
-        public long TopLeftY { get; set; }
+        public long Y { get; set; }
 
         [ParameterId(3)]
         public long BottomRightX { get; set; }

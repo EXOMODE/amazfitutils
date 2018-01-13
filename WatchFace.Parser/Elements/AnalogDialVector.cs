@@ -3,7 +3,7 @@ using WatchFace.Parser.Elements.AnalogDialFaceElements;
 
 namespace WatchFace.Parser.Elements
 {
-    public class AnalogDialFace
+    public class AnalogDialVector
     {
         [ParameterId(1)]
         public ClockHand Hours { get; set; }

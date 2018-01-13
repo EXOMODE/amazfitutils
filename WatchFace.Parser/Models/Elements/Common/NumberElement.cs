@@ -5,27 +5,15 @@ using WatchFace.Parser.Helpers;
 
 namespace WatchFace.Parser.Models.Elements
 {
-    public class NumberElement : CoordinatesElement
+    public class NumberElement : RectangleElement
     {
         public NumberElement(Parameter parameter, Element parent, string name = null) :
             base(parameter, parent, name) { }
 
-        public long BottomRightX { get; set; }
-        public long BottomRightY { get; set; }
         public TextAlignment Alignment { get; set; }
         public long Spacing { get; set; }
         public long ImageIndex { get; set; }
         public long ImagesCount { get; set; }
-
-        public Rectangle GetBox()
-        {
-            return new Rectangle((int) X, (int) Y, (int) (BottomRightX - X), (int) (BottomRightY - Y));
-        }
-
-        public Rectangle GetAltBox(CoordinatesElement altCoordinates)
-        {
-            return new Rectangle((int) altCoordinates.X, (int) altCoordinates.Y, (int) (BottomRightX - X), (int) (BottomRightY - Y));
-        }
 
         public void Draw(Graphics drawer, Bitmap[] images, int number, int minimumDigits = 1)
         {
@@ -47,12 +35,6 @@ namespace WatchFace.Parser.Models.Elements
         {
             switch (parameter.Id)
             {
-                case 3:
-                    BottomRightX = parameter.Value;
-                    return new ValueElement(parameter, this, nameof(BottomRightX));
-                case 4:
-                    BottomRightY = parameter.Value;
-                    return new ValueElement(parameter, this, nameof(BottomRightY));
                 case 5:
                     Alignment = (TextAlignment) parameter.Value;
                     return new ValueElement(parameter, this, nameof(Alignment));

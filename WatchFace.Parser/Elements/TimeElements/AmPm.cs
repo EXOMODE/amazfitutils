@@ -20,7 +20,6 @@ namespace WatchFace.Parser.Elements.TimeElements
         [ParameterId(5)]
         public long PmY { get; set; }
 
-
         [ParameterId(6)]
         [ParameterImageIndex]
         public long ImageIndexPm { get; set; }

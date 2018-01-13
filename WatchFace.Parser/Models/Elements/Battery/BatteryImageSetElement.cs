@@ -9,8 +9,15 @@ namespace WatchFace.Parser.Models.Elements.Battery
 
         public override void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            var imageIndex = state.BatteryLevel * (int) ImagesCount / 100;
-            Draw(drawer, resources, imageIndex);
+            if (ImagesCount == 1)
+            {
+                if (state.BatteryLevel <= 10) Draw(drawer, resources, 0);
+            }
+            else
+            {
+                var imageIndex = state.BatteryLevel * (int) ImagesCount / 100;
+                Draw(drawer, resources, imageIndex);
+            }
         }
     }
 }

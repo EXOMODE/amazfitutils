@@ -51,13 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\Activity.cs" />
+    <Compile Include="Elements\ActivityElements\CompositeNumber.cs" />
     <Compile Include="Elements\ActivityElements\FormattedNumber.cs" />
-    <Compile Include="Elements\AnalogDialFace.cs" />
+    <Compile Include="Elements\AnalogDialVector.cs" />
     <Compile Include="Elements\Background.cs" />
     <Compile Include="Elements\BasicElements\CircleScale.cs" />
     <Compile Include="Elements\AnalogDialFaceElements\ClockHand.cs" />
     <Compile Include="Elements\BasicElements\Coordinates.cs" />
-    <Compile Include="Elements\BasicElements\UnknownBlock.cs" />
+    <Compile Include="Elements\BasicElements\Rectangle.cs" />
     <Compile Include="Elements\BasicElements\Image.cs" />
     <Compile Include="Elements\BasicElements\ImageSet.cs" />
     <Compile Include="Elements\BasicElements\Number.cs" />
@@ -70,13 +71,14 @@
     <Compile Include="Elements\StepsProgress.cs" />
     <Compile Include="Elements\Status.cs" />
     <Compile Include="Elements\StatusElements\Switch.cs" />
-    <Compile Include="Elements\Unknown12.cs" />
+    <Compile Include="Elements\PulseProgress.cs" />
+    <Compile Include="Elements\AnalogDialBitmaps.cs" />
     <Compile Include="Elements\Time.cs" />
     <Compile Include="Elements\TimeElements\AmPm.cs" />
     <Compile Include="Elements\TimeElements\TwoDigits.cs" />
     <Compile Include="Elements\Weather.cs" />
-    <Compile Include="Elements\WeatherElements\CustomWeatherIcon.cs" />
     <Compile Include="Elements\WeatherElements\AirPollution.cs" />
+    <Compile Include="Elements\WeatherElements\CustomWeatherIcon.cs" />
     <Compile Include="Elements\WeatherElements\OneLineTemperature.cs" />
     <Compile Include="Elements\WeatherElements\SeparateTemperature.cs" />
     <Compile Include="Elements\WeatherElements\Temperature.cs" />
@@ -92,15 +94,18 @@
     <Compile Include="Models\Elements\Activity\StepsElement.cs" />
     <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
     <Compile Include="Models\Elements\Activity\PulseElement.cs" />
+    <Compile Include="Models\Elements\AnalogDialBitmapElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\SecondsClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\MinutesClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\HoursClockHandElement.cs" />
     <Compile Include="Models\Elements\Basic\ContainerElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryLenearProgressElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryNumberElement.cs" />
+    <Compile Include="Models\Elements\Common\CompositeNumberElement.cs" />
     <Compile Include="Models\Elements\Common\ImageSetElement.cs" />
     <Compile Include="Models\Elements\Common\CircularProgressElement.cs" />
     <Compile Include="Models\Elements\Common\ClockHandElement.cs" />
+    <Compile Include="Models\Elements\Common\RectangleElement.cs" />
     <Compile Include="Models\Elements\GoalProgressElement.cs" />
     <Compile Include="Models\Elements\GoalProgress\GoalReachedElement.cs" />
     <Compile Include="Models\Elements\Common\LinearProgressElement.cs" />

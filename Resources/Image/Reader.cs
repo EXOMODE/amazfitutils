@@ -35,7 +35,7 @@ namespace Resources.Image
             if (_paletteColors > 0)
                 ReadPalette();
             else if (_bitsPerPixel == 16 || _bitsPerPixel == 24 || _bitsPerPixel == 32)
-                Logger.Debug("The image doesn't use a palette.");
+                Logger.Trace("The image doesn't use a palette.");
             else
                 throw new ArgumentException("The image format is not supported. Please report the issue on https://bitbucket.org/valeronm/amazfitbiptools");
             return ReadImage();
@@ -70,12 +70,7 @@ namespace Resources.Image
 
                 if (padding != 0) Logger.Warn("Palette item {0} last byte is not zero: {1:X2}", i, padding);
 
-                var isColorValid = (r == 0 || r == 0xff) && (g == 0 || g == 0xff) && (b == 0 || b == 0xff);
-
-                if (isColorValid)
-                    Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}", i, r, g, b);
-                else
-                    Logger.Warn("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, color isn't supported!", i, r, g, b);
+                Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}", i, r, g, b);
 
                 var alpha = _transparency && i == 0 ? 0x00 : 0xff;
                 _palette[i] = Color.FromArgb(alpha, r, g, b);
