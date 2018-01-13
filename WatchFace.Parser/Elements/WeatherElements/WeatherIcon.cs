@@ -10,7 +10,8 @@ namespace WatchFace.Parser.Elements.WeatherElements
         [ParameterId(1)]
         public Coordinates Coordinates { get; set; }
 
-        // TODO: Looks like here should be Id 2 also
+        [ParameterId(2)]
+        public CustomWeatherIcon CustomIcon { get; set; }
 
         [ParameterId(3)]
         public Coordinates CoordinatesAlt { get; set; }

@@ -10,6 +10,7 @@ namespace WatchFace.Parser.Models.Elements
             base(parameter, parent, name) { }
 
         public CoordinatesElement Current { get; set; }
+        public ImageSetElement CustomIcon { get; set; }
         public CoordinatesElement CurrentAlt { get; set; }
         public CoordinatesElement Unknown4 { get; set; }
 
@@ -18,7 +19,11 @@ namespace WatchFace.Parser.Models.Elements
             var useAltCoordinates = CurrentAlt != null && state.CurrentTemperature == null;
             var iconCoordinates = useAltCoordinates ? CurrentAlt : Current;
 
-            drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), iconCoordinates.X, iconCoordinates.Y);
+            if (iconCoordinates != null)
+                drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), iconCoordinates.X, iconCoordinates.Y);
+
+            if (CustomIcon != null)
+                drawer.DrawImage(resources[CustomIcon.ImageIndex + 1], CustomIcon.X, CustomIcon.Y);
         }
 
         private static Bitmap LoadWeatherImage(WeatherCondition weather)
@@ -35,6 +40,9 @@ namespace WatchFace.Parser.Models.Elements
                 case 1:
                     Current = new CoordinatesElement(parameter, this);
                     return Current;
+                case 2:
+                    CustomIcon = new ImageSetElement(parameter, this);
+                    return CustomIcon;
                 case 3:
                     CurrentAlt = new CoordinatesElement(parameter, this);
                     return CurrentAlt;

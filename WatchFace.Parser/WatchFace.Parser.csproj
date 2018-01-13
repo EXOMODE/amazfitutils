@@ -73,6 +73,7 @@
     <Compile Include="Elements\TimeElements\AmPm.cs" />
     <Compile Include="Elements\TimeElements\TwoDigits.cs" />
     <Compile Include="Elements\Weather.cs" />
+    <Compile Include="Elements\WeatherElements\CustomWeatherIcon.cs" />
     <Compile Include="Elements\WeatherElements\AirPollution.cs" />
     <Compile Include="Elements\WeatherElements\OneLineTemperature.cs" />
     <Compile Include="Elements\WeatherElements\SeparateTemperature.cs" />
