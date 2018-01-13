@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.2.7] - 2018-01-18
+### Added
+- Added support for custom weather icons. New element `CustomIcon` was added to `Weather.Icon` element.
+  It contains `X`, `Y`, `ImageIndex` and `ImagesCount` parameters.
+  `X` and `Y` are the coordinates of the icon on the screen.
+  `ImageIndex` and `ImagesCount` describe the images set used for weather icon.
+
+## [1.0.2.6] - 2017-12-25
+### Changed
+- Fixed adding zero `DrawingOrder` when it's not present in config
+
 ## [1.0.2.5] - 2017-12-25
 ### Added
 - Added support for digits drawing order in Time block used by new official watchface (Winter).
@@ -69,7 +80,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Implemented watchfaces unpacking and packing.
 - Implemented .res file unpacking.
 
-[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.5
+[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.7
+[1.0.2.7]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.7..1.0.2.6
+[1.0.2.6]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.6..1.0.2.5
 [1.0.2.5]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.5..1.0.2.4
 [1.0.2.4]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.4..1.0.2.3
 [1.0.2.3]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.3..1.0.2.2
