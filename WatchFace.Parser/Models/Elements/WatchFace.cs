@@ -15,6 +15,7 @@ namespace WatchFace.Parser.Models.Elements
         public StatusElement Status { get; set; }
         public BatteryElement Battery { get; set; }
         public AnalogDialElement AnalogDial { get; set; }
+        public AnalogDialBitmapElement AnalogDialBitmap { get; set; }
 
         protected override Element CreateChildForParameter(Parameter parameter)
         {
@@ -47,6 +48,9 @@ namespace WatchFace.Parser.Models.Elements
                 case 10:
                     AnalogDial = new AnalogDialElement(parameter);
                     return AnalogDial;
+                case 12:
+                    AnalogDialBitmap = new AnalogDialBitmapElement(parameter);
+                    return AnalogDialBitmap;
                 default:
                     return base.CreateChildForParameter(parameter);
             }

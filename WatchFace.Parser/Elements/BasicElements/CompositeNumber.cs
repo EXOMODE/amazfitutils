@@ -1,7 +1,6 @@
 ﻿using WatchFace.Parser.Attributes;
-using WatchFace.Parser.Elements.BasicElements;
 
-namespace WatchFace.Parser.Elements.ActivityElements
+namespace WatchFace.Parser.Elements.BasicElements
 {
     public class CompositeNumber
     {

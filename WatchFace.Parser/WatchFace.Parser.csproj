@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\Activity.cs" />
-    <Compile Include="Elements\ActivityElements\CompositeNumber.cs" />
+    <Compile Include="Elements\BasicElements\CompositeNumber.cs" />
     <Compile Include="Elements\ActivityElements\FormattedNumber.cs" />
     <Compile Include="Elements\AnalogDialVector.cs" />
     <Compile Include="Elements\Background.cs" />

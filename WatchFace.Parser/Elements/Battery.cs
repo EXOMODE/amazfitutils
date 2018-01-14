@@ -1,5 +1,4 @@
 ﻿using WatchFace.Parser.Attributes;
-using WatchFace.Parser.Elements.ActivityElements;
 using WatchFace.Parser.Elements.BasicElements;
 
 namespace WatchFace.Parser.Elements
