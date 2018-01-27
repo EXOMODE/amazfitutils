@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using NLog;
 using Resources.Models;
 
@@ -13,15 +14,25 @@ namespace Resources
         {
             var binaryReader = new BinaryReader(stream);
 
-            Logger.Trace("Reading resources header");
-            var header = Header.ReadFrom(binaryReader);
-            Logger.Trace("Resources header was read:");
-            Logger.Trace("Signature: {0}, Version: {1}, ResourcesCount: {2}, IsValid: {3}",
-                header.Signature, header.Version, header.ResourcesCount, header.IsValid
-            );
+            var signature = Encoding.ASCII.GetString(binaryReader.ReadBytes(5));
+            Logger.Trace("Resources signature was read:");
+            stream.Seek(0, SeekOrigin.Begin);
+            Logger.Trace("Signature: {0}", signature);
 
-            if (!header.IsValid)
-                throw new ArgumentException("Invalid resources header");
+            Header header;
+            switch (signature) {
+                case Header.ResSignature:
+                    header = Header.ReadFrom(binaryReader);
+                    break;
+                case NewHeader.ResSignature:
+                    header = NewHeader.ReadFrom(binaryReader);
+                    break;
+                default:
+                    throw new ArgumentException($"Signature '{signature}' is no recognized.");
+            }
+
+            Logger.Trace("Resources header was read:");
+            Logger.Trace("Version: {0}, ResourcesCount: {1}", header.Version, header.ResourcesCount);
 
             return new FileDescriptor
             {

@@ -29,8 +29,8 @@ namespace Resources
                 Version = descriptor.Version.Value
             };
             Logger.Trace("Writing resources header...");
-            Logger.Trace("Signature: {0}, Version: {1}, ResourcesCount: {2}, IsValid: {3}",
-                header.Signature, header.Version, header.ResourcesCount, header.IsValid
+            Logger.Trace("Signature: {0}, Version: {1}, ResourcesCount: {2}",
+                header.Signature, header.Version, header.ResourcesCount
             );
             header.WriteTo(_binaryWriter);
 

@@ -7,13 +7,11 @@ namespace Resources.Models
     public class Header
     {
         public const int HeaderSize = 20;
-        private const string ResSignature = "HMRES";
+        public const string ResSignature = "HMRES";
 
-        public string Signature { get; private set; } = ResSignature;
+        public string Signature { get; protected set; } = ResSignature;
         public byte Version { get; set; }
         public uint ResourcesCount { get; set; }
-
-        public bool IsValid => Signature == ResSignature;
 
         public void WriteTo(BinaryWriter writer)
         {

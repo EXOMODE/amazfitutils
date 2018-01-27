@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="ImageLoader.cs" />
     <Compile Include="Models\FileDescriptor.cs" />
+    <Compile Include="Models\Header.cs" />
     <Compile Include="Utils\BitReader.cs" />
     <Compile Include="Utils\BitWriter.cs" />
     <Compile Include="Image\ColorError.cs" />
@@ -57,7 +58,7 @@
     <Compile Include="Writer.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="FileWriter.cs" />
-    <Compile Include="Models\Header.cs" />
+    <Compile Include="Models\NewHeader.cs" />
     <Compile Include="Image\Reader.cs" />
     <Compile Include="FileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

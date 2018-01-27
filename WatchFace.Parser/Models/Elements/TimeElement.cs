@@ -19,6 +19,8 @@ namespace WatchFace.Parser.Models.Elements
 
         public override void Draw(Graphics drawer, Bitmap[] images, WatchState state)
         {
+            AmPm?.Draw(drawer, images, state);
+
             var hours = AmPm == null ? state.Time.Hour : state.Time.Hour % 12;
             var drawingOrder = DrawingOrder ?? 0x1234;
 
@@ -43,7 +45,6 @@ namespace WatchFace.Parser.Models.Elements
                 }
 
             Seconds?.Draw(drawer, images, state.Time.Second);
-            AmPm?.Draw(drawer, images, state);
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)
