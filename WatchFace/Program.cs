@@ -50,6 +50,7 @@ namespace WatchFace
                     Console.WriteLine("File or directory '{0}' doesn't exists.", inputFileName);
                     continue;
                 }
+
                 if (isDirectory)
                 {
                     Console.WriteLine("Processing directory '{0}'", inputFileName);
@@ -61,6 +62,7 @@ namespace WatchFace
                     {
                         Logger.Fatal(e);
                     }
+
                     continue;
                 }
 
@@ -99,7 +101,7 @@ namespace WatchFace
             var outputFileName = Path.Combine(outputDirectory, baseName + "_packed.bin");
             SetupLogger(Path.ChangeExtension(outputFileName, ".log"));
 
-            var watchFace = ReadConfig(inputFileName);
+            var watchFace = ReadWatchFaceConfig(inputFileName);
             if (watchFace == null) return;
 
             var imagesDirectory = Path.GetDirectoryName(inputFileName);
@@ -137,7 +139,7 @@ namespace WatchFace
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             var reDescriptor = new FileDescriptor {Images = reader.Images};
             new Extractor(reDescriptor).Extract(outputDirectory);
-            ExportConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
+            ExportWatchFaceConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
         }
 
         private static void PackResources(string inputDirectory)
@@ -148,16 +150,32 @@ namespace WatchFace
             var logFileName = Path.Combine(outputDirectory, $"{baseName}_packed.log");
             SetupLogger(logFileName);
 
+            FileDescriptor resDescriptor;
+            var headerFileName = Path.Combine(inputDirectory, "header.json");
             var versionFileName = Path.Combine(inputDirectory, "version");
-            var resDescriptor = new FileDescriptor();
-            using (var stream = File.OpenRead(versionFileName))
-            using (var reader = new BinaryReader(stream))
+            if (File.Exists(headerFileName))
             {
-                resDescriptor.Version = reader.ReadByte();
+                resDescriptor = ReadResConfig(headerFileName);
             }
+            else if (File.Exists(versionFileName))
+            {
+                resDescriptor = new FileDescriptor();
+                using (var stream = File.OpenRead(versionFileName))
+                using (var reader = new BinaryReader(stream))
+                {
+                    resDescriptor.Version = reader.ReadByte();
+                }
+            }
+            else
+            {
+                throw new ArgumentException(
+                    "File 'header.json' or 'version' should exists in the folder with unpacked images. Res-file couldn't be created"
+                );
+            }
+
             var i = 0;
             var images = new List<Bitmap>();
-            while (true)
+            while (resDescriptor.ResourcesCount == null || i < resDescriptor.ResourcesCount.Value)
             {
                 try
                 {
@@ -169,8 +187,13 @@ namespace WatchFace
                     Logger.Info("All images with sequenced names are loaded. Latest loaded image: {0}", i - 1);
                     break;
                 }
+
                 i++;
             }
+
+            if (resDescriptor.ResourcesCount != null && resDescriptor.ResourcesCount.Value != images.Count)
+                throw new ArgumentException($"The .res-file should contain {resDescriptor.ResourcesCount.Value} images but was loaded {images.Count} images.");
+
             resDescriptor.Images = images;
 
             using (var stream = File.OpenWrite(outputFileName))
@@ -191,6 +214,7 @@ namespace WatchFace
                 resDescriptor = FileReader.Read(stream);
             }
 
+            ExportResConfig(resDescriptor, Path.Combine(outputDirectory, "header.json"));
             new Extractor(resDescriptor).Extract(outputDirectory);
         }
 
@@ -271,7 +295,7 @@ namespace WatchFace
             return unpackedPath;
         }
 
-        private static Parser.WatchFace ReadConfig(string jsonFileName)
+        private static Parser.WatchFace ReadWatchFaceConfig(string jsonFileName)
         {
             Logger.Debug("Reading config...");
             try
@@ -294,7 +318,30 @@ namespace WatchFace
             }
         }
 
-        private static void ExportConfig(Parser.WatchFace watchFace, string jsonFileName)
+        private static FileDescriptor ReadResConfig(string jsonFileName)
+        {
+            Logger.Debug("Reading resources config...");
+            try
+            {
+                using (var fileStream = File.OpenRead(jsonFileName))
+                using (var reader = new StreamReader(fileStream))
+                {
+                    return JsonConvert.DeserializeObject<FileDescriptor>(reader.ReadToEnd(),
+                        new JsonSerializerSettings
+                        {
+                            MissingMemberHandling = MissingMemberHandling.Error,
+                            NullValueHandling = NullValueHandling.Ignore
+                        });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+                return null;
+            }
+        }
+
+        private static void ExportWatchFaceConfig(Parser.WatchFace watchFace, string jsonFileName)
         {
             Logger.Debug("Exporting config...");
             try
@@ -303,6 +350,25 @@ namespace WatchFace
                 using (var writer = new StreamWriter(fileStream))
                 {
                     writer.Write(JsonConvert.SerializeObject(watchFace, Formatting.Indented,
+                        new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore}));
+                    writer.Flush();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+            }
+        }
+
+        private static void ExportResConfig(FileDescriptor resDescriptor, string jsonFileName)
+        {
+            Logger.Debug("Exporting resources config...");
+            try
+            {
+                using (var fileStream = File.OpenWrite(jsonFileName))
+                using (var writer = new StreamWriter(fileStream))
+                {
+                    writer.Write(JsonConvert.SerializeObject(resDescriptor, Formatting.Indented,
                         new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore}));
                     writer.Flush();
                 }

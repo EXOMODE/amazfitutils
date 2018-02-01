@@ -18,16 +18,6 @@ namespace Resources
 
         public void Extract(string outputDirectory)
         {
-            if (_descriptor.Version != null)
-            {
-                var fileName = Path.Combine(outputDirectory, "version");
-                using (var stream = File.OpenWrite(fileName))
-                using (var writer = new BinaryWriter(stream))
-                {
-                    writer.Write(_descriptor.Version.Value);
-                }
-            }
-
             for (var i = 0; i < _descriptor.Images.Count; i++)
             {
                 var numericPart = i.ToString().PadLeft(ImageLoader.NumericPartLength, '0');

@@ -9,8 +9,14 @@ namespace Resources.Models
         public new const int HeaderSize = 0x24;
         public new const string ResSignature = "NERES";
 
+        public NewHeader()
+        {
+            Signature = ResSignature;
+        }
+
         public uint Unknown { get; set; }
-        public new void WriteTo(BinaryWriter writer)
+
+        public override void WriteTo(BinaryWriter writer)
         {
             var buffer = new byte[HeaderSize];
             for (var i = 0; i < buffer.Length; i++) buffer[i] = 0xff;

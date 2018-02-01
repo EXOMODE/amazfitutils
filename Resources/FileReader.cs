@@ -36,7 +36,10 @@ namespace Resources
 
             return new FileDescriptor
             {
+                HasNewHeader = header is NewHeader,
+                ResourcesCount = header.ResourcesCount,
                 Version = header.Version,
+                Unknown = (header as NewHeader)?.Unknown,
                 Images = new Reader(stream).Read(header.ResourcesCount)
             };
         }

@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extractor.cs" />
     <Compile Include="ImageLoader.cs" />
     <Compile Include="Models\FileDescriptor.cs" />
     <Compile Include="Models\Header.cs" />
@@ -56,7 +58,6 @@
     <Compile Include="Image\FloydSteinbergDitherer.cs" />
     <Compile Include="Image\Writer.cs" />
     <Compile Include="Writer.cs" />
-    <Compile Include="Extractor.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="Models\NewHeader.cs" />
     <Compile Include="Image\Reader.cs" />

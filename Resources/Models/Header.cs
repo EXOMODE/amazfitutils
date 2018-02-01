@@ -13,7 +13,7 @@ namespace Resources.Models
         public byte Version { get; set; }
         public uint ResourcesCount { get; set; }
 
-        public void WriteTo(BinaryWriter writer)
+        public virtual void WriteTo(BinaryWriter writer)
         {
             var buffer = new byte[HeaderSize];
             for (var i = 0; i < buffer.Length; i++) buffer[i] = 0xff;
