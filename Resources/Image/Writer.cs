@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using BumpKit;
 using NLog;
-using Resources.Utils;
+using Utils;
 
 namespace Resources.Image
 {

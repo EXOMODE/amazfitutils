@@ -3,7 +3,7 @@ using System.Drawing;
 using System.IO;
 using BumpKit;
 using NLog;
-using Resources.Utils;
+using Utils;
 
 namespace Resources.Image
 {

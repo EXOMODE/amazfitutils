@@ -81,6 +81,10 @@ namespace WatchFace
                         case ".res":
                             UnpackResources(inputFileName);
                             break;
+                        case ".ft":
+                        case ".latin":
+                            UnpackFont(inputFileName);
+                            break;
                         default:
                             Console.WriteLine("The app doesn't support files with extension {0}.", inputFileExtension);
                             Console.WriteLine("Only 'bin', 'res' and 'json' files are supported at this time.");
@@ -200,6 +204,21 @@ namespace WatchFace
             {
                 new FileWriter(stream).Write(resDescriptor);
             }
+        }
+
+        private static void UnpackFont(string inputFileName)
+        {
+            var outputDirectory = CreateOutputDirectory(inputFileName);
+            var baseName = Path.GetFileNameWithoutExtension(inputFileName);
+            SetupLogger(Path.Combine(outputDirectory, $"{baseName}.log"));
+
+            Fonts.Models.FileDescriptor resDescriptor;
+            using (var stream = File.OpenRead(inputFileName))
+            {
+                resDescriptor = Fonts.FileReader.Read(stream);
+            }
+
+            ExportFontConfig(resDescriptor, Path.Combine(outputDirectory, "header.json"));
         }
 
         private static void UnpackResources(string inputFileName)
@@ -351,6 +370,25 @@ namespace WatchFace
                 {
                     writer.Write(JsonConvert.SerializeObject(watchFace, Formatting.Indented,
                         new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore}));
+                    writer.Flush();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+            }
+        }
+
+        private static void ExportFontConfig(Fonts.Models.FileDescriptor resDescriptor, string jsonFileName)
+        {
+            Logger.Debug("Exporting resources config...");
+            try
+            {
+                using (var fileStream = File.OpenWrite(jsonFileName))
+                using (var writer = new StreamWriter(fileStream))
+                {
+                    writer.Write(JsonConvert.SerializeObject(resDescriptor, Formatting.Indented,
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
                     writer.Flush();
                 }
             }

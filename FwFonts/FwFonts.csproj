@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EDD55D5D-9E80-451B-AC8A-0746BA6DC6E9}</ProjectGuid>
+    <ProjectGuid>{E50E8437-0511-4A94-808A-AD5F3105D060}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Resources</RootNamespace>
-    <AssemblyName>Resources</AssemblyName>
+    <RootNamespace>FwFonts</RootNamespace>
+    <AssemblyName>FwFonts</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,36 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BumpKit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bumpkit.1.0.2\lib\BumpKit.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.12\lib\net40\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extractor.cs" />
-    <Compile Include="ImageLoader.cs" />
-    <Compile Include="Models\FileDescriptor.cs" />
-    <Compile Include="Models\Header.cs" />
-    <Compile Include="Image\ColorError.cs" />
-    <Compile Include="Image\FloydSteinbergDitherer.cs" />
-    <Compile Include="Image\Writer.cs" />
-    <Compile Include="Writer.cs" />
-    <Compile Include="FileWriter.cs" />
-    <Compile Include="Models\NewHeader.cs" />
-    <Compile Include="Image\Reader.cs" />
-    <Compile Include="FileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reader.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{20e6917a-be26-43d6-a2dc-0f32759c4e9b}</Project>
