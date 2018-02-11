@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using FwFonts.Models;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
@@ -84,6 +85,9 @@ namespace WatchFace
                         case ".ft":
                         case ".latin":
                             UnpackFont(inputFileName);
+                            break;
+                        case ".fw":
+                            UnpackFwFont(inputFileName);
                             break;
                         default:
                             Console.WriteLine("The app doesn't support files with extension {0}.", inputFileExtension);
@@ -203,6 +207,30 @@ namespace WatchFace
             using (var stream = File.OpenWrite(outputFileName))
             {
                 new FileWriter(stream).Write(resDescriptor);
+            }
+        }
+
+        private static void UnpackFwFont(string inputFileName)
+        {
+            var outputDirectory = CreateOutputDirectory(inputFileName);
+            var baseName = Path.GetFileNameWithoutExtension(inputFileName);
+            SetupLogger(Path.Combine(outputDirectory, $"{baseName}.log"));
+
+            FwFonts.Models.FirmweareDescriptor descriptor;
+            using (var stream = File.OpenRead(inputFileName))
+            {
+                descriptor = FwFonts.FileReader.Read(stream);
+            }
+
+            foreach (var font in descriptor.Fonts)
+            {
+                var fontDirectory = Path.Combine(outputDirectory, font.Key);
+                if (!Directory.Exists(fontDirectory)) Directory.CreateDirectory(fontDirectory);
+
+                foreach (var image in font.Value.Images)
+                {
+                    image.Value.Save(Path.Combine(fontDirectory, $"0x{(ushort)image.Key:x4}.png"), ImageFormat.Png);
+                }
             }
         }
 

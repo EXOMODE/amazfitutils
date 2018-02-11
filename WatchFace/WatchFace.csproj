@@ -62,6 +62,10 @@
       <Project>{390eaf2d-9fa8-4dc1-8d4f-ea565ad3c682}</Project>
       <Name>Fonts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FwFonts\FwFonts.csproj">
+      <Project>{e50e8437-0511-4a94-808a-ad5f3105d060}</Project>
+      <Name>FwFonts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Resources\Resources.csproj">
       <Project>{edd55d5d-9e80-451b-ac8a-0746ba6dc6e9}</Project>
       <Name>Resources</Name>
