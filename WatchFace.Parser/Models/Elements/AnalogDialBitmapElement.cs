@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing;
 using BumpKit;
 using WatchFace.Parser.Interfaces;
 
@@ -32,22 +30,23 @@ namespace WatchFace.Parser.Models.Elements
             {
                 var angle = DegreeFromValues(state.Time.Minute, 60);
                 var hoursImage = RotateImage(
-                    resources[Minutes.ImageIndex], new Point((int)Minutes.X, (int)Minutes.Y), angle
+                    resources[Minutes.ImageIndex], new Point((int) Minutes.X, (int) Minutes.Y), angle
                 );
-                drawer.DrawImage(hoursImage, new Point((int)RedrawArea.X, (int)RedrawArea.Y));
+                drawer.DrawImage(hoursImage, new Point((int) RedrawArea.X, (int) RedrawArea.Y));
             }
 
             if (Seconds != null)
             {
                 var angle = DegreeFromValues(state.Time.Second, 60);
                 var hoursImage = RotateImage(
-                    resources[Seconds.ImageIndex], new Point((int)Seconds.X, (int)Seconds.Y), angle
+                    resources[Seconds.ImageIndex], new Point((int) Seconds.X, (int) Seconds.Y), angle
                 );
-                drawer.DrawImage(hoursImage, new Point((int)RedrawArea.X, (int)RedrawArea.Y));
+                drawer.DrawImage(hoursImage, new Point((int) RedrawArea.X, (int) RedrawArea.Y));
             }
 
             if (CenterImage != null)
-                drawer.DrawImage(resources[CenterImage.ImageIndex], new Point((int)CenterImage.X, (int)CenterImage.Y));
+                drawer.DrawImage(resources[CenterImage.ImageIndex],
+                    new Point((int) CenterImage.X, (int) CenterImage.Y));
         }
 
         private static double DegreeFromValues(double value, double total)
@@ -55,24 +54,19 @@ namespace WatchFace.Parser.Models.Elements
             return value * 360 / total - 90;
         }
 
-        private Bitmap RotateImage(Image image, Point ImageCoords, double degrees)
+        private Bitmap RotateImage(Image image, Point imageCoords, double degrees)
         {
-            var radians = degrees / 180 * Math.PI;
-            var sin = Math.Sin(radians);
-            var cos = Math.Cos(radians);
-
             var drawBox = RedrawArea.GetBox();
             var newImage = new Bitmap(drawBox.Width, drawBox.Height);
             using (var graphics = Graphics.FromImage(newImage))
             {
-                graphics.DrawImage(image, new Point(ImageCoords.X - drawBox.X, ImageCoords.Y - drawBox.Y));
+                graphics.DrawImage(image, new Point(imageCoords.X - drawBox.X, imageCoords.Y - drawBox.Y));
             }
 
             while (degrees < 0) degrees += 360;
             while (degrees > 360) degrees -= 360;
             var rotated = newImage.Rotate(degrees);
-            rotated.Save("tmp.png");
-            return rotated as Bitmap; 
+            return rotated as Bitmap;
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)

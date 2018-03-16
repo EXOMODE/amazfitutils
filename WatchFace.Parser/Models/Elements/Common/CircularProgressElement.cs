@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using WatchFace.Parser.Interfaces;
 
-namespace WatchFace.Parser.Models.Elements.GoalProgress
+namespace WatchFace.Parser.Models.Elements.Common
 {
     public abstract class CircularProgressElement : CoordinatesElement, IDrawable
     {
@@ -19,7 +19,8 @@ namespace WatchFace.Parser.Models.Elements.GoalProgress
 
         public void Draw(Graphics drawer, Bitmap[] resources, int value, int total)
         {
-            var sectorAngle = (EndAngle - StartAngle) * value / total;
+            var part = value >= total ? 1.0f : (float) value / total;
+            var sectorAngle = (EndAngle - StartAngle) * part;
             var pen = new Pen(Color, Width);
             var rect = new Rectangle((int) (X - RadiusX), (int) (Y - RadiusY),
                 (int) (RadiusX * 2), (int) (RadiusY * 2));

@@ -3,17 +3,13 @@ using WatchFace.Parser.Elements.BasicElements;
 
 namespace WatchFace.Parser.Elements.ActivityElements
 {
-    public class FormattedNumber
+    public class StepsWithGoalNumber
     {
         [ParameterId(1)]
         public Number Number { get; set; }
 
         [ParameterId(2)]
         [ParameterImageIndex]
-        public long? SuffixImageIndex { get; set; }
-
-        [ParameterId(3)]
-        [ParameterImageIndex]
-        public long? DecimalPointImageIndex { get; set; }
+        public long? DelimiterImageIndex { get; set; }
     }
 }

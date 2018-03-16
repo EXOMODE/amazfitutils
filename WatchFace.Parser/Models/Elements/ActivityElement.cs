@@ -1,4 +1,6 @@
-﻿namespace WatchFace.Parser.Models.Elements
+﻿using WatchFace.Parser.Models.Elements.Activity;
+
+namespace WatchFace.Parser.Models.Elements
 {
     public class ActivityElement : ContainerElement
     {
@@ -10,6 +12,7 @@
         public CaloriesElement Calories { get; set; }
         public PulseElement Pulse { get; set; }
         public DistanceElement Distance { get; set; }
+        public StepsWithGoalElement StepsWithGoal { get; set; }
 
         protected override Element CreateChildForParameter(Parameter parameter)
         {
@@ -30,6 +33,9 @@
                 case 5:
                     Distance = new DistanceElement(parameter, this);
                     return Distance;
+                case 6:
+                    StepsWithGoal = new StepsWithGoalElement(parameter, this);
+                    return StepsWithGoal;
                 default:
                     return base.CreateChildForParameter(parameter);
             }

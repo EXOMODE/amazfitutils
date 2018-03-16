@@ -118,11 +118,11 @@ namespace Resources.Image
                     var bitReader = new BitReader(rowBytes);
                     for (var x = 0; x < _width; x++)
                     {
-                        var firstByte = bitReader.ReadByte();
-                        var secondByte = bitReader.ReadByte();
-                        var b = ((secondByte >> 3) & 0x1f) << 3;
-                        var g = ((secondByte & (0x07 << 2)) | (firstByte & (0x40 >> 5))) << 3;
-                        var r = (firstByte & 0x1f) << 3;
+                        var firstByte = (int)bitReader.ReadByte();
+                        var secondByte = (int)bitReader.ReadByte();
+                        var b = (byte)(secondByte >> 3 & 0x1f) << 3;
+                        var g = (byte)(((firstByte >> 5) & 0x7) | ((secondByte & 0x07) << 3)) << 2;
+                        var r = (byte)(firstByte & 0x1f) << 3;
                         var color = Color.FromArgb(0xff, r, g, b);
                         context.SetPixel(x, y, color);
                     }

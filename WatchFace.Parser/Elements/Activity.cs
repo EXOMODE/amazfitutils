@@ -19,6 +19,9 @@ namespace WatchFace.Parser.Elements
         public CompositeNumber Pulse { get; set; }
 
         [ParameterId(5)]
-        public FormattedNumber Distance { get; set; }
+        public DistanceNumber Distance { get; set; }
+
+        [ParameterId(6)]
+        public StepsWithGoalNumber StepsWithGoal { get; set; }
     }
 }

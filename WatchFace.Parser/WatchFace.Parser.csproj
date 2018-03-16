@@ -51,8 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\Activity.cs" />
+    <Compile Include="Elements\ActivityElements\StepsWithGoalNumber.cs" />
     <Compile Include="Elements\BasicElements\CompositeNumber.cs" />
-    <Compile Include="Elements\ActivityElements\FormattedNumber.cs" />
+    <Compile Include="Elements\ActivityElements\DistanceNumber.cs" />
     <Compile Include="Elements\AnalogDialVector.cs" />
     <Compile Include="Elements\Background.cs" />
     <Compile Include="Elements\BasicElements\CircleScale.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Elements\BasicElements\Number.cs" />
     <Compile Include="Elements\BasicElements\Scale.cs" />
     <Compile Include="Elements\Battery.cs" />
+    <Compile Include="Elements\BatteryElements\BatteryNumber.cs" />
     <Compile Include="Elements\Date.cs" />
     <Compile Include="Elements\DateElements\MonthAndDay.cs" />
     <Compile Include="Elements\DateElements\OneLineMonthAndDay.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="JsonConverters\ColorJsonConverter.cs" />
     <Compile Include="Models\DrawingOrderPosition.cs" />
     <Compile Include="Models\Elements\Activity\CaloriesElement.cs" />
+    <Compile Include="Models\Elements\Activity\StepsWithGoalElement.cs" />
     <Compile Include="Models\Elements\Activity\StepsElement.cs" />
     <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
     <Compile Include="Models\Elements\Activity\PulseElement.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="Models\Elements\Basic\ContainerElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryLenearProgressElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryNumberElement.cs" />
+    <Compile Include="Models\Elements\Battery\CircularBatteryProgressElement.cs" />
     <Compile Include="Models\Elements\Common\CompositeNumberElement.cs" />
     <Compile Include="Models\Elements\Common\ImageSetElement.cs" />
     <Compile Include="Models\Elements\Common\CircularProgressElement.cs" />

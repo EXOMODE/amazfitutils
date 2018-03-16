@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using WatchFace.Parser.Models.Elements.Common;
 
 namespace WatchFace.Parser.Models.Elements.GoalProgress
 {
