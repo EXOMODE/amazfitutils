@@ -104,6 +104,7 @@ namespace Resources.Image
                     }
                 }
             }
+
             return image;
         }
 
@@ -118,11 +119,11 @@ namespace Resources.Image
                     var bitReader = new BitReader(rowBytes);
                     for (var x = 0; x < _width; x++)
                     {
-                        var firstByte = (int)bitReader.ReadByte();
-                        var secondByte = (int)bitReader.ReadByte();
-                        var b = (byte)(secondByte >> 3 & 0x1f) << 3;
-                        var g = (byte)(((firstByte >> 5) & 0x7) | ((secondByte & 0x07) << 3)) << 2;
-                        var r = (byte)(firstByte & 0x1f) << 3;
+                        var firstByte = (int) bitReader.ReadByte();
+                        var secondByte = (int) bitReader.ReadByte();
+                        var b = (byte) (secondByte >> 3 & 0x1f) << 3;
+                        var g = (byte) (((firstByte >> 5) & 0x7) | ((secondByte & 0x07) << 3)) << 2;
+                        var r = (byte) (firstByte & 0x1f) << 3;
                         var color = Color.FromArgb(0xff, r, g, b);
                         context.SetPixel(x, y, color);
                     }
@@ -166,10 +167,10 @@ namespace Resources.Image
                     var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
                     for (var x = 0; x < _width; x++)
                     {
-                        var alpha = rowBytes[x * 4];
-                        var b = rowBytes[x * 4 + 1];
-                        var g = rowBytes[x * 4 + 2];
-                        var r = rowBytes[x * 4 + 3];
+                        var r = rowBytes[x * 4];
+                        var g = rowBytes[x * 4 + 1];
+                        var b = rowBytes[x * 4 + 2];
+                        var alpha = rowBytes[x * 4 + 3];
                         var color = Color.FromArgb(0xff - alpha, r, g, b);
                         context.SetPixel(x, y, color);
                     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using BumpKit;
 using WatchFace.Parser.Interfaces;
@@ -66,6 +67,7 @@ namespace WatchFace.Parser
             var background = resources[0];
             var preview = new Bitmap(background.Width, background.Height);
             var graphics = Graphics.FromImage(preview);
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
             watchFace.Draw(graphics, resources, state);
             return preview;
         }
