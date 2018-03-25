@@ -85,6 +85,29 @@ namespace Resources.Image
                     }
                 }
             }
+
+            var startIndex = _transparency == 0 ? 0 : 1;
+
+            for (var i = startIndex; i < _palette.Count - 1; i++)
+            {
+                var minColor = (uint) _palette[i].ToArgb();
+                var minIndex = i;
+                for (var j = i + 1; j < _palette.Count; j++)
+                {
+                    var color = (uint) _palette[j].ToArgb();
+                    if (color >= minColor) continue;
+
+                    minColor = color;
+                    minIndex = j;
+                }
+
+                if (minIndex == i) continue;
+
+                var tmp = _palette[i];
+                _palette[i] = _palette[minIndex];
+                _palette[minIndex] = tmp;
+            }
+
             _paletteColors = (ushort) _palette.Count;
             _bitsPerPixel = (ushort) Math.Ceiling(Math.Log(_paletteColors, 2));
         }
@@ -149,6 +172,7 @@ namespace Resources.Image
                             bitWriter.WriteBits(paletteIndex, _bitsPerPixel);
                         }
                     }
+
                     bitWriter.Flush();
                     _writer.Write(rowData);
                 }
