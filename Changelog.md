@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.2.9] - 2018-03-25
+### Added
+- Added sorting of image palette for correct repacking font images added in 0.1.1.15 firmware (RES 32) (#23)
+
 ## [1.0.2.8] - 2018-02-02
 ### Added
 - Added support for unpacking/packing new format of .res-file from firmware 0.1.0.66 (#18)
@@ -86,7 +90,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Implemented watchfaces unpacking and packing.
 - Implemented .res file unpacking.
 
-[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.8
+[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.9
+[1.0.2.9]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.9..1.0.2.8
 [1.0.2.8]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.8..1.0.2.7
 [1.0.2.7]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.7..1.0.2.6
 [1.0.2.6]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.6..1.0.2.5
