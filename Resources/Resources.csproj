@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Extractor.cs" />
     <Compile Include="ImageLoader.cs" />
+    <Compile Include="Image\ImageType.cs" />
     <Compile Include="Models\FileDescriptor.cs" />
     <Compile Include="Models\Header.cs" />
     <Compile Include="Utils\BitReader.cs" />

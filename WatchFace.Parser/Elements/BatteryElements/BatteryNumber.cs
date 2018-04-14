@@ -9,7 +9,6 @@ namespace WatchFace.Parser.Elements.BatteryElements
         public Number Number { get; set; }
 
         [ParameterId(2)]
-        [ParameterImageIndex]
         public CircleScale CircleScale { get; set; }
 
         [ParameterId(3)]

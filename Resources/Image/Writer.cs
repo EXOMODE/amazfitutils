@@ -12,8 +12,11 @@ namespace Resources.Image
     public class Writer
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static readonly byte[] Signature = {(byte) 'B', (byte) 'M', (byte) 'd', 0};
         private readonly List<Color> _palette;
+        private bool hasTransparentColor;
+        private bool hasSemiTransparentColors;
+        private bool hasPresiceColors;
+        private ImageType imageType;
 
         private readonly BinaryWriter _writer;
 
@@ -31,29 +34,83 @@ namespace Resources.Image
             _palette = new List<Color>();
         }
 
+        private byte[] Signature => new byte[] { (byte)'B', (byte)'M', (byte)imageType, 0 };
+
         public void Write(Bitmap image)
         {
             _image = image;
-            _width = (ushort) image.Width;
-            _height = (ushort) image.Height;
+            _width = (ushort)image.Width;
+            _height = (ushort)image.Height;
 
             ExtractPalette();
 
-            if (_bitsPerPixel == 3) _bitsPerPixel = 4;
-            if (_bitsPerPixel == 0) _bitsPerPixel = 1;
+            if (hasSemiTransparentColors)
+            {
+                if (hasPresiceColors)
+                {
+                    imageType = ImageType.Bpp32;
+                    _bitsPerPixel = 32;
+                }
+                else
+                {
+                    imageType = ImageType.Bpp24;
+                    _bitsPerPixel = 24;
+                }
+            }
+            else if (hasTransparentColor)
+            {
+                if (_bitsPerPixel > 8)
+                {
+                    imageType = ImageType.Bpp24;
+                    _bitsPerPixel = 24;
+                }
+                else
+                {
+                    imageType = ImageType.Paletted;
+                }
+            } else
+            {
+                if (_bitsPerPixel > 8)
+                {
+                    imageType = ImageType.Bpp16;
+                    _bitsPerPixel = 16;
+                }
+                else
+                {
+                    imageType = ImageType.Paletted;
+                }
+            }
 
-            if (_bitsPerPixel > 4)
-                throw new ArgumentException(
-                    $"The image has {_bitsPerPixel} bit/pixel and can't be packed for using on the watches. Looks like dithering works incorrectly on the image."
-                );
+            if (imageType == ImageType.Paletted) { 
+                _paletteColors = (ushort)_palette.Count;
+                if (hasTransparentColor) _transparency = 1;
+                if (_bitsPerPixel > 4 && _bitsPerPixel <8) _bitsPerPixel = 8;
+                if (_bitsPerPixel == 3) _bitsPerPixel = 4;
+                if (_bitsPerPixel == 0) _bitsPerPixel = 1;
+            }
 
-            _rowLengthInBytes = (ushort) Math.Ceiling(_width * _bitsPerPixel / 8.0);
+            _rowLengthInBytes = (ushort)Math.Ceiling(_width * _bitsPerPixel / 8.0);
 
             _writer.Write(Signature);
 
             WriteHeader();
-            WritePalette();
-            WriteImage();
+
+            switch (imageType)
+            {
+                case ImageType.Paletted:
+                    WritePalette();
+                    WritePalettedImage();
+                    break;
+                case ImageType.Bpp16:
+                    Write16BitImage();
+                    break;
+                case ImageType.Bpp24:
+                    Write24BitImage();
+                    break;
+                case ImageType.Bpp32:
+                    Write32BitImage();
+                    break;
+            }
         }
 
         private void ExtractPalette()
@@ -68,48 +125,35 @@ namespace Resources.Image
                     var color = context.GetPixel(x, y);
                     if (_palette.Contains(color)) continue;
 
-                    if (color.A < 0x80 && _transparency == 0)
+                    Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, A {4:X2}",
+                        _palette.Count, color.R, color.G, color.B, color.A
+                    );
+
+                    if (!hasTransparentColor && color.A == 0)
                     {
-                        Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}, Transaparent color",
-                            _palette.Count, color.R, color.G, color.B
-                        );
+                        Logger.Trace("Found fully transaparent color");
                         _palette.Insert(0, color);
-                        _transparency = 1;
+                        hasTransparentColor = true;
                     }
                     else
                     {
-                        Logger.Trace("Palette item {0}: R {1:X2}, G {2:X2}, B {3:X2}",
-                            _palette.Count, color.R, color.G, color.B
-                        );
                         _palette.Add(color);
+                    }
+
+                    if (!hasSemiTransparentColors && color.A > 0 && color.A < 0xff)
+                    {
+                        Logger.Trace("Found semi transaparent color");
+                        hasSemiTransparentColors = true;
+                    }
+
+                    if (!hasPresiceColors && ((color.R & 0x7) > 0 || (color.G & 0x3) > 0 || (color.B & 0x3) > 0))
+                    {
+                        Logger.Trace("Found presice color");
+                            hasPresiceColors = true;
                     }
                 }
             }
-
-            var startIndex = _transparency == 0 ? 0 : 1;
-
-            for (var i = startIndex; i < _palette.Count - 1; i++)
-            {
-                var minColor = (uint) _palette[i].ToArgb();
-                var minIndex = i;
-                for (var j = i + 1; j < _palette.Count; j++)
-                {
-                    var color = (uint) _palette[j].ToArgb();
-                    if (color >= minColor) continue;
-
-                    minColor = color;
-                    minIndex = j;
-                }
-
-                if (minIndex == i) continue;
-
-                var tmp = _palette[i];
-                _palette[i] = _palette[minIndex];
-                _palette[minIndex] = tmp;
-            }
-
-            _paletteColors = (ushort) _palette.Count;
-            _bitsPerPixel = (ushort) Math.Ceiling(Math.Log(_paletteColors, 2));
+            _bitsPerPixel = (ushort)Math.Ceiling(Math.Log(_palette.Count, 2));
         }
 
         private void WriteHeader()
@@ -140,9 +184,9 @@ namespace Resources.Image
             }
         }
 
-        private void WriteImage()
+        private void WritePalettedImage()
         {
-            Logger.Trace("Writing image...");
+            Logger.Trace("Writing paletted image...");
 
             var paletteHash = new Dictionary<Color, byte>();
             byte i = 0;
@@ -174,6 +218,78 @@ namespace Resources.Image
                     }
 
                     bitWriter.Flush();
+                    _writer.Write(rowData);
+                }
+            }
+        }
+
+        private void Write16BitImage()
+        {
+            Logger.Trace("Writing 16-bit image...");
+            using (var context = _image.CreateUnsafeContext())
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    var rowData = new byte[_rowLengthInBytes];
+                    var memoryStream = new MemoryStream(rowData);
+                    for (var x = 0; x < _width; x++)
+                    {
+                        var color = context.GetPixel(x, y);
+
+                        byte first = (byte)((color.R >> 3) |((((color.G >> 2) & 0x7)) << 5));
+                        byte second = (byte)(color.B | ((color.G >> 5) & 0x7));
+
+                        memoryStream.WriteByte(first);
+                        memoryStream.WriteByte(second);
+                    }
+                    _writer.Write(rowData);
+                }
+            }
+        }
+
+        private void Write24BitImage()
+        {
+            Logger.Trace("Writing 24-bit image...");
+            using (var context = _image.CreateUnsafeContext())
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    var rowData = new byte[_rowLengthInBytes];
+                    var memoryStream = new MemoryStream(rowData);
+                    var bitWriter = new BitWriter(memoryStream);
+                    for (var x = 0; x < _width; x++)
+                    {
+                        var color = context.GetPixel(x, y);
+
+                        bitWriter.Write((byte)(0xff - color.A));
+                        bitWriter.WriteBits((ulong)color.B >> 3, 5);
+                        bitWriter.WriteBits((ulong)color.G >> 2, 6);
+                        bitWriter.WriteBits((ulong)color.R >> 3, 5);
+                    }
+                    bitWriter.Flush();
+                    _writer.Write(rowData);
+                }
+            }
+        }
+
+        private void Write32BitImage()
+        {
+            Logger.Trace("Writing 32-bit image...");
+            using (var context = _image.CreateUnsafeContext())
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    var rowData = new byte[_rowLengthInBytes];
+                    var memoryStream = new MemoryStream(rowData);
+                    for (var x = 0; x < _width; x++)
+                    {
+                        var color = context.GetPixel(x, y);
+
+                        memoryStream.WriteByte(color.R);
+                        memoryStream.WriteByte(color.G);
+                        memoryStream.WriteByte(color.B);
+                        memoryStream.WriteByte((byte)(0xff - color.A));
+                    }
                     _writer.Write(rowData);
                 }
             }
