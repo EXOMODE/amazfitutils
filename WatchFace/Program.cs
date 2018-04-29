@@ -27,14 +27,11 @@ namespace WatchFace
             if (args.Length == 0 || args[0] == null)
             {
                 Console.WriteLine(
-                    "{0}.exe unpacks and packs Amazfit Bip downloadable watch faces and resource files.", AppName);
+                    "{0}.exe unpacks and packs Amazfit Cor downloadable watch faces.", AppName);
                 Console.WriteLine();
                 Console.WriteLine("Usage examples:");
                 Console.WriteLine("  {0}.exe watchface.bin   - unpacks watchface images and config", AppName);
-                Console.WriteLine("  {0}.exe watchface.json  - packs config and referenced images to bin file",
-                    AppName);
-                Console.WriteLine("  {0}.exe mili_chaohu.res - unpacks resource file images", AppName);
-                Console.WriteLine("  {0}.exe mili_chaohu     - packs folder content to res file", AppName);
+                Console.WriteLine("  {0}.exe watchface.json  - packs config and referenced images to bin file", AppName);
                 return;
             }
 
@@ -77,9 +74,6 @@ namespace WatchFace
                             break;
                         case ".json":
                             PackWatchFace(inputFileName);
-                            break;
-                        case ".res":
-                            UnpackResources(inputFileName);
                             break;
                         default:
                             Console.WriteLine("The app doesn't support files with extension {0}.", inputFileExtension);
