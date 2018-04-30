@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.2.10] - 2018-05-01
+### Added
+- Skipped storing empty paramter lists. It was possible to brick watches with this :( (Thanks to Luca Venturini for the report)
+
 ## [1.0.2.9] - 2018-03-25
 ### Added
 - Added sorting of image palette for correct repacking font images added in 0.1.1.15 firmware (RES 32) (#23)
