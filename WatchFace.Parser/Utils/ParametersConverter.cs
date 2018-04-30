@@ -56,7 +56,11 @@ namespace WatchFace.Parser.Utils
                 }
                 else
                 {
-                    result.Add(new Parameter(id, Build(propertyValue, currentPath)));
+                    var innerParameters = Build(propertyValue, currentPath);
+                    if (innerParameters.Count > 0)
+                        result.Add(new Parameter(id, innerParameters));
+                    else
+                        Logger.Trace("{0} '{1}': Skipped because of empty", currentPath, propertyInfo.Name);
                 }
             }
 

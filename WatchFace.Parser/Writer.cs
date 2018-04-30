@@ -25,6 +25,7 @@ namespace WatchFace.Parser
             var encodedParameters = new Dictionary<byte, MemoryStream>(descriptor.Count);
             foreach (var parameter in descriptor)
             {
+                Logger.Trace("Parameter: {0}", parameter.Id);
                 var memoryStream = new MemoryStream();
                 foreach (var child in parameter.Children)
                     child.Write(memoryStream);
