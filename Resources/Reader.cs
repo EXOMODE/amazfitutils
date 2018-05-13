@@ -43,7 +43,14 @@ namespace Resources
                     _stream.Seek(realOffset, SeekOrigin.Begin);
                 }
                 Logger.Debug("Reading image {0}...", i);
-                images.Add(new Image.Reader(_stream).Read());
+                try
+                {
+                    images.Add(new Image.Reader(_stream).Read());
+                }
+                catch
+                {
+                    Logger.Warn("Error on reading image {0}", i);
+                }
             }
             return images;
         }

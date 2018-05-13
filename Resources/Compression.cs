@@ -6,6 +6,8 @@ namespace Resources
 {
     public class Compression
     {
+        private const int SectionSize = 4096;
+        private static readonly byte[] SomeData = new byte[16] {4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0};
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         class Header
@@ -41,7 +43,7 @@ namespace Resources
         public Stream Decompress()
         {
             var output = new MemoryStream();
-            var buffer = new byte[5120];
+            var sourceBuffer = new byte[SectionSize];
 
             var offset = (uint)0;
 
@@ -49,33 +51,32 @@ namespace Resources
             {
                 var header = Header.Read(_reader);
 
-                if (header.DecompressedLength == 4096)
+                if (header.DecompressedLength == SectionSize)
                 {
                     Logger.Debug("Compression block header read at offset 0x{0:X}", offset);
                     Logger.Debug("Flags 0x{0:X}, Compressed {1}, Decompressed {2}, LengthSize {3}",
                         header.Flags, header.CompressedLength, header.DecompressedLength, header.LengthSize);
 
-                    _reader.Read(buffer, 0, (int)header.CompressedLength - 9);
+                    _reader.Read(sourceBuffer, 0, (int)header.CompressedLength - Header.Size);
                     offset += header.CompressedLength;
-
 
                     if (header.IsCompressed)
                     {
-                        // Here should be decompression
-
+                        var decompressed = DecompressBuffer(sourceBuffer);
+                        output.Write(decompressed, 0, (int)header.DecompressedLength);
                     }
                     else
-                        output.Write(buffer, 0, (int)header.CompressedLength);
+                        output.Write(sourceBuffer, 0, (int)header.CompressedLength - Header.Size);
                 }
                 else
                 {
                     var latestBlock = _streamSize - offset;
                     Logger.Debug("Latest block read at offset 0x{0:X}, size: {1}", offset, latestBlock);
 
-                    _reader.Read(buffer, 0, (int)(latestBlock - Header.Size));
+                    _reader.Read(sourceBuffer, 0, (int)(latestBlock - Header.Size));
 
                     output.Write(header.Buffer, 0, Header.Size);
-                    output.Write(buffer, 0, (int)(latestBlock - Header.Size));
+                    output.Write(sourceBuffer, 0, (int)(latestBlock - Header.Size));
                     break;
                 }
             }
@@ -84,5 +85,94 @@ namespace Resources
             return output;
         }
 
+
+        private byte[] DecompressBuffer(byte[] srcBuffer)
+        {
+            var dstBuffer = new byte[SectionSize];
+            var data = (uint)1;
+            var dstOffset = 0;
+            var srcOffset = 0;
+
+            while (true)
+            {
+                while (true)
+                {
+                    if (data == 1)
+                    {
+                        data = BitConverter.ToUInt32(srcBuffer, srcOffset);
+                        srcOffset += 4;
+                    }
+
+                    var link = BitConverter.ToUInt32(srcBuffer, srcOffset);
+
+                    if (data << 31 == 0)
+                        break;
+
+                    data = data >> 1;
+
+                    uint dupOffset, dupLength;
+
+                    if (link << 30 == 0)
+                    {
+                        dupOffset = (uint)((byte)link >> 2);
+                        dupLength = 3;
+                        srcOffset++;
+                    }
+                    else if ((link & 2) == 0)
+                    {
+                        dupOffset = (uint)((ushort)link >> 2);
+                        dupLength = 3;
+                        srcOffset += 2;
+                    }
+                    else if (link << 31 == 0)
+                    {
+                        dupOffset = (uint)((ushort)link >> 6);
+                        dupLength = ((link >> 2) & 0xF) + 3;
+                        srcOffset += 2;
+                    }
+                    else if ((link & 0x7F) == 3)
+                    {
+                        dupOffset = link >> 15;
+                        dupLength = ((link >> 7) & 0xFF) + 3;
+                        srcOffset += 4;
+                    }
+                    else
+                    {
+                        dupOffset = (link >> 7) & 0x1FFFF;
+                        dupLength = ((link >> 2) & 0x1F) + 2;
+                        srcOffset += 3;
+                    }
+
+                    Array.Copy(dstBuffer, dstOffset - dupOffset, dstBuffer, dstOffset, dupLength);
+                    dstOffset += (int)dupLength;
+                }
+
+                if (dstOffset >= SectionSize - 11)
+                    break;
+
+                var length = SomeData[data & 0xf];
+                Array.Copy(srcBuffer, srcOffset, dstBuffer, dstOffset, 4);
+                data >>= length;
+                dstOffset += length;
+                srcOffset += length;
+            }
+
+            while (dstOffset <= SectionSize - 1)
+            {
+                if (data == 1)
+                {
+                    data = 0x80000000;
+                    srcOffset += 4;
+                }
+                data >>= 1;
+                var tmp = srcBuffer[srcOffset];
+                srcOffset++;
+                dstBuffer[dstOffset] = tmp;
+                dstOffset++;
+            }
+
+
+            return dstBuffer;
+        }
     }
 }

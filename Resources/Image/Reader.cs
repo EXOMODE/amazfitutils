@@ -32,6 +32,10 @@ namespace Resources.Image
                 throw new ArgumentException("Image signature doesn't match.");
 
             ReadHeader();
+            if (_paletteColors > 256)
+                throw new ArgumentException(
+                    "Too many palette colors.");
+
             if (_paletteColors > 0)
                 ReadPalette();
             else if (_bitsPerPixel == 16 || _bitsPerPixel == 24 || _bitsPerPixel == 32)

@@ -209,6 +209,12 @@ namespace WatchFace
             using (var stream = File.OpenRead(inputFileName))
             {
                 var decompressedStream = new Compression(stream).Decompress();
+                using (var wStream = File.OpenWrite(Path.Combine(outputDirectory, $"{inputFileName}.res"))) {
+                    decompressedStream.CopyTo(wStream);
+                    wStream.Flush();
+                }
+
+                decompressedStream.Seek(0, SeekOrigin.Begin);
                 resDescriptor = FileReader.Read(decompressedStream);
             }
 
