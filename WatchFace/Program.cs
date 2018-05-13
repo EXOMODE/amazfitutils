@@ -72,6 +72,9 @@ namespace WatchFace
                         case ".bin":
                             UnpackWatchFace(inputFileName);
                             break;
+                        case ".res":
+                            UnpackResources(inputFileName);
+                            break;
                         case ".json":
                             PackWatchFace(inputFileName);
                             break;
@@ -205,7 +208,8 @@ namespace WatchFace
             FileDescriptor resDescriptor;
             using (var stream = File.OpenRead(inputFileName))
             {
-                resDescriptor = FileReader.Read(stream);
+                var decompressedStream = new Compression(stream).Decompress();
+                resDescriptor = FileReader.Read(decompressedStream);
             }
 
             ExportResConfig(resDescriptor, Path.Combine(outputDirectory, "header.json"));

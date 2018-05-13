@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="ImageLoader.cs" />
     <Compile Include="Image\ImageType.cs" />
