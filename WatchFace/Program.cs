@@ -386,7 +386,10 @@ namespace WatchFace
             var fileTarget = new FileTarget
             {
                 FileName = logFileName,
-                Layout = "${level}|${message}"
+                Layout = "${level}|${message}",
+                KeepFileOpen = true,
+                ConcurrentWrites = false,
+                OpenFileCacheTimeout = 30
             };
             config.AddTarget("file", fileTarget);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, fileTarget));
