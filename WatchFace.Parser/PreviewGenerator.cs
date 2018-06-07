@@ -21,7 +21,7 @@ namespace WatchFace.Parser
                 for (var i = 0; i < 10; i++)
                 {
                     var num = i + 1;
-                    watchState.BatteryLevel = num * 10;
+                    watchState.BatteryLevel = 100 - (num * 10);
 
                     watchState.Pulse = 60 + num * 2;
                     watchState.Steps = num * 1000;
@@ -35,6 +35,17 @@ namespace WatchFace.Parser
 
                     watchState.DayTemperature += 2;
                     watchState.NightTemperature += 4;
+
+                    if (num < 3)
+                    {
+                        watchState.Air = AirCondition.Unknown;
+                        watchState.AirQualityIndex = null;
+                    }
+                    else
+                    {
+                        watchState.Air = (AirCondition) (num - 3);
+                        watchState.AirQualityIndex = (num - 2) * 50 - 25;
+                    }
 
                     if (num < 3)
                         watchState.CurrentTemperature = null;

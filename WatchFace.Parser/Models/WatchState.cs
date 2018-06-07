@@ -18,7 +18,10 @@ namespace WatchFace.Parser.Models
         public int? TomorrowDayTemperature { get; set; }
         public int? TomorrowNightTemperature { get; set; }
         public WeatherCondition CurrentWeather { get; set; } = WeatherCondition.Cloudy;
+
+        // https://en.wikipedia.org/wiki/Air_quality_index#Mainland_China
         public AirCondition Air { get; set; } = AirCondition.Excellent;
+        public int? AirQualityIndex { get; set; } = 15;
 
         public int BatteryLevel { get; set; } = 67;
         public bool Bluetooth { get; set; } = true;

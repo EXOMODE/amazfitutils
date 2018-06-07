@@ -120,6 +120,7 @@
     <Compile Include="Models\Elements\TimeElement.cs" />
     <Compile Include="Models\Elements\Common\TwoDigitsElement.cs" />
     <Compile Include="Models\Elements\WatchFace.cs" />
+    <Compile Include="Models\Elements\Weather\AirPollution\AirQualityIndexNumberElement.cs" />
     <Compile Include="Models\Elements\Weather\Temperature\Today\OnelineTemperatureElement.cs" />
     <Compile Include="Models\Elements\Weather\Temperature\CurrentTemperatureElement.cs" />
     <Compile Include="Models\Elements\Weather\AirPollution\AirPollutionImageElement.cs" />
