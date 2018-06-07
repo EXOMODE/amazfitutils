@@ -3,7 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.0.2.12] - 2018-05-01
+### Added
+- Added support for air quality index value;
+- Aanimated preview now shows discharging battery  instead of charging.
+
+## [1.0.2.11] - 2018-05-01
+### Changed
+- Improved speed of all operations by tuning logging options
 
 ## [1.0.2.10] - 2018-05-01
 ### Added
@@ -94,7 +101,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Implemented watchfaces unpacking and packing.
 - Implemented .res file unpacking.
 
-[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.9
+[Unreleased]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/HEAD..1.0.2.12
+[1.0.2.12]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.12..1.0.2.11
+[1.0.2.11]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.11..1.0.2.10
+[1.0.2.10]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.10..1.0.2.9
 [1.0.2.9]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.9..1.0.2.8
 [1.0.2.8]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.8..1.0.2.7
 [1.0.2.7]: https://bitbucket.org/valeronm/amazfitbiptools/branches/compare/1.0.2.7..1.0.2.6
