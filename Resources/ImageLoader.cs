@@ -16,7 +16,9 @@ namespace Resources
         {
             var numericParts = new[]
             {
-                index.ToString().PadLeft(NumericPartLength, '0'),
+                index.ToString().PadLeft(4, '0'),
+                index.ToString().PadLeft(3, '0'),
+                index.ToString().PadLeft(2, '0'),
                 index.ToString()
             };
 
