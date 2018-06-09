@@ -19,11 +19,14 @@ namespace WatchFace.Parser.Models.Elements
             var useAltCoordinates = CurrentAlt != null && state.CurrentTemperature == null;
             var iconCoordinates = useAltCoordinates ? CurrentAlt : Current;
 
+            if (state.CurrentWeather > WeatherCondition.VeryHeavyDownpour ||
+                state.CurrentWeather < WeatherCondition.Unknown) return;
+
             if (iconCoordinates != null)
                 drawer.DrawImage(LoadWeatherImage(state.CurrentWeather), iconCoordinates.X, iconCoordinates.Y);
 
             if (CustomIcon != null)
-                drawer.DrawImage(resources[CustomIcon.ImageIndex + 1], CustomIcon.X, CustomIcon.Y);
+                drawer.DrawImage(resources[CustomIcon.ImageIndex + (int)state.CurrentWeather], CustomIcon.X, CustomIcon.Y);
         }
 
         private static Bitmap LoadWeatherImage(WeatherCondition weather)

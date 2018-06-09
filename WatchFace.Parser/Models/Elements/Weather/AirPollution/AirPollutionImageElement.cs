@@ -9,9 +9,9 @@ namespace WatchFace.Parser.Models.Elements
 
         public override void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            if (state.Air == AirCondition.Unknown) return;
+            if (state.AirQuality == AirCondition.Unknown) return;
 
-            var imageIndex = (int) state.Air;
+            var imageIndex = (int) state.AirQuality;
             Draw(drawer, resources, imageIndex);
         }
     }

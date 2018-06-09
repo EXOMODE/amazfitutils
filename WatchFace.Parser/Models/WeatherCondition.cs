@@ -2,7 +2,31 @@
 {
     public enum WeatherCondition
     {
-        Unknown = 279,
-        Cloudy = 247
+        Unknown,
+        PartlyCloudy,
+        CloudyAndRain,
+        CloudyAndSnow,
+        Sunny,
+        Cloudy,
+        LightRain,
+        LightSnow,
+        Rain,
+        Snow,
+        HeavySnow,
+        HeavyRain,
+        SandStorm,
+        SnowAndRain,
+        Fog,
+        Haze,
+        Storm,
+        VeryHeavySnow,
+        FloatingDust,
+        Downpour,
+        Hail,
+        HailStorm,
+        HeavyDownpour,
+        BlowingDust,
+        Tornado,
+        VeryHeavyDownpour
     }
 }

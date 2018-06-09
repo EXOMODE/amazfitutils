@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
+using BumpKit;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
@@ -10,6 +12,7 @@ using NLog.Targets;
 using Resources;
 using Resources.Models;
 using WatchFace.Parser;
+using WatchFace.Parser.Models;
 using WatchFace.Parser.Utils;
 using Reader = WatchFace.Parser.Reader;
 using Writer = WatchFace.Parser.Writer;
@@ -20,6 +23,7 @@ namespace WatchFace
     {
         private const string AppName = "WatchFace";
 
+        private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static void Main(string[] args)
@@ -107,7 +111,7 @@ namespace WatchFace
             var imagesDirectory = Path.GetDirectoryName(inputFileName);
             try
             {
-                WriteWatchFace(outputFileName, imagesDirectory, watchFace);
+                WriteWatchFace(outputDirectory, outputFileName, imagesDirectory, watchFace);
             }
             catch (Exception)
             {
@@ -128,13 +132,8 @@ namespace WatchFace
             var watchFace = ParseResources(reader);
             if (watchFace == null) return;
 
-            Logger.Debug("Generating previews...");
-            var preview = PreviewGenerator.CreateImage(reader.Parameters, reader.Images.ToArray());
-            preview.Save(Path.Combine(outputDirectory, $"{baseName}_preview.png"), ImageFormat.Png);
-            using (var gifOutput = File.OpenWrite(Path.Combine(outputDirectory, $"{baseName}_preview.gif")))
-            {
-                PreviewGenerator.CreateGif(reader.Parameters, reader.Images.ToArray(), gifOutput);
-            }
+
+            GeneratePreviews(reader.Parameters, reader.Images.ToArray(), outputDirectory, baseName);
 
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             var reDescriptor = new FileDescriptor {Images = reader.Images};
@@ -192,7 +191,8 @@ namespace WatchFace
             }
 
             if (resDescriptor.ResourcesCount != null && resDescriptor.ResourcesCount.Value != images.Count)
-                throw new ArgumentException($"The .res-file should contain {resDescriptor.ResourcesCount.Value} images but was loaded {images.Count} images.");
+                throw new ArgumentException(
+                    $"The .res-file should contain {resDescriptor.ResourcesCount.Value} images but was loaded {images.Count} images.");
 
             resDescriptor.Images = images;
 
@@ -218,7 +218,7 @@ namespace WatchFace
             new Extractor(resDescriptor).Extract(outputDirectory);
         }
 
-        private static void WriteWatchFace(string outputFileName, string imagesDirectory, Parser.WatchFace watchFace)
+        private static void WriteWatchFace(string outputDirectory, string outputFileName, string imagesDirectory, Parser.WatchFace watchFace)
         {
             try
             {
@@ -229,13 +229,8 @@ namespace WatchFace
                 Logger.Trace("Building parameters for watch face...");
                 var descriptor = ParametersConverter.Build(watchFace);
 
-                Logger.Debug("Generating preview...");
-                var preview = PreviewGenerator.CreateImage(descriptor, imagesReader.Images.ToArray());
-                preview.Save(Path.ChangeExtension(outputFileName, ".png"));
-                using (var gifOutput = File.OpenWrite(Path.ChangeExtension(outputFileName, ".gif")))
-                {
-                    PreviewGenerator.CreateGif(descriptor, imagesReader.Images.ToArray(), gifOutput);
-                }
+                var baseFilename = Path.GetFileNameWithoutExtension(outputFileName);
+                GeneratePreviews(descriptor, imagesReader.Images.ToArray(), outputDirectory, baseFilename);
 
                 Logger.Debug("Writing watch face to '{0}'", outputFileName);
                 using (var fileStream = File.OpenWrite(outputFileName))
@@ -399,6 +394,110 @@ namespace WatchFace
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
 
             LogManager.Configuration = config;
+        }
+
+        private static void GeneratePreviews(List<Parameter> parameters, Bitmap[] images, string outputDirectory, string baseName)
+        {
+            Logger.Debug("Generating previews...");
+
+            var states = GetPreviewStates();
+            var staticPreview = PreviewGenerator.CreateImage(parameters, images, new WatchState());
+            staticPreview.Save(Path.Combine(outputDirectory, $"{baseName}_static.png"), ImageFormat.Png);
+
+            var previewImages = PreviewGenerator.CreateAnimation(parameters, images, states);
+
+            if (IsRunningOnMono)
+            {
+                var i = 0;
+                foreach (var previewImage in previewImages)
+                {
+                    previewImage.Save(Path.Combine(outputDirectory, $"{baseName}_animated_{i}.png"), ImageFormat.Png);
+                    i++;
+                }
+            }
+            else
+            {
+                using (var gifOutput = File.OpenWrite(Path.Combine(outputDirectory, $"{baseName}_animated.gif")))
+                using (var encoder = new GifEncoder(gifOutput))
+                {
+                    foreach (var previewImage in previewImages)
+                        encoder.AddFrame(previewImage, frameDelay: TimeSpan.FromSeconds(1));
+                }
+            }
+        }
+
+        private static IEnumerable<WatchState> GetPreviewStates()
+        {
+            var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var previewStatesPath = Path.Combine(appPath, "PreviewStates.json");
+
+            if (File.Exists(previewStatesPath))
+                using (var stream = File.OpenRead(previewStatesPath))
+                using (var reader = new StreamReader(stream))
+                {
+                    var json = reader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<List<WatchState>>(json);
+                }
+
+            var previewStates = GenerateSampleStates();
+            using (var stream = File.OpenWrite(previewStatesPath))
+            using (var writer = new StreamWriter(stream))
+            {
+                var json = JsonConvert.SerializeObject(previewStates, Formatting.Indented);
+                writer.Write(json);
+                writer.Flush();
+            }
+
+            return previewStates;
+        }
+
+        private static IEnumerable<WatchState> GenerateSampleStates()
+        {
+            var time = DateTime.Now;
+            var states = new List<WatchState>();
+
+            for (var i = 0; i < 10; i++)
+            {
+                var num = i + 1;
+                var watchState = new WatchState
+                {
+                    BatteryLevel = 100 - i * 10,
+                    Pulse = 60 + num * 2,
+                    Steps = num * 1000,
+                    Calories = num * 75,
+                    Distance = num * 700,
+                    Bluetooth = num > 1 && num < 6,
+                    Unlocked = num > 2 && num < 7,
+                    Alarm = num > 3 && num < 8,
+                    DoNotDisturb = num > 4 && num < 9,
+
+                    DayTemperature = -15 + 2 * i,
+                    NightTemperature = -24 + i * 4,
+                };
+
+                if (num < 3)
+                {
+                    watchState.AirQuality = AirCondition.Unknown;
+                    watchState.AirQualityIndex = null;
+
+                    watchState.CurrentWeather = WeatherCondition.Unknown;
+                    watchState.CurrentTemperature = null;
+                }
+                else
+                {
+                    var index = num - 2;
+                    watchState.AirQuality = (AirCondition) index;
+                    watchState.CurrentWeather = (WeatherCondition) index;
+
+                    watchState.AirQualityIndex = index * 50 - 25;
+                    watchState.CurrentTemperature = -10 + i * 6;
+                }
+
+                watchState.Time = new DateTime(time.Year, num, num * 2 + 5, i * 2, i * 6, i);
+                states.Add(watchState);
+            }
+
+            return states;
         }
     }
 }

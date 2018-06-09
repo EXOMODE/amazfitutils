@@ -9,7 +9,7 @@ namespace Resources
 {
     public class ImageLoader
     {
-        public static readonly int NumericPartLength = 3;
+        public static readonly int NumericPartLength = 4;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static Bitmap LoadImageForNumber(string directory, long index)

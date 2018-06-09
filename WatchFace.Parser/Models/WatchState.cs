@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace WatchFace.Parser.Models
 {
@@ -12,15 +14,18 @@ namespace WatchFace.Parser.Models
         public int Distance { get; set; } = 2367;
         public int? Pulse { get; set; } = 62;
 
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public WeatherCondition CurrentWeather { get; set; } = WeatherCondition.PartlyCloudy;
         public int? CurrentTemperature { get; set; } = -10;
         public int? DayTemperature { get; set; } = -15;
         public int? NightTemperature { get; set; } = -24;
         public int? TomorrowDayTemperature { get; set; }
         public int? TomorrowNightTemperature { get; set; }
-        public WeatherCondition CurrentWeather { get; set; } = WeatherCondition.Cloudy;
 
         // https://en.wikipedia.org/wiki/Air_quality_index#Mainland_China
-        public AirCondition Air { get; set; } = AirCondition.Excellent;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AirCondition AirQuality { get; set; } = AirCondition.Excellent;
         public int? AirQualityIndex { get; set; } = 15;
 
         public int BatteryLevel { get; set; } = 67;

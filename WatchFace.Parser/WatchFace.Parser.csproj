@@ -31,19 +31,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BumpKit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bumpkit.1.0.2\lib\BumpKit.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.12\lib\net40\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.5.6\lib\net40-client\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -173,9 +173,34 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WeatherIcons\247.png" />
-    <EmbeddedResource Include="WeatherIcons\279.png" />
+    <EmbeddedResource Include="WeatherIcons\1.png" />
+    <EmbeddedResource Include="WeatherIcons\0.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="WeatherIcons\10.png" />
+    <EmbeddedResource Include="WeatherIcons\11.png" />
+    <EmbeddedResource Include="WeatherIcons\12.png" />
+    <EmbeddedResource Include="WeatherIcons\13.png" />
+    <EmbeddedResource Include="WeatherIcons\14.png" />
+    <EmbeddedResource Include="WeatherIcons\15.png" />
+    <EmbeddedResource Include="WeatherIcons\16.png" />
+    <EmbeddedResource Include="WeatherIcons\17.png" />
+    <EmbeddedResource Include="WeatherIcons\18.png" />
+    <EmbeddedResource Include="WeatherIcons\19.png" />
+    <EmbeddedResource Include="WeatherIcons\2.png" />
+    <EmbeddedResource Include="WeatherIcons\20.png" />
+    <EmbeddedResource Include="WeatherIcons\21.png" />
+    <EmbeddedResource Include="WeatherIcons\22.png" />
+    <EmbeddedResource Include="WeatherIcons\23.png" />
+    <EmbeddedResource Include="WeatherIcons\24.png" />
+    <EmbeddedResource Include="WeatherIcons\25.png" />
+    <EmbeddedResource Include="WeatherIcons\3.png" />
+    <EmbeddedResource Include="WeatherIcons\4.png" />
+    <EmbeddedResource Include="WeatherIcons\5.png" />
+    <EmbeddedResource Include="WeatherIcons\6.png" />
+    <EmbeddedResource Include="WeatherIcons\7.png" />
+    <EmbeddedResource Include="WeatherIcons\8.png" />
+    <EmbeddedResource Include="WeatherIcons\9.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
