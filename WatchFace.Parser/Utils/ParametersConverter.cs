@@ -15,8 +15,6 @@ namespace WatchFace.Parser.Utils
             var result = new List<Parameter>();
             var currentType = typeof(T);
 
-            if (!string.IsNullOrEmpty(path))
-                Logger.Trace("{0} '{1}'", path, currentType.Name);
             foreach (var kv in ElementsHelper.SortedProperties<T>())
             {
                 var id = kv.Key;
@@ -52,13 +50,19 @@ namespace WatchFace.Parser.Utils
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     foreach (var item in propertyValue)
+                    {
+                        Logger.Trace("{0} '{1}'", currentPath, propertyInfo.Name);
                         result.Add(new Parameter(id, Build(item, currentPath)));
+                    }
                 }
                 else
                 {
                     var innerParameters = Build(propertyValue, currentPath);
                     if (innerParameters.Count > 0)
+                    {
+                        Logger.Trace("{0} '{1}'", currentPath, propertyInfo.Name);
                         result.Add(new Parameter(id, innerParameters));
+                    }
                     else
                         Logger.Trace("{0} '{1}': Skipped because of empty", currentPath, propertyInfo.Name);
                 }
@@ -75,8 +79,6 @@ namespace WatchFace.Parser.Utils
 
             var thisMethod = typeof(ParametersConverter).GetMethod(nameof(Parse));
 
-            if (!string.IsNullOrEmpty(path))
-                Logger.Trace("{0} '{1}'", path, currentType.Name);
             foreach (var parameter in descriptor)
             {
                 var currentPath = string.IsNullOrEmpty(path)
@@ -111,6 +113,7 @@ namespace WatchFace.Parser.Utils
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
+                    Logger.Trace("{0} '{1}'", currentPath, propertyInfo.Name);
                     dynamic propertyValue = propertyInfo.GetValue(result, null);
                     if (propertyValue == null)
                     {
@@ -132,6 +135,7 @@ namespace WatchFace.Parser.Utils
                 }
                 else
                 {
+                    Logger.Trace("{0} '{1}'", currentPath, propertyInfo.Name);
                     dynamic propertyValue = propertyInfo.GetValue(result, null);
                     if (propertyValue != null)
                         throw new ArgumentException($"Parameter {parameter.Id} is already set for {currentType.Name}");

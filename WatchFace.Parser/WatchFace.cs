@@ -31,5 +31,8 @@ namespace WatchFace.Parser
 
         [ParameterId(10)]
         public AnalogDialFace AnalogDialFace { get; set; }
+
+        [ParameterId(14)]
+        public UnknownType14 Unknown14 { get; set; }
     }
 }

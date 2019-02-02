@@ -13,5 +13,11 @@ namespace WatchFace.Parser.Elements
 
         [ParameterId(3)]
         public Scale Scale { get; set; }
+
+        [ParameterId(5)]
+        public long? Unknown5 { get; set; }
+
+        [ParameterId(6)]
+        public long? Unknown6 { get; set; }
     }
 }

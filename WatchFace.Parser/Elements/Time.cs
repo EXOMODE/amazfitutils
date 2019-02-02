@@ -22,5 +22,8 @@ namespace WatchFace.Parser.Elements
         [JsonConverter(typeof(DrawingOrderJsonConverter))]
         [ParameterId(5)]
         public long? DrawingOrder { get; set; }
+
+        [ParameterId(9)]
+        public long? Unknown9 { get; set; }
     }
 }
