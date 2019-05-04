@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using NLog;
+using Resources.Models;
 using WatchFace.Parser.Models;
+using Header = WatchFace.Parser.Models.Header;
+using Image = Resources.Models.Image;
 
 namespace WatchFace.Parser
 {
@@ -18,7 +22,8 @@ namespace WatchFace.Parser
         }
 
         public List<Parameter> Parameters { get; private set; }
-        public List<Bitmap> Images { get; private set; }
+        public List<IResource> Resources { get; private set; }
+        public Bitmap[] Images => Resources.OfType<Image>().Select(i => i.Bitmap).ToArray();
 
         public void Read()
         {
@@ -46,7 +51,7 @@ namespace WatchFace.Parser
             Logger.Trace("Watch face parameters locations were read:");
 
             Parameters = ReadParameters(parametrsTableLength, parametersLocations);
-            Images = new Resources.Reader(_stream).Read((uint) imagesCount);
+            Resources = new Resources.Reader(_stream).Read((uint) imagesCount);
         }
 
         private List<Parameter> ReadParameters(long coordinatesTableSize, ICollection<Parameter> parametersDescriptors)

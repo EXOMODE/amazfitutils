@@ -18,12 +18,16 @@ namespace Resources
 
         public void Extract(string outputDirectory)
         {
-            for (var i = 0; i < _descriptor.Images.Count; i++)
+            for (var i = 0; i < _descriptor.Resources.Count; i++)
             {
+                var resource = _descriptor.Resources[i];
                 var numericPart = i.ToString().PadLeft(ImageLoader.NumericPartLength, '0');
-                var fileName = Path.Combine(outputDirectory, numericPart + ".png");
+
+                var fileName = Path.Combine(outputDirectory, numericPart + resource.Extension);
                 Logger.Debug("Extracting {0}...", fileName);
-                _descriptor.Images[i].Save(fileName, ImageFormat.Png);
+
+                using (var fileStream = File.OpenWrite(fileName))
+                    resource.ExportTo(fileStream);
             }
         }
     }

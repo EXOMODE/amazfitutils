@@ -1,31 +1,35 @@
-﻿using System;
+﻿using NLog;
+using Resources;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using NLog;
-using Resources;
+using System.Linq;
+using Resources.Models;
 using WatchFace.Parser.Attributes;
+using Image = Resources.Models.Image;
 
 namespace WatchFace.Parser.Utils
 {
-    public class ImagesLoader
+    public class ResourcesLoader
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly string _imagesDirectory;
 
         private readonly Dictionary<long, long> _mapping;
 
-        public ImagesLoader(string imagesDirectory)
+        public ResourcesLoader(string imagesDirectory)
         {
-            Images = new List<Bitmap>();
+            Resources = new List<IResource>();
             _mapping = new Dictionary<long, long>();
             _imagesDirectory = imagesDirectory;
         }
 
-        public List<Bitmap> Images { get; }
+        public List<IResource> Resources { get; }
+        public Bitmap[] Images => Resources.OfType<Image>().Select(i => i.Bitmap).ToArray();
 
         public void Process<T>(T serializable, string path = "")
         {
-            if (!string.IsNullOrEmpty(path)) Logger.Trace("Loading images for {0} '{1}'", path, typeof(T).Name);
+            if (!string.IsNullOrEmpty(path)) Logger.Trace("Loading resources for {0} '{1}'", path, typeof(T).Name);
 
             long? lastImageIndexValue = null;
 
@@ -67,7 +71,7 @@ namespace WatchFace.Parser.Utils
                     {
                         if (lastImageIndexValue == null)
                             throw new ArgumentException(
-                                $"Property {propertyInfo.Name} can't be processed becuase ImageIndex isn't present or it is zero"
+                                $"Property {propertyInfo.Name} can't be processed because ImageIndex isn't present or it is zero"
                             );
 
                         var imagesCount = propertyType.IsGenericType
@@ -102,9 +106,10 @@ namespace WatchFace.Parser.Utils
             if (_mapping.ContainsKey(index))
                 return _mapping[index];
 
-            var newImageIndex = Images.Count;
+            var newImageIndex = Resources.Count;
             Logger.Trace("Loading image {0}...", newImageIndex);
-            Images.Add(ImageLoader.LoadImageForNumber(_imagesDirectory, index));
+            var resource = ImageLoader.LoadResourceForNumber(_imagesDirectory, index);
+            Resources.Add(resource);
             _mapping[index] = newImageIndex;
             return newImageIndex;
         }

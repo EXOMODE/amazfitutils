@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Resources.Models
@@ -12,6 +13,6 @@ namespace Resources.Models
         public byte? Version { get; set; }
 
         [IgnoreDataMember]
-        public List<Bitmap> Images { get; set; } = new List<Bitmap>();
+        public List<IResource> Resources { get; set; } = new List<IResource>();
     }
 }

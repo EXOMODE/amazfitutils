@@ -2,18 +2,20 @@
 using System.Drawing;
 using System.IO;
 using NLog;
+using Resources.Models;
 using WatchFace.Parser.Models;
+using Header = WatchFace.Parser.Models.Header;
 
 namespace WatchFace.Parser
 {
     public class Writer
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly List<Bitmap> _images;
+        private readonly List<IResource> _images;
 
         private readonly Stream _stream;
 
-        public Writer(Stream stream, List<Bitmap> images)
+        public Writer(Stream stream, List<IResource> images)
         {
             _stream = stream;
             _images = images;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using BumpKit;
 using NLog;
@@ -29,7 +28,7 @@ namespace Resources.Image
         {
             var signature = _reader.ReadChars(4);
             if (signature[0] != 'B' || signature[1] != 'M')
-                throw new ArgumentException("Image signature doesn't match.");
+                throw new InvalidResourceException("Image signature doesn't match.");
 
             ReadHeader();
             ReadPalette();
@@ -94,6 +93,7 @@ namespace Resources.Image
                     }
                 }
             }
+
             return image;
         }
     }

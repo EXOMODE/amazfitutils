@@ -29,14 +29,14 @@ namespace Resources
                 WriteOldHeader(descriptor);
 
             Logger.Trace("Writing images...");
-            new Writer(_stream).Write(descriptor.Images);
+            new Writer(_stream).Write(descriptor.Resources);
         }
 
         private void WriteOldHeader(FileDescriptor descriptor)
         {
             var header = new Header
             {
-                ResourcesCount = (uint)descriptor.Images.Count,
+                ResourcesCount = (uint)descriptor.Resources.Count,
                 Version = descriptor.Version.Value
             };
             Logger.Trace("Writing resources header...");

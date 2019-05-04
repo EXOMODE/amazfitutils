@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BumpKit;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ using Resources.Models;
 using WatchFace.Parser;
 using WatchFace.Parser.Models;
 using WatchFace.Parser.Utils;
+using Image = System.Drawing.Image;
 using Reader = WatchFace.Parser.Reader;
 using Writer = WatchFace.Parser.Writer;
 
@@ -132,11 +134,10 @@ namespace WatchFace
             var watchFace = ParseResources(reader);
             if (watchFace == null) return;
 
-
-            GeneratePreviews(reader.Parameters, reader.Images.ToArray(), outputDirectory, baseName);
+            GeneratePreviews(reader.Parameters, reader.Images, outputDirectory, baseName);
 
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
-            var reDescriptor = new FileDescriptor {Images = reader.Images};
+            var reDescriptor = new FileDescriptor {Resources = reader.Resources};
             new Extractor(reDescriptor).Extract(outputDirectory);
             ExportWatchFaceConfig(watchFace, Path.Combine(outputDirectory, $"{baseName}.json"));
         }
@@ -173,13 +174,13 @@ namespace WatchFace
             }
 
             var i = 0;
-            var images = new List<Bitmap>();
+            var images = new List<IResource>();
             while (resDescriptor.ResourcesCount == null || i < resDescriptor.ResourcesCount.Value)
             {
                 try
                 {
-                    var image = ImageLoader.LoadImageForNumber(inputDirectory, i);
-                    images.Add(image);
+                    var resource = ImageLoader.LoadResourceForNumber(inputDirectory, i);
+                    images.Add(resource);
                 }
                 catch (FileNotFoundException)
                 {
@@ -194,7 +195,7 @@ namespace WatchFace
                 throw new ArgumentException(
                     $"The .res-file should contain {resDescriptor.ResourcesCount.Value} images but was loaded {images.Count} images.");
 
-            resDescriptor.Images = images;
+            resDescriptor.Resources = images;
 
             using (var stream = File.OpenWrite(outputFileName))
             {
@@ -223,19 +224,19 @@ namespace WatchFace
             try
             {
                 Logger.Debug("Reading referenced images from '{0}'", imagesDirectory);
-                var imagesReader = new ImagesLoader(imagesDirectory);
+                var imagesReader = new ResourcesLoader(imagesDirectory);
                 imagesReader.Process(watchFace);
 
                 Logger.Trace("Building parameters for watch face...");
                 var descriptor = ParametersConverter.Build(watchFace);
 
                 var baseFilename = Path.GetFileNameWithoutExtension(outputFileName);
-                GeneratePreviews(descriptor, imagesReader.Images.ToArray(), outputDirectory, baseFilename);
+                GeneratePreviews(descriptor, imagesReader.Images, outputDirectory, baseFilename);
 
                 Logger.Debug("Writing watch face to '{0}'", outputFileName);
                 using (var fileStream = File.OpenWrite(outputFileName))
                 {
-                    var writer = new Writer(fileStream, imagesReader.Images);
+                    var writer = new Writer(fileStream, imagesReader.Resources);
                     writer.Write(descriptor);
                     fileStream.Flush();
                 }

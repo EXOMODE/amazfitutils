@@ -160,7 +160,7 @@
     <Compile Include="Attributes\ParameterImagesCountAttribute.cs" />
     <Compile Include="Utils\DrawingOrderIterator.cs" />
     <Compile Include="Utils\ElementsHelper.cs" />
-    <Compile Include="Utils\ImagesLoader.cs" />
+    <Compile Include="Utils\ResourcesLoader.cs" />
     <Compile Include="Utils\ParametersConverter.cs" />
     <Compile Include="Attributes\ParameterImageIndexAttribute.cs" />
     <Compile Include="Attributes\ParameterIdAttribute.cs" />

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.IO;
 using NLog;
+using Resources.Models;
 
 namespace Resources
 {
@@ -20,32 +19,54 @@ namespace Resources
             _binaryReader = new BinaryReader(_stream);
         }
 
-        public List<Bitmap> Read(uint imagesTableLength)
+        public List<IResource> Read(uint resourcesCount)
         {
-            var offsetsTableLength = (int) (imagesTableLength * OffsetTableItemLength);
+            var offsetsTableLength = (int) (resourcesCount * OffsetTableItemLength);
             Logger.Trace("Reading resources offsets table with {0} elements ({1} bytes)",
-                imagesTableLength, offsetsTableLength
+                resourcesCount, offsetsTableLength
             );
-            var imagesOffsets = _binaryReader.ReadBytes(offsetsTableLength);
-            var imagesOffset = _stream.Position;
 
-            Logger.Debug("Reading {0} images...", imagesTableLength);
-            var images = new List<Bitmap>((int) imagesTableLength);
-            for (var i = 0; i < imagesTableLength; i++)
+            var offsets = new int[resourcesCount];
+            for (var i = 0; i < resourcesCount; i++)
+                offsets[i] = _binaryReader.ReadInt32();
+
+            var resourcesOffset = (int) _stream.Position;
+            var fileSize = (int) _stream.Length;
+
+            Logger.Debug("Reading {0} resources...", resourcesCount);
+            var resources = new List<IResource>((int) resourcesCount);
+            for (var i = 0; i < resourcesCount; i++)
             {
-                var imageOffset = BitConverter.ToUInt32(imagesOffsets, i * OffsetTableItemLength);
-                var realOffset = imageOffset + imagesOffset;
-                Logger.Trace("Image {0} offset is {1}...", i, imageOffset);
-                if (_stream.Position != realOffset)
+                var offset = offsets[i] + resourcesOffset;
+                var nextOffset = i + 1 < resourcesCount ? offsets[i + 1] + resourcesOffset : fileSize;
+                var length = nextOffset - offset;
+                Logger.Trace("Resource {0} offset: {1}, length: {2}...", i, offset, length);
+                if (_stream.Position != offset)
                 {
-                    var bytesGap = realOffset - _stream.Position;
+                    var bytesGap = offset - _stream.Position;
                     Logger.Warn("Found {0} bytes gap before resource number {1}", bytesGap, i);
-                    _stream.Seek(realOffset, SeekOrigin.Begin);
+                    _stream.Seek(offset, SeekOrigin.Begin);
                 }
-                Logger.Debug("Reading image {0}...", i);
-                images.Add(new Image.Reader(_stream).Read());
+
+                Logger.Debug("Reading resource {0}...", i);
+                try
+                {
+                    var bitmap = new Image.Reader(_stream).Read();
+                    var image = new Models.Image(bitmap);
+                    resources.Add(image);
+                }
+                catch (InvalidResourceException)
+                {
+                    Logger.Warn("Resource is not an image");
+                    _stream.Seek(offset, SeekOrigin.Begin);
+                    var data = new byte[length];
+                    _stream.Read(data, 0, length);
+                    var blob = new Blob(data);
+                    resources.Add(blob);
+                }
             }
-            return images;
+
+            return resources;
         }
     }
 }
