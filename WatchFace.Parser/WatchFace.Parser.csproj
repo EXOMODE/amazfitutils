@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -50,25 +50,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\NoDrawImageAttribute.cs" />
+    <Compile Include="Elements\ActivityVerge.cs" />
+    <Compile Include="Elements\ActivityBip.cs" />
     <Compile Include="Elements\Activity.cs" />
     <Compile Include="Elements\ActivityElements\FormattedNumber.cs" />
     <Compile Include="Elements\AnalogDialFace.cs" />
+    <Compile Include="Elements\Animations\Animation.cs" />
+    <Compile Include="Elements\Animations\AnimationImage.cs" />
+    <Compile Include="Elements\Animations\Other.cs" />
     <Compile Include="Elements\Background.cs" />
     <Compile Include="Elements\BasicElements\CircleScale.cs" />
     <Compile Include="Elements\AnalogDialFaceElements\ClockHand.cs" />
     <Compile Include="Elements\BasicElements\Coordinates.cs" />
+    <Compile Include="Elements\BasicElements\Heart.cs" />
     <Compile Include="Elements\BasicElements\Image.cs" />
     <Compile Include="Elements\BasicElements\ImageSet.cs" />
+    <Compile Include="Elements\BasicElements\Number3.cs" />
     <Compile Include="Elements\BasicElements\UnknownType14d6.cs" />
     <Compile Include="Elements\BasicElements\UnknownType.cs" />
     <Compile Include="Elements\BasicElements\Number.cs" />
     <Compile Include="Elements\BasicElements\Scale.cs" />
+    <Compile Include="Elements\BasicElements\XY.cs" />
     <Compile Include="Elements\Battery.cs" />
     <Compile Include="Elements\Date.cs" />
     <Compile Include="Elements\DateElements\DateUnknown3.cs" />
+    <Compile Include="Elements\DateElements\DayAmPm.cs" />
     <Compile Include="Elements\DateElements\MonthAndDay.cs" />
     <Compile Include="Elements\DateElements\OneLineMonthAndDay.cs" />
     <Compile Include="Elements\DateElements\SeparateMonthAndDay.cs" />
+    <Compile Include="Elements\PulseWrapper.cs" />
+    <Compile Include="Elements\Steps.cs" />
     <Compile Include="Elements\StepsProgress.cs" />
     <Compile Include="Elements\Status.cs" />
     <Compile Include="Elements\StatusElements\Switch.cs" />
@@ -92,11 +104,14 @@
     <Compile Include="Models\DrawingOrderPosition.cs" />
     <Compile Include="Models\Elements\Activity\CaloriesElement.cs" />
     <Compile Include="Models\Elements\Activity\StepsElement.cs" />
+    <Compile Include="Models\Elements\Activity\StepsElementP.cs" />
     <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
     <Compile Include="Models\Elements\Activity\PulseElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\SecondsClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\MinutesClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\HoursClockHandElement.cs" />
+    <Compile Include="Models\Elements\AnimationImageSetElement.cs" />
+    <Compile Include="Models\Elements\AnimationWrapperElement.cs" />
     <Compile Include="Models\Elements\Basic\ContainerElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryLenearProgressElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryNumberElement.cs" />
@@ -110,6 +125,9 @@
     <Compile Include="Models\Elements\GoalProgress\LinearGoalProgressElement.cs" />
     <Compile Include="Models\Elements\Battery\BatteryImageSetElement.cs" />
     <Compile Include="Models\Elements\BatteryElement.cs" />
+    <Compile Include="Models\Elements\HeartProgressElement.cs" />
+    <Compile Include="Models\Elements\GoalProgress\LinearHeartProgressElement.cs" />
+    <Compile Include="Models\Elements\OtheElement.cs" />
     <Compile Include="Models\Elements\StatusElement.cs" />
     <Compile Include="Models\Elements\AnalogDialElement.cs" />
     <Compile Include="Models\Elements\WeatherElement.cs" />
@@ -139,7 +157,6 @@
     <Compile Include="Models\Elements\Basic\ValueElement.cs" />
     <Compile Include="Models\Elements\Status\UnlockedElement.cs" />
     <Compile Include="Models\Elements\Status\DoNotDisturbElement.cs" />
-    <Compile Include="Models\Elements\Status\AlarmElement.cs" />
     <Compile Include="Models\Elements\Status\BluetoothElement.cs" />
     <Compile Include="Models\Elements\Common\SwitchElement.cs" />
     <Compile Include="Models\Elements\Basic\CompositeElement.cs" />

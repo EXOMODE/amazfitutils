@@ -1,4 +1,4 @@
-﻿#define VERGE_PACK
+﻿//#define VERGE_PACK
 //#define VERGE_UNPACK
 
 //#define GTR_PACK
