@@ -1,5 +1,7 @@
 ﻿using WatchFace.Parser.Attributes;
 using WatchFace.Parser.Elements;
+using WatchFace.Parser.Elements.Animations;
+using WatchFace.Parser.Elements.BasicElements;
 
 namespace WatchFace.Parser
 {
@@ -32,7 +34,25 @@ namespace WatchFace.Parser
         [ParameterId(10)]
         public AnalogDialFace AnalogDialFace { get; set; }
 
+        [ParameterId(11)]
+        public Other Other { get; set; }
+
+        [ParameterId(12)]
+        public Heart Heart { get; set; }
+
         [ParameterId(14)]
         public UnknownType14 Unknown14 { get; set; }
+    }
+
+    public class WatchFaceVerge : WatchFace
+    {
+        [ParameterId(4)]
+        public new ActivityVerge Activity { get; set; }
+    }
+
+    public class WatchFaceBip : WatchFace
+    {
+        [ParameterId(4)]
+        public new ActivityBip Activity { get; set; }
     }
 }

@@ -30,5 +30,8 @@ namespace WatchFace.Parser.Elements.BasicElements
         [JsonConverter(typeof(ColorJsonConverter))]
         [ParameterId(8)]
         public long Color { get; set; }
+
+        [ParameterId(9)]
+        public long unknown { get; set; }
     }
 }

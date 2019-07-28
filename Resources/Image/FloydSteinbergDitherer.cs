@@ -10,7 +10,7 @@ namespace Resources.Image
 
         public static void Process(Bitmap image)
         {
-            var isImageAltered = false;
+            //var isImageAltered = false;
             using (var context = image.CreateUnsafeContext())
             {
                 for (var y = 0; y < context.Height; y++)
@@ -21,13 +21,13 @@ namespace Resources.Image
 
                     if (colorError.IsZero) continue;
 
-                    if (!isImageAltered)
+                    /*if (!isImageAltered)
                     {
                         Logger.Warn(
                             "Dithering applied for an image. Resource in watch face will use only supported colors. You can't get back original image by unpacking watch face."
                         );
                         isImageAltered = true;
-                    }
+                    }*/
 
                     context.SetPixel(x, y, colorError.NewColor);
 

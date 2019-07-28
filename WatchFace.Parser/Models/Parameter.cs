@@ -11,22 +11,25 @@ namespace WatchFace.Parser.Models
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public Parameter(byte id, long value)
+        public Parameter(byte id, long value, bool isNoDraw = false)
         {
             Id = id;
             Value = value;
+            IsNoDraw = isNoDraw;
         }
 
-        public Parameter(byte id, List<Parameter> value)
+        public Parameter(byte id, List<Parameter> value, bool isNoDraw = false)
         {
             Id = id;
             Children = value;
+            IsNoDraw = isNoDraw;
         }
 
         public byte Id { get; }
         public long Value { get; }
         public List<Parameter> Children { get; }
         public bool HasChildren => Children != null;
+        public bool IsNoDraw { get; protected set; }
 
         public long Write(Stream stream, int traceOffset = 0)
         {
@@ -91,8 +94,8 @@ namespace WatchFace.Parser.Models
         public static Parameter ReadFrom(Stream fileStream, int traceOffset = 0)
         {
             var rawId = ReadByte(fileStream);
-            var id = (byte) ((rawId & 0xf8) >> 3);
-            var flags = (ParameterFlags) (rawId & 0x7);
+            var id = (byte)((rawId & 0xf8) >> 3);
+            var flags = (ParameterFlags)(rawId & 0x7);
 
             if (id == 0)
                 throw new ArgumentException("Parameter with zero Id is invalid.");
@@ -120,6 +123,7 @@ namespace WatchFace.Parser.Models
 
             var currentByte = ReadByte(fileStream);
             bytesLength += 1;
+
             while ((currentByte & 0x80) > 0)
             {
                 if (bytesLength > 9)

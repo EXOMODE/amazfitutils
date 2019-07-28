@@ -10,23 +10,17 @@ namespace WatchFace.Parser.Utils
     {
         public static Dictionary<byte, PropertyInfo> SortedProperties<T>()
         {
-            var typeInfo = typeof(T);
-            var properties = new Dictionary<byte, PropertyInfo>();
-            foreach (var propertyInfo in typeInfo.GetProperties())
-            {
-                var parameterIdAttribute = (ParameterIdAttribute) propertyInfo
-                    .GetCustomAttributes(typeof(ParameterIdAttribute), false).FirstOrDefault();
-                if (parameterIdAttribute == null)
-                    throw new ArgumentException(
-                        $"Class {typeInfo.Name} doesn't have ParameterIdAttribute on property {propertyInfo.Name}"
-                    );
-                if (properties.ContainsKey(parameterIdAttribute.Id))
-                    throw new ArgumentException(
-                        $"Class {typeInfo.Name} already has ParameterIdAttribute with Id {parameterIdAttribute.Id}"
-                    );
+            Type typeInfo = typeof(T);
+            Dictionary<byte, PropertyInfo> properties = new Dictionary<byte, PropertyInfo>();
 
-                properties[parameterIdAttribute.Id] = propertyInfo;
+            foreach (PropertyInfo propertyInfo in typeInfo.GetProperties())
+            {
+                ParameterIdAttribute parameterIdAttribute = (ParameterIdAttribute)propertyInfo.GetCustomAttributes(typeof(ParameterIdAttribute), false).FirstOrDefault();
+
+                if (parameterIdAttribute == null) throw new ArgumentException($"Class {typeInfo.Name} doesn't have ParameterIdAttribute on property {propertyInfo.Name}");
+                if (!properties.ContainsKey(parameterIdAttribute.Id)) properties[parameterIdAttribute.Id] = propertyInfo;
             }
+
             return properties.OrderBy(kv => kv.Key).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 

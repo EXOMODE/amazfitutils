@@ -14,6 +14,8 @@ namespace WatchFace.Parser.Models.Elements
 
         public CompositeElement(Parameter parameter, Element parent, string name = null) : base(parameter, parent, name)
         {
+            if (parameter.Children == null) return;
+
             foreach (var parameterChild in parameter.Children)
                 Children.Add(CreateChildForParameter(parameterChild));
         }

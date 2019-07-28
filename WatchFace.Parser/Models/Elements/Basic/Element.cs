@@ -2,6 +2,7 @@
 {
     public class Element
     {
+        protected readonly Parameter parameter;
         protected readonly string _name;
         protected readonly Element _parent;
 
@@ -9,6 +10,7 @@
 
         protected Element(Parameter parameter, Element parent, string name = null)
         {
+            this.parameter = parameter;
             Id = parameter.Id;
             _name = name;
             _parent = parent;

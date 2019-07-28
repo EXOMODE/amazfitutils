@@ -18,12 +18,56 @@ namespace WatchFace.Parser.Models.Elements.Common
         public List<CoordinatesElement> Shape { get; set; } = new List<CoordinatesElement>();
         public ImageElement CenterImage { get; set; }
 
+        public static Point GlobalCenter { get; set; }
+
         public abstract void Draw(Graphics drawer, Bitmap[] resources, WatchState state);
 
         public void Draw(Graphics drawer, Bitmap[] resources, double value, double total)
         {
-            var angle = value * 360 / total - 90;
-            var points = Shape.Select(point => RotatePoint(point, angle)).ToArray();
+            var angle = value * 360 / total;
+
+            if (Center == null || (Center.X == 0 && Center.Y == 0))
+            {
+                Center.X = GlobalCenter.X;
+                Center.Y = GlobalCenter.Y;
+            }
+
+            if (CenterImage != null)
+            {
+                Bitmap img = resources[CenterImage.ImageIndex];
+
+                drawer.TranslateTransform(Center.X, Center.Y);
+                drawer.RotateTransform((float)angle);
+                drawer.TranslateTransform(-Center.X, -Center.Y);
+
+                drawer.DrawImage(img, Center.X - CenterImage.X, Center.Y - CenterImage.Y);
+                drawer.ResetTransform();
+
+                return;
+            }
+
+            return;
+
+
+            var tmp = Shape.Select(point => RotatePoint(point, angle)).ToList();
+            List<Point> tmp2 = new List<Point>();
+            List<Point> pnts = new List<Point>();
+
+            if (tmp.Count < 3)
+            {
+                Bitmap img = resources[CenterImage.ImageIndex];
+                pnts.Add(RotatePoint(new Point(0, 0), angle));
+                pnts.Add(RotatePoint(new Point(img.Width, 0), angle));
+                pnts.Add(RotatePoint(new Point(img.Width, img.Height), angle));
+                pnts.Add(RotatePoint(new Point(0, img.Height), angle));
+            }
+            else
+            {
+                pnts = tmp;
+            }
+
+            var points = pnts.ToArray();
+
             if (OnlyBorder)
             {
                 drawer.DrawPolygon(new Pen(Color), points);
@@ -37,12 +81,16 @@ namespace WatchFace.Parser.Models.Elements.Common
             CenterImage?.Draw(drawer, resources);
         }
 
-        private Point RotatePoint(CoordinatesElement element, double degrees)
+        private Point RotatePoint(CoordinatesElement element, double degrees) => RotatePoint(element.X, element.Y, degrees);
+
+        private Point RotatePoint(Point point, double degrees) => RotatePoint(point.X, point.Y, degrees);
+
+        private Point RotatePoint(long pX, long pY, double degrees)
         {
             var radians = degrees / 180 * Math.PI;
-            var x = element.X * Math.Cos(radians) + element.Y * Math.Sin(radians);
-            var y = element.X * Math.Sin(radians) - element.Y * Math.Cos(radians);
-            return new Point((int) Math.Floor(x + Center.X), (int) Math.Floor(y + Center.Y));
+            var x = pX * Math.Cos(radians) + pY * Math.Sin(radians);
+            var y = pX * Math.Sin(radians) - pY * Math.Cos(radians);
+            return new Point((int)Math.Floor(x + Center.X), (int)Math.Floor(y + Center.Y));
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)

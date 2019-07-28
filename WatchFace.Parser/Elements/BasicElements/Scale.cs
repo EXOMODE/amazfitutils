@@ -11,6 +11,6 @@ namespace WatchFace.Parser.Elements.BasicElements
 
         [ParameterId(2)]
         [ParameterImagesCount]
-        public List<Coordinates> Segments { get; set; }
+        public List<XY> Segments { get; set; }
     }
 }

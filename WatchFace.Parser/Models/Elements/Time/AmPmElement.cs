@@ -6,12 +6,14 @@ namespace WatchFace.Parser.Models.Elements
     public class AmPmElement : CoordinatesElement, IDrawable
     {
         public AmPmElement(Parameter parameter, Element parent, string name) : base(parameter, parent, name) { }
-        public long ImageIndexAm { get; set; }
-        public long ImageIndexPm { get; set; }
+        public long ImageIndexAMCN { get; set; }
+        public long ImageIndexPMCN { get; set; }
+        public long ImageIndexAMEN { get; set; }
+        public long ImageIndexPMEN { get; set; }
 
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            var imageIndex = state.Time.Hour < 12 ? ImageIndexAm : ImageIndexPm;
+            var imageIndex = state.Time.Hour < 12 ? ImageIndexAMEN : ImageIndexPMEN;
             drawer.DrawImage(resources[imageIndex], new Point((int) X, (int) Y));
         }
 
@@ -20,11 +22,17 @@ namespace WatchFace.Parser.Models.Elements
             switch (parameter.Id)
             {
                 case 3:
-                    ImageIndexAm = parameter.Value;
-                    return new ValueElement(parameter, this, nameof(ImageIndexAm));
+                    ImageIndexAMCN = parameter.Value;
+                    return new ValueElement(parameter, this, nameof(ImageIndexAMCN));
                 case 4:
-                    ImageIndexPm = parameter.Value;
-                    return new ValueElement(parameter, this, nameof(ImageIndexPm));
+                    ImageIndexPMCN = parameter.Value;
+                    return new ValueElement(parameter, this, nameof(ImageIndexPMCN));
+                case 5:
+                    ImageIndexAMEN = parameter.Value;
+                    return new ValueElement(parameter, this, nameof(ImageIndexAMEN));
+                case 6:
+                    ImageIndexPMEN = parameter.Value;
+                    return new ValueElement(parameter, this, nameof(ImageIndexPMEN));
                 default:
                     return base.CreateChildForParameter(parameter);
             }

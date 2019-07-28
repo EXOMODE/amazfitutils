@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using BumpKit;
 using NLog;
@@ -18,6 +19,8 @@ namespace Resources.Image
         private ushort _rowLengthInBytes;
         private bool _transparency;
         private ushort _width;
+
+        public static bool IsVerge { get; set; }
 
         public Reader(Stream stream)
         {
@@ -48,12 +51,30 @@ namespace Resources.Image
         private void ReadHeader()
         {
             Logger.Trace("Reading image header...");
-            _width = _reader.ReadUInt16();
-            _height = _reader.ReadUInt16();
-            _rowLengthInBytes = _reader.ReadUInt16();
-            _bitsPerPixel = _reader.ReadUInt16();
-            _paletteColors = _reader.ReadUInt16();
-            _transparency = _reader.ReadUInt16() > 0;
+
+            if (IsVerge)
+            {
+                _width = (ushort)_reader.ReadUInt32();
+                _height = (ushort)_reader.ReadUInt32();
+                //_rowLengthInBytes = (ushort)_reader.ReadUInt32();
+                
+                _bitsPerPixel = (ushort)_reader.ReadUInt32();
+                _paletteColors = (ushort)_reader.ReadUInt32();
+                _transparency = _reader.ReadUInt32() > 0;
+
+                _rowLengthInBytes = (ushort)Math.Ceiling(_width * _bitsPerPixel / 8.0);
+                _paletteColors = 0;
+            }
+            else
+            {
+                _width = _reader.ReadUInt16();
+                _height = _reader.ReadUInt16();
+                _rowLengthInBytes = _reader.ReadUInt16();
+                _bitsPerPixel = _reader.ReadUInt16();
+                _paletteColors = _reader.ReadUInt16();
+                _transparency = _reader.ReadUInt16() > 0;
+            }
+
             Logger.Trace("Image header was read:");
             Logger.Trace("Width: {0}, Height: {1}, RowLength: {2}", _width, _height, _rowLengthInBytes);
             Logger.Trace("BPP: {0}, PaletteColors: {1}, Transaparency: {2}",
@@ -104,6 +125,7 @@ namespace Resources.Image
                 {
                     var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
                     var bitReader = new BitReader(rowBytes);
+
                     for (var x = 0; x < _width; x++)
                     {
                         var pixelColorIndex = bitReader.ReadBits(_bitsPerPixel);
@@ -170,6 +192,7 @@ namespace Resources.Image
                 {
                     var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
                     var bitReader = new BitReader(rowBytes);
+
                     for (var x = 0; x < _width; x++)
                     {
                         var alpha = (int)bitReader.ReadByte();
@@ -193,13 +216,18 @@ namespace Resources.Image
                 for (var y = 0; y < _height; y++)
                 {
                     var rowBytes = _reader.ReadBytes(_rowLengthInBytes);
+
                     for (var x = 0; x < _width; x++)
                     {
                         var r = rowBytes[x * 4];
                         var g = rowBytes[x * 4 + 1];
                         var b = rowBytes[x * 4 + 2];
                         var alpha = rowBytes[x * 4 + 3];
+                        Logger.Trace("WriteColor A {0}: R {1}, G {2}, B {3}", alpha, r, g, b);
                         var color = Color.FromArgb(0xff - alpha, r, g, b);
+
+                        if (IsVerge) color = Color.FromArgb(alpha, b, g, r);
+
                         context.SetPixel(x, y, color);
                     }
                 }

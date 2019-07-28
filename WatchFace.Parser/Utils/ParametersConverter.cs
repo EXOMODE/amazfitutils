@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NLog;
+using WatchFace.Parser.Attributes;
 using WatchFace.Parser.Models;
 
 namespace WatchFace.Parser.Utils
@@ -29,6 +31,9 @@ namespace WatchFace.Parser.Utils
                 if (propertyValue == null)
                     continue;
 
+                NoDrawImageAttribute noDrawImageAttribute = (NoDrawImageAttribute)propertyInfo.GetCustomAttributes(typeof(NoDrawImageAttribute), true).FirstOrDefault();
+                bool noDrawImage = noDrawImageAttribute != null;
+
                 if (propertyType == typeof(long) ||
                     propertyType == typeof(TextAlignment) ||
                     propertyType == typeof(bool))
@@ -40,19 +45,19 @@ namespace WatchFace.Parser.Utils
                         value = (long) propertyValue;
 
                     Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, value);
-                    result.Add(new Parameter(id, value));
+                    result.Add(new Parameter(id, value, noDrawImage));
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     Logger.Trace("{0} '{1}': {2}", currentPath, propertyInfo.Name, propertyValue);
-                    result.Add(new Parameter(id, propertyValue));
+                    result.Add(new Parameter(id, propertyValue, noDrawImage));
                 }
                 else if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     foreach (var item in propertyValue)
                     {
                         Logger.Trace("{0} '{1}'", currentPath, propertyInfo.Name);
-                        result.Add(new Parameter(id, Build(item, currentPath)));
+                        result.Add(new Parameter(id, Build(item, currentPath), noDrawImage));
                     }
                 }
                 else
@@ -61,7 +66,7 @@ namespace WatchFace.Parser.Utils
                     if (innerParameters.Count > 0)
                     {
                         Logger.Trace("{0} '{1}'", currentPath, propertyInfo.Name);
-                        result.Add(new Parameter(id, innerParameters));
+                        result.Add(new Parameter(id, innerParameters, noDrawImage));
                     }
                     else
                         Logger.Trace("{0} '{1}': Skipped because of empty", currentPath, propertyInfo.Name);
@@ -79,13 +84,23 @@ namespace WatchFace.Parser.Utils
 
             var thisMethod = typeof(ParametersConverter).GetMethod(nameof(Parse));
 
+            if (descriptor == null)
+            {
+                Logger.Error($"Parameter does not exists ({currentType})");
+                //return default;
+            }
+
             foreach (var parameter in descriptor)
             {
                 var currentPath = string.IsNullOrEmpty(path)
                     ? parameter.Id.ToString()
                     : string.Concat(path, '.', parameter.Id.ToString());
+
                 if (!properties.ContainsKey(parameter.Id))
+                {
+                    continue;
                     throw new ArgumentException($"Parameter {parameter.Id} isn't supported for {currentType.Name}");
+                }
 
                 var propertyInfo = properties[parameter.Id];
                 var propertyType = propertyInfo.PropertyType;

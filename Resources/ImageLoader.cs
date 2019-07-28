@@ -31,7 +31,8 @@ namespace Resources
                 if (resource != null) return resource;
             }
 
-            throw new FileNotFoundException($"File referenced by index {index} not found.");
+            return default;
+            //throw new FileNotFoundException($"File referenced by index {index} not found.");
         }
 
         private static IResource TryLoadBitmap(string directory, string numericPart)
@@ -74,7 +75,8 @@ namespace Resources
                 gr.DrawImage(image, new Rectangle(0, 0, clone.Width, clone.Height));
             }
 
-            FloydSteinbergDitherer.Process(clone);
+            //if (!Image.Reader.IsVerge) FloydSteinbergDitherer.Process(clone);
+
             return clone;
         }
     }

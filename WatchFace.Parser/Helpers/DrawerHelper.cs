@@ -13,6 +13,8 @@ namespace WatchFace.Parser.Helpers
 
             foreach (var image in images)
             {
+                if (image == null) continue;
+
                 width += image.Width + spacing;
                 if (image.Height > height) height = image.Height;
             }
@@ -46,6 +48,8 @@ namespace WatchFace.Parser.Helpers
 
             foreach (var image in images)
             {
+                if (image == null) continue;
+
                 drawer.DrawImage(image, x, y);
                 x += image.Width + (int) spacing;
             }

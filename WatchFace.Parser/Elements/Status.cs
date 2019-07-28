@@ -6,15 +6,15 @@ namespace WatchFace.Parser.Elements
     public class Status
     {
         [ParameterId(1)]
-        public Switch Bluetooth { get; set; }
+        public Switch DoNotDisturb { get; set; }
 
         [ParameterId(2)]
-        public Switch Alarm { get; set; }
-
-        [ParameterId(3)]
         public Switch Lock { get; set; }
 
+        [ParameterId(3)]
+        public Switch Bluetooth { get; set; }
+
         [ParameterId(4)]
-        public Switch DoNotDisturb { get; set; }
+        public Battery Battery { get; set; }
     }
 }

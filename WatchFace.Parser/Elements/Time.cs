@@ -25,5 +25,8 @@ namespace WatchFace.Parser.Elements
 
         [ParameterId(9)]
         public long? Unknown9 { get; set; }
+        
+        [ParameterId(10)]
+        public BasicElements.Image Delimiter { get; set; }
     }
 }

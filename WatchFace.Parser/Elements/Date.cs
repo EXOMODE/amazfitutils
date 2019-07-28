@@ -13,7 +13,7 @@ namespace WatchFace.Parser.Elements
         public ImageSet WeekDay { get; set; }
 
         [ParameterId(3)]
-        public DateUnknown3 Unknown3 { get; set; }
+        public DayAmPm DayAmPm { get; set; }
 
         [ParameterId(4)]
         public Coordinates Unknown4 { get; set; }

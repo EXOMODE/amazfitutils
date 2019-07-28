@@ -38,7 +38,6 @@ namespace WatchFace.Parser
             Logger.Trace("Reading parameter offsets...");
             var parametersStream = StreamBlock(_stream, (int) header.ParametersSize);
             Logger.Trace("Parameter offsets were read from file");
-
             Logger.Trace("Reading parameters descriptor...");
             var mainParam = Parameter.ReadFrom(parametersStream);
             Logger.Trace("Parameters descriptor was read:");

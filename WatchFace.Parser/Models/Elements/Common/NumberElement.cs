@@ -32,6 +32,14 @@ namespace WatchFace.Parser.Models.Elements
             DrawerHelper.DrawImages(drawer, GetImagesForNumber(images, number, minimumDigits), (int) Spacing, Alignment, GetBox());
         }
 
+        public void Draw(Graphics drawer, Bitmap[] images, Bitmap icon, int number, int minimumDigits = 1)
+        {
+            List<Bitmap> imgs = GetImagesForNumber(images, number, minimumDigits);
+            imgs.Insert(0, icon);
+
+            DrawerHelper.DrawImages(drawer, imgs, (int)Spacing, Alignment, GetBox());
+        }
+
         public List<Bitmap> GetImagesForNumber(Bitmap[] images, int number, int minimumDigits = 1)
         {
             var stringNumber = number.ToString().PadLeft(minimumDigits, '0');

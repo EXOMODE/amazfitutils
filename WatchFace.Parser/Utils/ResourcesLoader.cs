@@ -109,8 +109,13 @@ namespace WatchFace.Parser.Utils
             var newImageIndex = Resources.Count;
             Logger.Trace("Loading image {0}...", newImageIndex);
             var resource = ImageLoader.LoadResourceForNumber(_imagesDirectory, index);
-            Resources.Add(resource);
-            _mapping[index] = newImageIndex;
+
+            if (resource != default(IResource))
+            {
+                Resources.Add(resource);
+                _mapping[index] = newImageIndex;
+            }
+
             return newImageIndex;
         }
     }

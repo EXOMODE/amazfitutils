@@ -16,6 +16,7 @@ namespace WatchFace.Parser.Models.Elements
         public TwoDigitsElement Seconds { get; set; }
         public AmPmElement AmPm { get; set; }
         public long? DrawingOrder { get; set; }
+        public ImageElement Delimiter { get; set; }
 
         public override void Draw(Graphics drawer, Bitmap[] images, WatchState state)
         {
@@ -32,6 +33,9 @@ namespace WatchFace.Parser.Models.Elements
                         break;
                     case DrawingOrderPosition.HourOnes:
                         Hours?.Ones?.Draw(drawer, images, hours % 10);
+                        break;
+                    case DrawingOrderPosition.Delimiter:
+                        Delimiter?.Draw(drawer, images);
                         break;
                     case DrawingOrderPosition.MinuteTens:
                         Minutes?.Tens?.Draw(drawer, images, state.Time.Minute % 100 / 10);
@@ -66,6 +70,9 @@ namespace WatchFace.Parser.Models.Elements
                 case 5:
                     DrawingOrder = parameter.Value;
                     return new ValueElement(parameter, this, nameof(DrawingOrder));
+                case 10:
+                    Delimiter = new ImageElement(parameter, this, nameof(Delimiter));
+                    return Delimiter;
                 default:
                     return base.CreateChildForParameter(parameter);
             }

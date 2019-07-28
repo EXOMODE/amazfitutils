@@ -1,4 +1,16 @@
-﻿using System;
+﻿#define VERGE_PACK
+//#define VERGE_UNPACK
+
+//#define GTR_PACK
+//#define GTR_UNPACK
+
+//#define BAND_PACK
+//#define BAND_UNPACK
+
+//#define BIP_PACK
+//#define BIP_UNPACK
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -13,7 +25,9 @@ using NLog.Targets;
 using Resources;
 using Resources.Models;
 using WatchFace.Parser;
+using WatchFace.Parser.Elements;
 using WatchFace.Parser.Models;
+using WatchFace.Parser.Models.Elements.Common;
 using WatchFace.Parser.Utils;
 using Image = System.Drawing.Image;
 using Reader = WatchFace.Parser.Reader;
@@ -23,13 +37,86 @@ namespace WatchFace
 {
     internal class Program
     {
-        private const string AppName = "WatchFace";
+        private const string AppName = "WatchFace 1.9.0";
 
         private static readonly bool IsRunningOnMono = Type.GetType("Mono.Runtime") != null;
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        private static Size previewSize = new Size(176, 176);
+
         private static void Main(string[] args)
         {
+#if DEBUG
+
+#if VERGE_PACK
+            args = new[] { "-size360", "Verge/Verge.json", };
+#elif VERGE_UNPACK
+            args = new[] { "-size360", "Verge.bin", };
+            //args = new[] { "-size360", "Verge/Verge_packed.bin", };
+#endif
+
+#if GTR_PACK
+            args = new[] { "-size464", "GTR/GTR.json", };
+#elif GTR_UNPACK
+            args = new[] { "-size464", "GTR.bin", };
+            //args = new[] { "-size464", "GTR/GTR_packed.bin", };
+#endif
+
+#if BAND_PACK
+            args = new[] { "-size120x240", "Band/Band.json", };
+#elif BAND_UNPACK
+            args = new[] { "-size120x240", "Band.bin", };
+            //args = new[] { "-size120x240", "Band/Band_packed.bin", };
+#endif
+
+#if BIP_PACK
+            args = new[] { "-size176", "Bip/Bip.json", };
+#elif BIP_UNPACK
+            //args = new[] { "-size176", "Bip.bin", };
+            args = new[] { "-size176", "Bip/Bip_packed.bin", };
+#endif
+
+#endif
+            List<string> files = new List<string>();
+
+            foreach (var arg in args)
+            {
+                if (arg.StartsWith("-"))
+                {
+                    string a = arg.Substring(1);
+
+                    if (a.StartsWith("size"))
+                    {
+                        a = a.Substring(4);
+                        string[] tmp = a.Split('x');
+                        int w = 0;
+                        int h = 0;
+
+                        if (tmp.Length == 1)
+                            w = h = int.Parse(tmp[0]);
+                        else
+                        {
+                            w = int.Parse(tmp[0]);
+                            h = int.Parse(tmp[1]);
+                        }
+
+                        previewSize = new Size(w, h);
+
+                        if ((w == 360 && h == 360) || (w == 464 && h == 464))
+                        {
+                            Parser.Models.Header.HeaderSize += 20;
+                            Resources.Image.Reader.IsVerge = true;
+                        }
+                    }
+
+                    continue;
+                }
+
+                files.Add(arg);
+            }
+
+            ClockHandElement.GlobalCenter = new Point(previewSize.Width / 2, previewSize.Height / 2);
+
             if (args.Length == 0 || args[0] == null)
             {
                 Console.WriteLine(
@@ -44,11 +131,13 @@ namespace WatchFace
                 return;
             }
 
-            if (args.Length > 1)
+            if (files.Count > 1)
                 Console.WriteLine("Multiple files unpacking.");
 
-            foreach (var inputFileName in args)
+            foreach (var inputFileName in files)
             {
+                
+
                 var isDirectory = Directory.Exists(inputFileName);
                 var isFile = File.Exists(inputFileName);
                 if (!isDirectory && !isFile)
@@ -134,7 +223,7 @@ namespace WatchFace
             var watchFace = ParseResources(reader);
             if (watchFace == null) return;
 
-            GeneratePreviews(reader.Parameters, reader.Images, outputDirectory, baseName);
+            //GeneratePreviews(reader.Parameters, reader.Images, outputDirectory, baseName);
 
             Logger.Debug("Exporting resources to '{0}'", outputDirectory);
             var reDescriptor = new FileDescriptor {Resources = reader.Resources};
@@ -225,10 +314,24 @@ namespace WatchFace
             {
                 Logger.Debug("Reading referenced images from '{0}'", imagesDirectory);
                 var imagesReader = new ResourcesLoader(imagesDirectory);
-                imagesReader.Process(watchFace);
+
+                if (previewSize.Width == 360 || previewSize.Width == 464)
+                    imagesReader.Process(watchFace as WatchFaceVerge);
+                else if (previewSize.Width == 176)
+                    imagesReader.Process(watchFace as WatchFaceBip);
+                else
+                    imagesReader.Process(watchFace);
+
 
                 Logger.Trace("Building parameters for watch face...");
-                var descriptor = ParametersConverter.Build(watchFace);
+                List<Parameter> descriptor;
+
+                if (previewSize.Width == 360 || previewSize.Width == 464)
+                    descriptor = ParametersConverter.Build(watchFace as WatchFaceVerge);
+                else if (previewSize.Width == 176)
+                    descriptor = ParametersConverter.Build(watchFace as WatchFaceBip);
+                else
+                    descriptor = ParametersConverter.Build(watchFace);
 
                 var baseFilename = Path.GetFileNameWithoutExtension(outputFileName);
                 GeneratePreviews(descriptor, imagesReader.Images, outputDirectory, baseFilename);
@@ -273,7 +376,12 @@ namespace WatchFace
             Logger.Debug("Parsing parameters...");
             try
             {
-                return ParametersConverter.Parse<Parser.WatchFace>(reader.Parameters);
+                if (previewSize.Width == 176)
+                    return ParametersConverter.Parse<WatchFaceBip>(reader.Parameters);
+                else if (previewSize.Width == 360 || previewSize.Width == 464)
+                    return ParametersConverter.Parse<WatchFaceVerge>(reader.Parameters);
+                else
+                    return ParametersConverter.Parse<Parser.WatchFace>(reader.Parameters);
             }
             catch (Exception e)
             {
@@ -299,10 +407,25 @@ namespace WatchFace
                 using (var fileStream = File.OpenRead(jsonFileName))
                 using (var reader = new StreamReader(fileStream))
                 {
+                    if (previewSize.Width == 176)
+                        return JsonConvert.DeserializeObject<WatchFaceBip>(reader.ReadToEnd(),
+                            new JsonSerializerSettings
+                            {
+                                MissingMemberHandling = MissingMemberHandling.Ignore,
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+                    else if (previewSize.Width == 360 || previewSize.Width == 464)
+                        return JsonConvert.DeserializeObject<WatchFaceVerge>(reader.ReadToEnd(),
+                            new JsonSerializerSettings
+                            {
+                                MissingMemberHandling = MissingMemberHandling.Ignore,
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+
                     return JsonConvert.DeserializeObject<Parser.WatchFace>(reader.ReadToEnd(),
                         new JsonSerializerSettings
                         {
-                            MissingMemberHandling = MissingMemberHandling.Error,
+                            MissingMemberHandling = MissingMemberHandling.Ignore,
                             NullValueHandling = NullValueHandling.Ignore
                         });
                 }
@@ -402,10 +525,10 @@ namespace WatchFace
             Logger.Debug("Generating previews...");
 
             var states = GetPreviewStates();
-            var staticPreview = PreviewGenerator.CreateImage(parameters, images, new WatchState());
+            var staticPreview = PreviewGenerator.CreateImage(parameters, images, new WatchState(), previewSize);
             staticPreview.Save(Path.Combine(outputDirectory, $"{baseName}_static.png"), ImageFormat.Png);
 
-            var previewImages = PreviewGenerator.CreateAnimation(parameters, images, states);
+            var previewImages = PreviewGenerator.CreateAnimation(parameters, images, states, previewSize);
 
             if (IsRunningOnMono)
             {
@@ -457,23 +580,22 @@ namespace WatchFace
             var time = DateTime.Now;
             var states = new List<WatchState>();
 
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 20; i++)
             {
                 var num = i + 1;
                 var watchState = new WatchState
                 {
-                    BatteryLevel = 100 - i * 10,
-                    Pulse = 60 + num * 2,
-                    Steps = num * 1000,
+                    BatteryLevel = 100 - i * 5,
+                    Pulse = 40 + num * 4,
+                    Steps = num * 500,
                     Calories = num * 75,
-                    Distance = num * 700,
-                    Bluetooth = num > 1 && num < 6,
-                    Unlocked = num > 2 && num < 7,
-                    Alarm = num > 3 && num < 8,
-                    DoNotDisturb = num > 4 && num < 9,
+                    Distance = num * 350,
+                    Bluetooth = num > 2 && num < 12,
+                    Unlocked = num > 4 && num < 14,
+                    DoNotDisturb = num > 8 && num < 18,
 
-                    DayTemperature = -15 + 2 * i,
-                    NightTemperature = -24 + i * 4,
+                    DayTemperature = i - 15,
+                    NightTemperature = i - 24,
                 };
 
                 if (num < 3)
@@ -491,10 +613,11 @@ namespace WatchFace
                     watchState.CurrentWeather = (WeatherCondition) index;
 
                     watchState.AirQualityIndex = index * 50 - 25;
-                    watchState.CurrentTemperature = -10 + i * 6;
+                    watchState.CurrentTemperature = index * 6 - 10;
                 }
 
-                watchState.Time = new DateTime(time.Year, num, num * 2 + 5, i * 2, i * 6, i);
+                int month = num / 2 + 1;
+                watchState.Time = new DateTime(time.Year, month, num + 5, i, i * 2, i);
                 states.Add(watchState);
             }
 

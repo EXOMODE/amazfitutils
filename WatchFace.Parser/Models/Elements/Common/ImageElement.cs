@@ -16,7 +16,7 @@ namespace WatchFace.Parser.Models.Elements
 
         public void Draw(Graphics drawer, Bitmap[] images)
         {
-            drawer.DrawImage(images[ImageIndex], new Point((int) X, (int) Y));
+            if (!parameter.IsNoDraw) drawer.DrawImage(images[ImageIndex], new Point((int) X, (int) Y));
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)

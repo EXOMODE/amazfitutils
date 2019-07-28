@@ -1,14 +1,14 @@
 ﻿using WatchFace.Parser.Attributes;
 
-namespace WatchFace.Parser.Elements.TimeElements
+namespace WatchFace.Parser.Elements.DateElements
 {
-    public class AmPm
+    public class DayAmPm
     {
         [ParameterId(1)]
-        public long X { get; set; }
+        public long TopLeftX { get; set; }
 
         [ParameterId(2)]
-        public long Y { get; set; }
+        public long TopLeftY { get; set; }
 
         [ParameterId(3)]
         [ParameterImageIndex]

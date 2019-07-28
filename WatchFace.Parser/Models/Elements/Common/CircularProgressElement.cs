@@ -19,6 +19,9 @@ namespace WatchFace.Parser.Models.Elements.GoalProgress
 
         public void Draw(Graphics drawer, Bitmap[] resources, int value, int total)
         {
+            if (RadiusY == 0) RadiusY = RadiusX;
+            if (RadiusX == 0) return;
+
             var sectorAngle = (EndAngle - StartAngle) * value / total;
             var pen = new Pen(Color, Width);
             var rect = new Rectangle((int) (X - RadiusX), (int) (Y - RadiusY),

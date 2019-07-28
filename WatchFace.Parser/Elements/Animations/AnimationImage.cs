@@ -1,8 +1,8 @@
 ﻿using WatchFace.Parser.Attributes;
 
-namespace WatchFace.Parser.Elements.BasicElements
+namespace WatchFace.Parser.Elements.Animations
 {
-    public class Coordinates
+    public class AnimationImage
     {
         [ParameterId(1)]
         public long X { get; set; }
@@ -11,10 +11,12 @@ namespace WatchFace.Parser.Elements.BasicElements
         public long Y { get; set; }
 
         [ParameterId(3)]
-        public long X2 { get; set; }
+        [ParameterImageIndex]
+        public long ImageIndex { get; set; }
 
         [ParameterId(4)]
-        public long Y2 { get; set; }
+        [ParameterImagesCount]
+        public long ImageCount { get; set; }
 
         [ParameterId(5)]
         public long X3 { get; set; }
