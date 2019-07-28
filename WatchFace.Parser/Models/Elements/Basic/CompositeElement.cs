@@ -6,32 +6,23 @@ namespace WatchFace.Parser.Models.Elements
     {
         public CompositeElement() { }
 
-        public CompositeElement(IEnumerable<Parameter> parameters)
-        {
-            foreach (var parameterChild in parameters)
-                Children.Add(CreateChildForParameter(parameterChild));
-        }
+        public CompositeElement(IEnumerable<Parameter> parameters) => CreateChilds(parameters);
 
-        public CompositeElement(Parameter parameter, Element parent, string name = null) : base(parameter, parent, name)
-        {
-            if (parameter.Children == null) return;
-
-            foreach (var parameterChild in parameter.Children)
-                Children.Add(CreateChildForParameter(parameterChild));
-        }
+        public CompositeElement(Parameter parameter, Element parent, string name = null) : base(parameter, parent, name) => CreateChilds(parameter.Children);
 
         public List<Element> Children { get; } = new List<Element>();
 
-        public void CreateChilds(List<Parameter> parameter)
+        public void CreateChilds(IEnumerable<Parameter> parameter)
         {
-            foreach (var parameterChild in parameter)
-                Children.Add(CreateChildForParameter(parameterChild));
+            if (parameter == null) return;
+
+            foreach (var parameterChild in parameter) Children.Add(CreateChildForParameter(parameterChild));
         }
 
         protected virtual Element CreateChildForParameter(Parameter parameter)
         {
-            if (parameter.HasChildren)
-                return new ContainerElement(parameter, this);
+            if (parameter.HasChildren) return new ContainerElement(parameter, this);
+
             return new ValueElement(parameter, this);
         }
     }

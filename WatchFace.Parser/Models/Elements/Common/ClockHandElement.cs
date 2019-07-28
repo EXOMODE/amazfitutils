@@ -32,7 +32,23 @@ namespace WatchFace.Parser.Models.Elements.Common
                 Center.Y = GlobalCenter.Y;
             }
 
-            if (CenterImage != null)
+            var points = Shape.Select(point => RotatePoint(point, angle)).ToArray();
+
+            if (points.Length > 1)
+            {
+                if (OnlyBorder)
+                {
+                    drawer.DrawPolygon(new Pen(Color), points);
+                }
+                else
+                {
+                    drawer.FillPolygon(new SolidBrush(Color), points, FillMode.Alternate);
+                    drawer.DrawPolygon(new Pen(Color, 1), points);
+                }
+
+                CenterImage?.Draw(drawer, resources);
+            }
+            else if (CenterImage != null)
             {
                 Bitmap img = resources[CenterImage.ImageIndex];
 
@@ -45,40 +61,6 @@ namespace WatchFace.Parser.Models.Elements.Common
 
                 return;
             }
-
-            return;
-
-
-            var tmp = Shape.Select(point => RotatePoint(point, angle)).ToList();
-            List<Point> tmp2 = new List<Point>();
-            List<Point> pnts = new List<Point>();
-
-            if (tmp.Count < 3)
-            {
-                Bitmap img = resources[CenterImage.ImageIndex];
-                pnts.Add(RotatePoint(new Point(0, 0), angle));
-                pnts.Add(RotatePoint(new Point(img.Width, 0), angle));
-                pnts.Add(RotatePoint(new Point(img.Width, img.Height), angle));
-                pnts.Add(RotatePoint(new Point(0, img.Height), angle));
-            }
-            else
-            {
-                pnts = tmp;
-            }
-
-            var points = pnts.ToArray();
-
-            if (OnlyBorder)
-            {
-                drawer.DrawPolygon(new Pen(Color), points);
-            }
-            else
-            {
-                drawer.FillPolygon(new SolidBrush(Color), points, FillMode.Alternate);
-                drawer.DrawPolygon(new Pen(Color, 1), points);
-            }
-
-            CenterImage?.Draw(drawer, resources);
         }
 
         private Point RotatePoint(CoordinatesElement element, double degrees) => RotatePoint(element.X, element.Y, degrees);

@@ -1,4 +1,4 @@
-﻿//#define VERGE_PACK
+﻿#define VERGE_PACK
 //#define VERGE_UNPACK
 
 //#define GTR_PACK
@@ -17,7 +17,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using BumpKit;
 using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
@@ -546,12 +545,8 @@ namespace WatchFace
             }
             else
             {
-                using (var gifOutput = File.OpenWrite(Path.Combine(outputDirectory, $"{baseName}_animated.gif")))
-                using (var encoder = new GifEncoder(gifOutput))
-                {
-                    foreach (var previewImage in previewImages)
-                        encoder.AddFrame(previewImage, frameDelay: TimeSpan.FromSeconds(1));
-                }
+                using (var gif = AnimatedGif.AnimatedGif.Create(Path.Combine(outputDirectory, $"{baseName}_animated.gif"), 1000))
+                    foreach (var previewImage in previewImages) gif.AddFrame(previewImage, quality: AnimatedGif.GifQuality.Bit8);
             }
         }
 

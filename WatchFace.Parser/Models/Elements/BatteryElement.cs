@@ -1,4 +1,5 @@
-﻿using WatchFace.Parser.Models.Elements.Battery;
+﻿using System.Drawing;
+using WatchFace.Parser.Models.Elements.Battery;
 
 namespace WatchFace.Parser.Models.Elements
 {
@@ -16,6 +17,11 @@ namespace WatchFace.Parser.Models.Elements
         public Element Scale { get; set; }
 
         public ImageElement Persent { get; set; }
+
+        public override void Draw(Graphics drawer, Bitmap[] images, WatchState state)
+        {
+            base.Draw(drawer, images, state);
+        }
 
         protected override Element CreateChildForParameter(Parameter parameter)
         {

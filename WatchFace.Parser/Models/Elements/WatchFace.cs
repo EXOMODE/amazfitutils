@@ -33,37 +33,37 @@ namespace WatchFace.Parser.Models.Elements
             switch (parameter.Id)
             {
                 case 2:
-                    Background = new BackgroundElement(parameter, null);
+                    Background = new BackgroundElement(parameter, this);
                     return Background;
                 case 3:
-                    Time = new TimeElement(parameter, null);
+                    Time = new TimeElement(parameter, this);
                     return Time;
                 case 4:
-                    Activity = new ActivityElement(parameter, null);
+                    Activity = new ActivityElement(parameter, this);
                     return Activity;
                 case 5:
-                    Date = new DateElement(parameter, null);
+                    Date = new DateElement(parameter, this);
                     return Date;
                 case 6:
-                    Weather = new WeatherElement(parameter, null);
+                    Weather = new WeatherElement(parameter, this);
                     return Weather;
                 case 7:
-                    GoalProgress = new GoalProgressElement(parameter, null);
+                    GoalProgress = new GoalProgressElement(parameter, this);
                     return GoalProgress;
                 case 8:
-                    Status = new StatusElement(parameter, null);
+                    Status = new StatusElement(parameter, this);
                     return Status;
                 case 9:
-                    Battery = new BatteryElement(parameter, null);
-                    return Status;
+                    Battery = new BatteryElement(parameter, this);
+                    return Battery;
                 case 10:
-                    AnalogDial = new AnalogDialElement(parameter, null);
+                    AnalogDial = new AnalogDialElement(parameter, this);
                     return AnalogDial;
                 case 11:
-                    Animation = new OtherElement(parameter, null);
+                    Animation = new OtherElement(parameter, this);
                     return Animation;
                 case 12:
-                    HeartProgress = new HeartProgressElement(parameter, null);
+                    HeartProgress = new HeartProgressElement(parameter, this);
                     return HeartProgress;
                 default:
                     return base.CreateChildForParameter(parameter);

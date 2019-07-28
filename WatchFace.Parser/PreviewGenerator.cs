@@ -33,7 +33,7 @@ namespace WatchFace.Parser
 
         private static Image CreateFrame(IDrawable watchFace, Bitmap[] resources, WatchState state, Size size)
         {
-            var preview = new Bitmap(size.Width, size.Height);
+            var preview = new Bitmap(size.Width, size.Height, format: System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             var graphics = Graphics.FromImage(preview);
             watchFace.Draw(graphics, resources, state);
             return preview;
