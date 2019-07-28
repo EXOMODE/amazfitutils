@@ -80,6 +80,7 @@
     <Compile Include="Elements\DateElements\OneLineMonthAndDay.cs" />
     <Compile Include="Elements\DateElements\SeparateMonthAndDay.cs" />
     <Compile Include="Elements\PulseWrapper.cs" />
+    <Compile Include="Elements\StatusBip.cs" />
     <Compile Include="Elements\Steps.cs" />
     <Compile Include="Elements\StepsProgress.cs" />
     <Compile Include="Elements\Status.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Models\Elements\Activity\StepsElementP.cs" />
     <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
     <Compile Include="Models\Elements\Activity\PulseElement.cs" />
+    <Compile Include="Models\Elements\Status\AlarmElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\SecondsClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\MinutesClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\HoursClockHandElement.cs" />

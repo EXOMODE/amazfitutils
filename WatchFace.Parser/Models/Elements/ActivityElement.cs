@@ -6,6 +6,7 @@
             base(parameter, parent, name) { }
 
         public StepsElementP Steps { get; set; }
+        public StepsElement StepsBip { get; set; }
         public StepsGoalElement StepsGoal { get; set; }
         public CaloriesElement Calories { get; set; }
         public PulseElement Pulse { get; set; }
@@ -34,6 +35,12 @@
                 switch (parameter.Id)
                 {
                     case 1:
+                        if (StatusElement.IsBip)
+                        {
+                            StepsBip = new StepsElement(parameter, this, nameof(Steps));
+                            return StepsBip;
+                        }
+                            
                         Steps = new StepsElementP(parameter, this);
                         return Steps;
                     case 2:

@@ -15,25 +15,50 @@
 
         public BatteryElement Battery { get; set; }
 
+        public AlarmElement Alarm { get; set; }
+
+        public static bool IsBip { get; set; }
+
         protected override Element CreateChildForParameter(Parameter parameter)
         {
-            switch (parameter.Id)
+            if (IsBip)
             {
-                case 1:
-                    this.DoNotDisturb = new DoNotDisturbElement(parameter, (Element)this, (string)null);
-                    return (Element)this.DoNotDisturb;
-                case 2:
-                    this.Unlocked = new UnlockedElement(parameter, (Element)this, (string)null);
-                    return (Element)this.Unlocked;
-                case 3:
-                    this.Bluetooth = new BluetoothElement(parameter, (Element)this, (string)null);
-                    return (Element)this.Bluetooth;
-                case 4:
-                    this.Battery = new BatteryElement(parameter, (Element)this, (string)null);
-                    return (Element)this.Battery;
-                default:
-                    return base.CreateChildForParameter(parameter);
+                switch (parameter.Id)
+                {
+                    case 1:
+                        Bluetooth = new BluetoothElement(parameter, this);
+                        return Bluetooth;
+                    case 2:
+                        Alarm = new AlarmElement(parameter, this);
+                        return Alarm;
+                    case 3:
+                        Unlocked = new UnlockedElement(parameter, this);
+                        return Unlocked;
+                    case 4:
+                        DoNotDisturb = new DoNotDisturbElement(parameter, this);
+                        return DoNotDisturb;
+                }
             }
+            else
+            {
+                switch (parameter.Id)
+                {
+                    case 1:
+                        DoNotDisturb = new DoNotDisturbElement(parameter, this);
+                        return DoNotDisturb;
+                    case 2:
+                        Unlocked = new UnlockedElement(parameter, this);
+                        return Unlocked;
+                    case 3:
+                        Bluetooth = new BluetoothElement(parameter, this);
+                        return Bluetooth;
+                    case 4:
+                        Battery = new BatteryElement(parameter, this);
+                        return Battery;
+                }
+            }
+
+            return base.CreateChildForParameter(parameter);
         }
     }
 }

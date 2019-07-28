@@ -27,6 +27,7 @@ using Resources.Models;
 using WatchFace.Parser;
 using WatchFace.Parser.Elements;
 using WatchFace.Parser.Models;
+using WatchFace.Parser.Models.Elements;
 using WatchFace.Parser.Models.Elements.Common;
 using WatchFace.Parser.Utils;
 using Image = System.Drawing.Image;
@@ -72,8 +73,8 @@ namespace WatchFace
 #if BIP_PACK
             args = new[] { "-size176", "Bip/Bip.json", };
 #elif BIP_UNPACK
-            //args = new[] { "-size176", "Bip.bin", };
-            args = new[] { "-size176", "Bip/Bip_packed.bin", };
+            args = new[] { "-size176", "Bip.bin", };
+            //args = new[] { "-size176", "Bip/Bip_packed.bin", };
 #endif
 
 #endif
@@ -101,18 +102,22 @@ namespace WatchFace
                         }
 
                         previewSize = new Size(w, h);
-
-                        if ((w == 360 && h == 360) || (w == 464 && h == 464))
-                        {
-                            Parser.Models.Header.HeaderSize += 20;
-                            Resources.Image.Reader.IsVerge = true;
-                        }
                     }
 
                     continue;
                 }
 
                 files.Add(arg);
+            }
+
+            if ((previewSize.Width == 360 && previewSize.Height == 360) || (previewSize.Width == 464 && previewSize.Height == 464))
+            {
+                Parser.Models.Header.HeaderSize += 20;
+                Resources.Image.Reader.IsVerge = true;
+            }
+            else if (previewSize.Width == 176 && previewSize.Height == 176)
+            {
+                StatusElement.IsBip = true;
             }
 
             ClockHandElement.GlobalCenter = new Point(previewSize.Width / 2, previewSize.Height / 2);

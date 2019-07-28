@@ -45,5 +45,7 @@ namespace WatchFace.Parser.Models
         public bool Unlocked { get; set; } = true;
 
         public bool DoNotDisturb { get; set; }
+
+        public bool Alarm { get; set; }
     }
 }
