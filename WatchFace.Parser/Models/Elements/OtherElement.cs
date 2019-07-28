@@ -1,8 +1,8 @@
 ﻿namespace WatchFace.Parser.Models.Elements
 {
-    public class OtheElement : ContainerElement
+    public class OtherElement : ContainerElement
     {
-        public OtheElement(Parameter parameter, Element parent = null, string name = null)
+        public OtherElement(Parameter parameter, Element parent = null, string name = null)
           : base(parameter, parent, name)
         {
         }

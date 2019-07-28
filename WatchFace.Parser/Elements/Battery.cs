@@ -14,13 +14,10 @@ namespace WatchFace.Parser.Elements
         [ParameterId(3)]
         public ImageSet Icon { get; set; }
 
-        [ParameterId(5)]
-        public Scale Scale { get; set; }
-
         [ParameterId(6)]
         public Image Persent { get; set; }
 
         [ParameterId(7)]
-        public CircleScale BatteryCircle { get; set; }
+        public CircleScale Scale { get; set; }
     }
 }

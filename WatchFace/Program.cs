@@ -598,7 +598,7 @@ namespace WatchFace
                     Bluetooth = num > 2 && num < 12,
                     Unlocked = num > 4 && num < 14,
                     DoNotDisturb = num > 8 && num < 18,
-
+                    Alarm = num > 3 && num < 8,
                     DayTemperature = i - 15,
                     NightTemperature = i - 24,
                 };

@@ -72,6 +72,7 @@
     <Compile Include="Elements\BasicElements\Number.cs" />
     <Compile Include="Elements\BasicElements\Scale.cs" />
     <Compile Include="Elements\BasicElements\XY.cs" />
+    <Compile Include="Elements\BatteryBip.cs" />
     <Compile Include="Elements\Battery.cs" />
     <Compile Include="Elements\Date.cs" />
     <Compile Include="Elements\DateElements\DateUnknown3.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Models\Elements\Activity\StepsElementP.cs" />
     <Compile Include="Models\Elements\Activity\StepsGoalElement.cs" />
     <Compile Include="Models\Elements\Activity\PulseElement.cs" />
+    <Compile Include="Models\Elements\Battery\CircularBatteryProgressElement.cs" />
     <Compile Include="Models\Elements\Status\AlarmElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\SecondsClockHandElement.cs" />
     <Compile Include="Models\Elements\AnalogDial\MinutesClockHandElement.cs" />
@@ -129,7 +131,7 @@
     <Compile Include="Models\Elements\BatteryElement.cs" />
     <Compile Include="Models\Elements\HeartProgressElement.cs" />
     <Compile Include="Models\Elements\GoalProgress\LinearHeartProgressElement.cs" />
-    <Compile Include="Models\Elements\OtheElement.cs" />
+    <Compile Include="Models\Elements\OtherElement.cs" />
     <Compile Include="Models\Elements\StatusElement.cs" />
     <Compile Include="Models\Elements\AnalogDialElement.cs" />
     <Compile Include="Models\Elements\WeatherElement.cs" />

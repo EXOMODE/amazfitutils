@@ -57,5 +57,8 @@ namespace WatchFace.Parser
 
         [ParameterId(8)]
         public new StatusBip Status { get; set; }
+
+        [ParameterId(9)]
+        public new BatteryBip Battery { get; set; }
     }
 }

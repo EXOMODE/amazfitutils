@@ -24,7 +24,7 @@ namespace WatchFace.Parser.Models.Elements
 
         public AnalogDialElement AnalogDial { get; set; }
 
-        public OtheElement Animation { get; set; }
+        public OtherElement Animation { get; set; }
 
         public HeartProgressElement HeartProgress { get; set; }
 
@@ -53,11 +53,14 @@ namespace WatchFace.Parser.Models.Elements
                 case 8:
                     Status = new StatusElement(parameter, null);
                     return Status;
+                case 9:
+                    Battery = new BatteryElement(parameter, null);
+                    return Status;
                 case 10:
                     AnalogDial = new AnalogDialElement(parameter, null);
                     return AnalogDial;
                 case 11:
-                    Animation = new OtheElement(parameter, null);
+                    Animation = new OtherElement(parameter, null);
                     return Animation;
                 case 12:
                     HeartProgress = new HeartProgressElement(parameter, null);
