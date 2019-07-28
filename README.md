@@ -13,7 +13,7 @@ WatchFace.exe -size360 gtr.json
 WatchFace.exe -size464 verge.json
 
 ## Unpacking WatchFace
-WatchFace.exe [-size] "path/to/face.bin" [ "other/path/to/face.bin" ... 
+WatchFace.exe [-size] "path/to/face.bin" [ "other/path/to/face.bin" ...  ]
 
 WatchFace.exe -size176 bip.bin
 
