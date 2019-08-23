@@ -7,5 +7,6 @@
         MinuteTens = 3,
         MinuteOnes = 4,
         Delimiter = 5,
+        PM = 6,
     }
 }

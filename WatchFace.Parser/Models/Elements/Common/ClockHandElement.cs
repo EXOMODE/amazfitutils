@@ -20,6 +20,14 @@ namespace WatchFace.Parser.Models.Elements.Common
 
         public static Point GlobalCenter { get; set; }
 
+        public long? unknown1 { get; set; }
+
+        public long? unknown2 { get; set; }
+
+        public CoordinatesElement unknown3 { get; set; }
+
+        public CoordinatesElement unknown4 { get; set; }
+
         public abstract void Draw(Graphics drawer, Bitmap[] resources, WatchState state);
 
         public void Draw(Graphics drawer, Bitmap[] resources, double value, double total)
@@ -77,27 +85,51 @@ namespace WatchFace.Parser.Models.Elements.Common
 
         protected override Element CreateChildForParameter(Parameter parameter)
         {
-            switch (parameter.Id)
+            if (Header.HeaderSize == 60)
             {
-                case 1:
-                    OnlyBorder = parameter.Value > 0;
-                    return new ValueElement(parameter, this);
-                case 2:
-                    Color = Color.FromArgb(0xff, Color.FromArgb((int) parameter.Value));
-                    return new ValueElement(parameter, this);
-                case 3:
-                    Center = new CoordinatesElement(parameter, this);
-                    return Center;
-                case 4:
-                    var point = new CoordinatesElement(parameter, this);
-                    Shape.Add(point);
-                    return point;
-                case 5:
-                    CenterImage = new ImageElement(parameter, this);
-                    return CenterImage;
-                default:
-                    return base.CreateChildForParameter(parameter);
+                switch (parameter.Id)
+                {
+                    case 1:
+                        unknown1 = parameter.Value;
+                        return new ValueElement(parameter, this);
+                    case 2:
+                        unknown2 = parameter.Value;
+                        return new ValueElement(parameter, this);
+                    case 3:
+                        Center = unknown3 = new CoordinatesElement(parameter, this);
+                        return unknown3;
+                    case 4:
+                        unknown4 = new CoordinatesElement(parameter, this);
+                        return unknown4;
+                    case 5:
+                        CenterImage = new ImageElement(parameter, this);
+                        return CenterImage;
+                }
             }
+            else
+            {
+                switch (parameter.Id)
+                {
+                    case 1:
+                        OnlyBorder = parameter.Value > 0;
+                        return new ValueElement(parameter, this);
+                    case 2:
+                        Color = Color.FromArgb(0xff, Color.FromArgb((int)parameter.Value));
+                        return new ValueElement(parameter, this);
+                    case 3:
+                        Center = new CoordinatesElement(parameter, this);
+                        return Center;
+                    case 4:
+                        var point = new CoordinatesElement(parameter, this);
+                        Shape.Add(point);
+                        return point;
+                    case 5:
+                        CenterImage = new ImageElement(parameter, this);
+                        return CenterImage;
+                }
+            }
+
+            return base.CreateChildForParameter(parameter);
         }
     }
 }

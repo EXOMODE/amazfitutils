@@ -55,10 +55,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\NoDrawImageAttribute.cs" />
+    <Compile Include="Elements\ActivityGTR.cs" />
     <Compile Include="Elements\ActivityVerge.cs" />
     <Compile Include="Elements\ActivityBip.cs" />
     <Compile Include="Elements\Activity.cs" />
     <Compile Include="Elements\ActivityElements\FormattedNumber.cs" />
+    <Compile Include="Elements\AnalogDialFaceElements\ClockHandVerge.cs" />
+    <Compile Include="Elements\AnalogDialFaceVerge.cs" />
     <Compile Include="Elements\AnalogDialFace.cs" />
     <Compile Include="Elements\Animations\Animation.cs" />
     <Compile Include="Elements\Animations\AnimationImage.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="Elements\BasicElements\Number.cs" />
     <Compile Include="Elements\BasicElements\Scale.cs" />
     <Compile Include="Elements\BasicElements\XY.cs" />
+    <Compile Include="Elements\BatteryGTR.cs" />
     <Compile Include="Elements\BatteryBip.cs" />
     <Compile Include="Elements\Battery.cs" />
     <Compile Include="Elements\Date.cs" />

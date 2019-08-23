@@ -45,9 +45,9 @@ namespace WatchFace.Parser.Models.Elements
                 switch (parameter.Id)
                 {
                     case 1:
-                    case 2:
                         Text = new BatteryNumberElement(parameter, this);
                         return Text;
+                    case 2:
                     case 3:
                         Icon = new BatteryImageSetElement(parameter, this);
                         return Icon;

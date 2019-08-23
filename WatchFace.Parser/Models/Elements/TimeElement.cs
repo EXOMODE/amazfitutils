@@ -18,6 +18,8 @@ namespace WatchFace.Parser.Models.Elements
         public long? DrawingOrder { get; set; }
         public ImageElement Delimiter { get; set; }
 
+        public CoordinatesElement PM { get; set; }
+
         public override void Draw(Graphics drawer, Bitmap[] images, WatchState state)
         {
             AmPm?.Draw(drawer, images, state);
@@ -42,6 +44,9 @@ namespace WatchFace.Parser.Models.Elements
                         break;
                     case DrawingOrderPosition.MinuteOnes:
                         Minutes?.Ones?.Draw(drawer, images, state.Time.Minute % 10);
+                        break;
+                    case DrawingOrderPosition.PM:
+                        //PM?.Draw(drawer, images);
                         break;
                     default:
                         Logger.Warn("Not supported element {0} in DrawingOrder value", position);
@@ -73,6 +78,9 @@ namespace WatchFace.Parser.Models.Elements
                 case 10:
                     Delimiter = new ImageElement(parameter, this, nameof(Delimiter));
                     return Delimiter;
+                case 12:
+                    PM = new CoordinatesElement(parameter, this, nameof(PM));
+                    return PM;
                 default:
                     return base.CreateChildForParameter(parameter);
             }

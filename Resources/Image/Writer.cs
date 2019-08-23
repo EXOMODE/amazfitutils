@@ -72,15 +72,19 @@ namespace Resources.Image
 
             _writer.Write(Signature);
 
-            WriteHeader();
-
             if (!Reader.IsVerge)
             {
+                WriteHeader();
                 WritePalette();
                 WriteImage();
             }
             else
+            {
+                _paletteColors = 24;
+                _transparency = 1;
+                WriteHeader();
                 WriteImage32();
+            }
         }
 
         private void ExtractPalette()

@@ -12,7 +12,7 @@ namespace WatchFace.Parser.Models.Elements
         public NumberElement Number { get; set; }
         public long KilometerImageIndex { get; set; }
         public long DecimalPointImageIndex { get; set; }
-
+        public long SuffixMilesImageIndex { get; set; }
 
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
@@ -40,6 +40,9 @@ namespace WatchFace.Parser.Models.Elements
                 case 3:
                     DecimalPointImageIndex = parameter.Value;
                     return new ValueElement(parameter, this, nameof(DecimalPointImageIndex));
+                case 4:
+                    SuffixMilesImageIndex = parameter.Value;
+                    return new ValueElement(parameter, this, nameof(SuffixMilesImageIndex));
                 default:
                     return base.CreateChildForParameter(parameter);
             }

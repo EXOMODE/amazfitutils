@@ -15,6 +15,8 @@ namespace WatchFace.Parser
 
         private readonly Stream _stream;
 
+        public string OutputDirectory { get; set; }
+
         public Writer(Stream stream, List<IResource> images)
         {
             _stream = stream;
@@ -64,7 +66,7 @@ namespace WatchFace.Parser
                 ParametersSize = (uint) encodedParametersPositions.Length,
                 Unknown = 0x159 // Maybe some kind of layers (the bigger number needed for more complex watch faces)
             };
-            header.WriteTo(_stream);
+            header.WriteTo(_stream, OutputDirectory);
 
             Logger.Trace("Writing parameters offsets and lengths...");
             encodedParametersPositions.Seek(0, SeekOrigin.Begin);

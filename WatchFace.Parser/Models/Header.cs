@@ -15,23 +15,48 @@ namespace WatchFace.Parser.Models
 
         public bool IsValid => Signature == DialSignature;
 
-        public void WriteTo(Stream stream)
+        public void WriteTo(Stream stream, string outputDirectory)
         {
-            var buffer = new byte[HeaderSize];
+            byte[] buffer;
+
+            if (HeaderSize == 60)
+            {
+                buffer = new byte[HeaderSize + 4];
+
+                for (var i = 0; i < buffer.Length; i++) buffer[i] = 0xff;
+
+                string p = Path.Combine(outputDirectory, "header.bin");
+
+                if (File.Exists(p))
+                {
+                    buffer = File.ReadAllBytes(p);
+                    //File.Delete(p);
+
+                    Unknown = BitConverter.ToUInt32(buffer, 52);
+                }
+
+                //Encoding.ASCII.GetBytes(Signature).CopyTo(buffer, 0);
+                //BitConverter.GetBytes(Unknown).CopyTo(buffer, 52);
+                BitConverter.GetBytes(ParametersSize).CopyTo(buffer, 56);
+
+                stream.Write(buffer, 0, HeaderSize + 4);
+
+                return;
+            }
+
+            buffer = new byte[HeaderSize];
 
             for (var i = 0; i < buffer.Length; i++) buffer[i] = 0xff;
 
             Encoding.ASCII.GetBytes(Signature).CopyTo(buffer, 0);
 
-            BitConverter.GetBytes(Unknown).CopyTo(buffer, HeaderSize == 40 ? 32 : 52);
-            BitConverter.GetBytes(ParametersSize).CopyTo(buffer, HeaderSize == 40 ? 36 : 56);
+            BitConverter.GetBytes(Unknown).CopyTo(buffer, 32);
+            BitConverter.GetBytes(ParametersSize).CopyTo(buffer, 36);
 
             stream.Write(buffer, 0, HeaderSize);
-
-            if (HeaderSize == 60) stream.Write(new byte[] { 0xff, 0xff, 0xff, 0xff }, 0, 4);
         }
 
-        public static Header ReadFrom(Stream stream)
+        public static Header ReadFrom(Stream stream, string outputDirectory)
         {
             byte[] buffer = new byte[HeaderSize];
 
@@ -43,14 +68,13 @@ namespace WatchFace.Parser.Models
 
             if (unknown >= ushort.MaxValue || parametersSize >= ushort.MaxValue)
             {
-                buffer = new byte[HeaderSize];
+                buffer = new byte[HeaderSize + 4];
                 stream.Position = 0;
                 stream.Read(buffer, 0, buffer.Length);
 
                 unknown = BitConverter.ToUInt32(buffer, 52);
                 parametersSize = BitConverter.ToUInt32(buffer, 56);
-
-                stream.Position += 4;
+                File.WriteAllBytes(Path.Combine(outputDirectory, "header.bin"), buffer);
             }
 
             return new Header

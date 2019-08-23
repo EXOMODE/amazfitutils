@@ -12,6 +12,7 @@
         public PulseElement Pulse { get; set; }
         public DistanceElement Distance { get; set; }
         public ImageElement CircleRange { get; set; }
+        public ImageElement StarImage { get; set; }
 
         protected override Element CreateChildForParameter(Parameter parameter)
         {
@@ -19,12 +20,18 @@
             {
                 switch (parameter.Id)
                 {
+                    case 4:
+                        Distance = new DistanceElement(parameter, this);
+                        return Distance;
                     case 5:
                         Steps = new StepsElementP(parameter, this);
                         return Steps;
                     case 3:
                         Pulse = new PulseElement(parameter, this);
                         return Pulse;
+                    case 7:
+                        StarImage = new ImageElement(parameter, this);
+                        return StarImage;
                     case 9:
                         CircleRange = new ImageElement(parameter, this);
                         return CircleRange;

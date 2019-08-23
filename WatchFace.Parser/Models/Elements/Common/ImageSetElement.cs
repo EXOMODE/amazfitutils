@@ -14,7 +14,8 @@ namespace WatchFace.Parser.Models.Elements
             if (index >= ImagesCount) index = (int) ImagesCount - 1;
 
             var imageIndex = ImageIndex + index;
-            drawer.DrawImage(resources[imageIndex], new Point((int) X, (int) Y));
+
+            if (imageIndex < resources.Length) drawer.DrawImage(resources[imageIndex], new Point((int) X, (int) Y));
         }
 
         protected override Element CreateChildForParameter(Parameter parameter)

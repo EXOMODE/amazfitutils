@@ -16,6 +16,8 @@ namespace WatchFace.Parser
 
         private readonly Stream _stream;
 
+        public string OutputDirectory { get; set; }
+
         public Reader(Stream stream)
         {
             _stream = stream;
@@ -28,7 +30,7 @@ namespace WatchFace.Parser
         public void Read()
         {
             Logger.Trace("Reading header...");
-            var header = Header.ReadFrom(_stream);
+            var header = Header.ReadFrom(_stream, OutputDirectory);
             Logger.Trace("Header was read:");
             Logger.Trace("Signature: {0}, Unknown: {1}, ParametersSize: {2}, IsValid: {3}", header.Signature,
                 header.Unknown,

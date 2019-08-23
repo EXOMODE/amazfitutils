@@ -13,7 +13,22 @@ namespace WatchFace.Parser.Models.Elements
 
         public void Draw(Graphics drawer, Bitmap[] resources, WatchState state)
         {
-            var imageIndex = state.Time.Hour < 12 ? ImageIndexAMEN : ImageIndexPMEN;
+            var imageIndex = state.Time.Hour < 12 ? ImageIndexAMCN : ImageIndexPMCN;
+
+            if (imageIndex <= 0) imageIndex = state.Time.Hour < 12 ? ImageIndexAMEN : ImageIndexPMEN;
+
+            try
+            {
+                var pm = ((TimeElement)_parent).PM;
+
+                if ((imageIndex == ImageIndexPMEN || imageIndex == ImageIndexPMCN) && pm != null)
+                {
+                    X = pm.X;
+                    Y = pm.Y;
+                }
+            }
+            catch { }
+
             drawer.DrawImage(resources[imageIndex], new Point((int) X, (int) Y));
         }
 

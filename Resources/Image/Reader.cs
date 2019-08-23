@@ -21,6 +21,7 @@ namespace Resources.Image
         private ushort _width;
 
         public static bool IsVerge { get; set; }
+        public static bool IsInverted { get; set; }
 
         public Reader(Stream stream)
         {
@@ -57,7 +58,7 @@ namespace Resources.Image
                 _width = (ushort)_reader.ReadUInt32();
                 _height = (ushort)_reader.ReadUInt32();
                 //_rowLengthInBytes = (ushort)_reader.ReadUInt32();
-                
+
                 _bitsPerPixel = (ushort)_reader.ReadUInt32();
                 _paletteColors = (ushort)_reader.ReadUInt32();
                 _transparency = _reader.ReadUInt32() > 0;
@@ -226,7 +227,13 @@ namespace Resources.Image
                         Logger.Trace("WriteColor A {0}: R {1}, G {2}, B {3}", alpha, r, g, b);
                         var color = Color.FromArgb(0xff - alpha, r, g, b);
 
-                        if (IsVerge) color = Color.FromArgb(alpha, b, g, r);
+                        if (IsVerge)
+                        {
+                            //if (IsInverted)
+                                color = Color.FromArgb(alpha, b, g, r);
+                            //else
+                            //    color = Color.FromArgb(alpha, r, g, b);
+                        }
 
                         context.SetPixel(x, y, color);
                     }

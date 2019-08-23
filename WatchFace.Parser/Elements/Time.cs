@@ -28,5 +28,8 @@ namespace WatchFace.Parser.Elements
         
         [ParameterId(10)]
         public BasicElements.Image Delimiter { get; set; }
+
+        [ParameterId(12)]
+        public BasicElements.Coordinates PM { get; set; }
     }
 }

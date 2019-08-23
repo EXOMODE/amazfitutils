@@ -17,6 +17,7 @@ namespace WatchFace.Parser.Elements.ActivityElements
         public long? DecimalPointImageIndex { get; set; }
 
         [ParameterId(4)]
+        [ParameterImageIndex]
         public long? SuffixMilesImageIndex { get; set; }
     }
 }

@@ -1,5 +1,5 @@
-﻿#define VERGE_PACK
-//#define VERGE_UNPACK
+﻿//#define VERGE_PACK
+#define VERGE_UNPACK
 
 //#define GTR_PACK
 //#define GTR_UNPACK
@@ -51,14 +51,14 @@ namespace WatchFace
 #if VERGE_PACK
             args = new[] { "-size360", "Verge/Verge.json", };
 #elif VERGE_UNPACK
-            args = new[] { "-size360", "Verge.bin", };
-            //args = new[] { "-size360", "Verge/Verge_packed.bin", };
+            //args = new[] { "-size360", "Verge.bin", "-i" };
+            args = new[] { "-size360", "Verge/Verge_packed.bin", };
 #endif
 
 #if GTR_PACK
             args = new[] { "-size464", "GTR/GTR.json", };
 #elif GTR_UNPACK
-            args = new[] { "-size464", "GTR.bin", };
+            args = new[] { "-size464", "GTR.bin", "-i" };
             //args = new[] { "-size464", "GTR/GTR_packed.bin", };
 #endif
 
@@ -101,6 +101,10 @@ namespace WatchFace
                         }
 
                         previewSize = new Size(w, h);
+                    }
+                    else if (a.StartsWith("i"))
+                    {
+                        Resources.Image.Reader.IsInverted = true;
                     }
 
                     continue;
@@ -221,7 +225,7 @@ namespace WatchFace
             var baseName = Path.GetFileNameWithoutExtension(inputFileName);
             SetupLogger(Path.Combine(outputDirectory, $"{baseName}.log"));
 
-            var reader = ReadWatchFace(inputFileName);
+            var reader = ReadWatchFace(inputFileName, outputDirectory);
             if (reader == null) return;
 
             var watchFace = ParseResources(reader);
@@ -319,8 +323,10 @@ namespace WatchFace
                 Logger.Debug("Reading referenced images from '{0}'", imagesDirectory);
                 var imagesReader = new ResourcesLoader(imagesDirectory);
 
-                if (previewSize.Width == 360 || previewSize.Width == 464)
+                if (previewSize.Width == 360)
                     imagesReader.Process(watchFace as WatchFaceVerge);
+                else if (previewSize.Width == 464)
+                    imagesReader.Process(watchFace as WatchFaceGTR);
                 else if (previewSize.Width == 176)
                     imagesReader.Process(watchFace as WatchFaceBip);
                 else
@@ -330,8 +336,10 @@ namespace WatchFace
                 Logger.Trace("Building parameters for watch face...");
                 List<Parameter> descriptor;
 
-                if (previewSize.Width == 360 || previewSize.Width == 464)
+                if (previewSize.Width == 360)
                     descriptor = ParametersConverter.Build(watchFace as WatchFaceVerge);
+                else if(previewSize.Width == 464)
+                    descriptor = ParametersConverter.Build(watchFace as WatchFaceGTR);
                 else if (previewSize.Width == 176)
                     descriptor = ParametersConverter.Build(watchFace as WatchFaceBip);
                 else
@@ -343,7 +351,11 @@ namespace WatchFace
                 Logger.Debug("Writing watch face to '{0}'", outputFileName);
                 using (var fileStream = File.OpenWrite(outputFileName))
                 {
-                    var writer = new Writer(fileStream, imagesReader.Resources);
+                    var writer = new Writer(fileStream, imagesReader.Resources)
+                    {
+                        OutputDirectory = outputDirectory,
+                    };
+
                     writer.Write(descriptor);
                     fileStream.Flush();
                 }
@@ -355,14 +367,18 @@ namespace WatchFace
             }
         }
 
-        private static Reader ReadWatchFace(string inputFileName)
+        private static Reader ReadWatchFace(string inputFileName, string outputDirectory)
         {
             Logger.Debug("Opening watch face '{0}'", inputFileName);
             try
             {
                 using (var fileStream = File.OpenRead(inputFileName))
                 {
-                    var reader = new Reader(fileStream);
+                    var reader = new Reader(fileStream)
+                    {
+                        OutputDirectory = outputDirectory,
+                    };
+
                     Logger.Debug("Reading parameters...");
                     reader.Read();
                     return reader;
@@ -382,8 +398,10 @@ namespace WatchFace
             {
                 if (previewSize.Width == 176)
                     return ParametersConverter.Parse<WatchFaceBip>(reader.Parameters);
-                else if (previewSize.Width == 360 || previewSize.Width == 464)
+                else if (previewSize.Width == 360)
                     return ParametersConverter.Parse<WatchFaceVerge>(reader.Parameters);
+                else if (previewSize.Width == 464)
+                    return ParametersConverter.Parse<WatchFaceGTR>(reader.Parameters);
                 else
                     return ParametersConverter.Parse<Parser.WatchFace>(reader.Parameters);
             }
@@ -418,8 +436,15 @@ namespace WatchFace
                                 MissingMemberHandling = MissingMemberHandling.Ignore,
                                 NullValueHandling = NullValueHandling.Ignore
                             });
-                    else if (previewSize.Width == 360 || previewSize.Width == 464)
+                    else if (previewSize.Width == 360)
                         return JsonConvert.DeserializeObject<WatchFaceVerge>(reader.ReadToEnd(),
+                            new JsonSerializerSettings
+                            {
+                                MissingMemberHandling = MissingMemberHandling.Ignore,
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+                    else if (previewSize.Width == 464)
+                        return JsonConvert.DeserializeObject<WatchFaceGTR>(reader.ReadToEnd(),
                             new JsonSerializerSettings
                             {
                                 MissingMemberHandling = MissingMemberHandling.Ignore,
