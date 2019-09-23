@@ -8,9 +8,11 @@ WatchFace.exe -size176 bip.json
 
 WatchFace.exe -size120x240 band.json
 
-WatchFace.exe -size360 gtr.json
+WatchFace.exe -size390 gtr.json
 
-WatchFace.exe -size464 verge.json
+WatchFace.exe -size454 gtr.json
+
+WatchFace.exe -size360 verge.json
 
 ## Unpacking WatchFace
 WatchFace.exe [-size] "path/to/face.bin" [ "other/path/to/face.bin" ...  ]
@@ -19,6 +21,8 @@ WatchFace.exe -size176 bip.bin
 
 WatchFace.exe -size120x240 band.bin
 
-WatchFace.exe -size360 gtr.bin
+WatchFace.exe -size390 gtr.bin
 
-WatchFace.exe -size464 verge.bin
+WatchFace.exe -size454 gtr.bin
+
+WatchFace.exe -size360 verge.bin
