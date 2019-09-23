@@ -1,8 +1,8 @@
 ﻿//#define VERGE_PACK
-#define VERGE_UNPACK
+//#define VERGE_UNPACK
 
 //#define GTR_PACK
-//#define GTR_UNPACK
+#define GTR_UNPACK
 
 //#define BAND_PACK
 //#define BAND_UNPACK
@@ -56,10 +56,10 @@ namespace WatchFace
 #endif
 
 #if GTR_PACK
-            args = new[] { "-size464", "GTR/GTR.json", };
+            args = new[] { "-size454", "GTR/GTR.json", };
 #elif GTR_UNPACK
-            args = new[] { "-size464", "GTR.bin", "-i" };
-            //args = new[] { "-size464", "GTR/GTR_packed.bin", };
+            args = new[] { "-size454", "GTR.bin", "-i" };
+            //args = new[] { "-size454", "GTR/GTR_packed.bin", };
 #endif
 
 #if BAND_PACK
@@ -113,7 +113,7 @@ namespace WatchFace
                 files.Add(arg);
             }
 
-            if ((previewSize.Width == 360 && previewSize.Height == 360) || (previewSize.Width == 464 && previewSize.Height == 464))
+            if ((previewSize.Width == 360 && previewSize.Height == 360) || (previewSize.Width == 454 && previewSize.Height == 454) || (previewSize.Width == 390 && previewSize.Height == 390))
             {
                 Parser.Models.Header.HeaderSize += 20;
                 Resources.Image.Reader.IsVerge = true;
@@ -325,7 +325,7 @@ namespace WatchFace
 
                 if (previewSize.Width == 360)
                     imagesReader.Process(watchFace as WatchFaceVerge);
-                else if (previewSize.Width == 464)
+                else if (previewSize.Width == 454 || previewSize.Width == 390)
                     imagesReader.Process(watchFace as WatchFaceGTR);
                 else if (previewSize.Width == 176)
                     imagesReader.Process(watchFace as WatchFaceBip);
@@ -338,7 +338,7 @@ namespace WatchFace
 
                 if (previewSize.Width == 360)
                     descriptor = ParametersConverter.Build(watchFace as WatchFaceVerge);
-                else if(previewSize.Width == 464)
+                else if(previewSize.Width == 454 || previewSize.Width == 390)
                     descriptor = ParametersConverter.Build(watchFace as WatchFaceGTR);
                 else if (previewSize.Width == 176)
                     descriptor = ParametersConverter.Build(watchFace as WatchFaceBip);
@@ -400,7 +400,7 @@ namespace WatchFace
                     return ParametersConverter.Parse<WatchFaceBip>(reader.Parameters);
                 else if (previewSize.Width == 360)
                     return ParametersConverter.Parse<WatchFaceVerge>(reader.Parameters);
-                else if (previewSize.Width == 464)
+                else if (previewSize.Width == 454 || previewSize.Width == 390)
                     return ParametersConverter.Parse<WatchFaceGTR>(reader.Parameters);
                 else
                     return ParametersConverter.Parse<Parser.WatchFace>(reader.Parameters);
@@ -443,7 +443,7 @@ namespace WatchFace
                                 MissingMemberHandling = MissingMemberHandling.Ignore,
                                 NullValueHandling = NullValueHandling.Ignore
                             });
-                    else if (previewSize.Width == 464)
+                    else if (previewSize.Width == 454 || previewSize.Width == 390)
                         return JsonConvert.DeserializeObject<WatchFaceGTR>(reader.ReadToEnd(),
                             new JsonSerializerSettings
                             {
